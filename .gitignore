@@ -1,0 +1,49 @@
+# Django related
+*.pyc
+*.pyo
+*.db
+*.log
+*.pid
+*.pot
+__pycache__/
+*.sqlite3
+db.sqlite3
+media/  # Assuming media files are stored locally
+local_settings.py  # Local settings file which shouldn't be committed to the repo
+
+# React / Node related
+/node_modules/
+/build/
+.npmrc
+.yarn-cache
+.env
+.DS_Store
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+/public/
+
+# IDEs and editors
+/.idea/
+.vscode/
+*.swp
+*.swo
+*.swn
+*.bak
+*.orig
+*.old
+
+# Operating systems
+*.DS_Store
+*.WindowsIconCache
+*Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Backup, swap, autosave, etc.
+*~
+*.bak
+*.swp
+*.swo
+
