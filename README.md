@@ -1,4 +1,7 @@
 # LearnFast (lf)
+## Table of contents
+1. [General product comments](##general-product-comments)
+2. 
 ## General product comments
 - **Mission**: Maximises the users ability to operate without a machine.
 - Possible reason why other education platforms are not successful is that humans are lazy and learning things (languages, online coding courses) in a self-directed way and through self-motivation is *so rare*. So instead you must focus on the product being for students who are already working towards tests and exams that are imposed on them by the usual educational culture. Exams at schools and unis for example. Or professional exams like CFA. The latter example is technically self-directed, however I think it's different because so many people do it and so "doing a CFA" is more comparable to "going to uni" than "taking Spanish lessons".  
