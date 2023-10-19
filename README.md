@@ -90,6 +90,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Teach an LLM to use tools, like a calculator or search engine, in a *self-supervised manner*](https://twitter.com/mathemagic1an/status/1624870248221663232?s=51&t=AW6dEQ03zD0cuA2vUVdmLQ)
 - [Train CIFAR10 to 94% in under 10 seconds on a single A100. With a single readable 600-line http://main.py, bunch of nice tricks implemented within.](https://twitter.com/karpathy/status/1620103412686942208?s=66&t=ysr3lSYt0WAw-mwCwBzZdA)
 - [laion synthetic dataset](https://x.com/ocolegro/status/1712065511809274116?s=20)
+- [Adept multimodal model (non-commercial)](https://twitter.com/AdeptAILabs/status/1714682075763405257?s=20)
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
