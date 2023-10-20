@@ -262,6 +262,6 @@ More broadly, we hope the principles in this essay will help support the creatio
 - Opportunities: (1) Best case is that you find something new, do it, then use AI to automate the procedure. (2) In existing domains, regulatory capture will probably occur and then the question is how you can compete in this domain.
 
 ### Marketing strategy
-- Get fitness influencers like bodybuilders and College athletes (Swimmers, Soccer players, Tennis, American football, etc) to promote the app. The idea being that they represent your ideal customer, someone who is trying to balance lots of training and school work and they want to get their school work done ASAP.
+- Get fitness influencers like bodybuilders and College athletes (Swimmers, Soccer players, Tennis, American football, etc) to promote the app. The idea being that they represent your ideal customer, someone who is trying to balance lots of training and school work and they want to get their school work done ASAP. More importantly the perception of your brand will benefit, people who have less time to study are not viewed as lesser when they are athletes. Although they never should be viewed as such.
 - Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
 - Try to catch up and coming influencers. If you can see that someone is talented/good and underfollowed then use them.
