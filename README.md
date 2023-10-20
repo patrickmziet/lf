@@ -260,3 +260,8 @@ More broadly, we hope the principles in this essay will help support the creatio
 - Then there is a slow creep, it is natural that once new things have been done process starts to arise. And so even if something may not be doable by AI today, it eventually will be.
 - What is best for humans in all this? If humans try to compete with AI in procedural tasks they will (1) lose (2) end up being a thoughtless cog in the machine. On the latter point, you could take the thought experiment that if schools only gave homework kids could just mindlessly use AI and coast through school. Humans are not part of this picture.
 - Opportunities: (1) Best case is that you find something new, do it, then use AI to automate the procedure. (2) In existing domains, regulatory capture will probably occur and then the question is how you can compete in this domain.
+
+### Marketing strategy
+- Get fitness influencers like bodybuilders and College athletes (Swimmers, Soccer players, Tennis, American football, etc) to promote the app. The idea being that they represent your ideal customer, someone who is trying to balance lots of training and school work and they want to get their school work done ASAP.
+- Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
+- Try to catch up and coming influencers. If you can see that someone is talented/good and underfollowed then use them.
