@@ -108,6 +108,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [US Higher Education Needs a Revolution. What’s Holding It Back? by Tyler Cowen](https://www.bloomberg.com/opinion/articles/2023-10-06/us-higher-education-needs-a-revolution-what-s-holding-it-back?utm_medium=email&utm_source=newsletter&utm_term=231006&utm_campaign=author_19834842)
 - [How AI Will Remake the Rules of International Trade by Tyler Cowen](https://www.bloomberg.com/opinion/articles/2023-10-11/how-ai-will-remake-the-rules-of-international-trade?utm_medium=email&utm_source=newsletter&utm_term=231011&utm_campaign=author_19834842)
 - [Justin Wolfers Webinar: Assigning Homework in a World with ChatGPT](https://youtu.be/m2BvGzms0Ug?si=y-QeYTPmqFUJjCYu)
+- [Students Outrunning Faculty in AI Use](https://www.insidehighered.com/news/tech-innovation/artificial-intelligence/2023/10/31/most-students-outrunning-faculty-ai-use?utm_source=Inside+Higher+Ed&utm_campaign=23419446b9-DNU_2021_COPY_02&utm_medium=email&utm_term=0_1fcbc04421-23419446b9-236889242&mc_cid=23419446b9&mc_eid=dae49d931a) 
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)
