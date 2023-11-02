@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import apiService from '../services/apiService';
+import { AuthContext } from '../contexts/AuthContext';
 
-function Register() {
+function Register(props) {
   const [username, setUsername] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -16,6 +18,8 @@ function Register() {
     .then(response => {
       console.log(response.data);
       // handle successful registration
+      setIsAuthenticated(true);
+      props.history.push('/notes');
     })
     .catch(error => {
       console.error(error);

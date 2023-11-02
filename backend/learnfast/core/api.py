@@ -10,3 +10,5 @@ class NoteListCreate(generics.ListCreateAPIView):
         # Ensure the note is associated with the current user
         serializer.save(user=self.request.user)
 
+    def get_queryset(self):
+        return Note.objects.filter(user=self.request.user)

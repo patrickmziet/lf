@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import apiService from '../services/apiService';
+import { AuthContext } from '../contexts/AuthContext';
 
-function Login() {
+function Login(props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const { setIsAuthenticated } = useContext(AuthContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -14,6 +16,8 @@ function Login() {
     .then(response => {
       console.log(response.data);
       // handle successful login
+      setIsAuthenticated(true);
+      props.history.push('/notes');
     })
     .catch(error => {
       console.error(error);
