@@ -91,6 +91,11 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Train CIFAR10 to 94% in under 10 seconds on a single A100. With a single readable 600-line http://main.py, bunch of nice tricks implemented within.](https://twitter.com/karpathy/status/1620103412686942208?s=66&t=ysr3lSYt0WAw-mwCwBzZdA)
 - [laion synthetic dataset](https://x.com/ocolegro/status/1712065511809274116?s=20)
 - [Adept multimodal model (non-commercial)](https://twitter.com/AdeptAILabs/status/1714682075763405257?s=20)
+- [How to bend GPT4 to do more for you by making emotional appeals](https://x.com/AndrewCurran_/status/1720177766283505724?s=20)
+- [64k and 128k context window for Mistral](https://x.com/Teknium1/status/1720108793055596978?s=20)
+- [YaRN: Efficient Context Window Extension of Large Language Models](https://twitter.com/nearcyan/status/1720243724901638413?s=20)
+- [YouTune: Finetune image models on YouTube videos](https://x.com/charliebholtz/status/1719847667495231700?s=20)
+
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
@@ -109,6 +114,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [How AI Will Remake the Rules of International Trade by Tyler Cowen](https://www.bloomberg.com/opinion/articles/2023-10-11/how-ai-will-remake-the-rules-of-international-trade?utm_medium=email&utm_source=newsletter&utm_term=231011&utm_campaign=author_19834842)
 - [Justin Wolfers Webinar: Assigning Homework in a World with ChatGPT](https://youtu.be/m2BvGzms0Ug?si=y-QeYTPmqFUJjCYu)
 - [Students Outrunning Faculty in AI Use](https://www.insidehighered.com/news/tech-innovation/artificial-intelligence/2023/10/31/most-students-outrunning-faculty-ai-use?utm_source=Inside+Higher+Ed&utm_campaign=23419446b9-DNU_2021_COPY_02&utm_medium=email&utm_term=0_1fcbc04421-23419446b9-236889242&mc_cid=23419446b9&mc_eid=dae49d931a) 
+- [You've been Matrix Multiplied](https://x.com/jamescham/status/1718120386687324248?s=20)
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)
