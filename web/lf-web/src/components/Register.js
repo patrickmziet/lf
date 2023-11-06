@@ -3,7 +3,8 @@ import apiService from '../services/apiService';
 import { AuthContext } from '../contexts/AuthContext';
 
 function Register(props) {
-  const [username, setUsername] = useState('');
+  //const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password1, setPassword1] = useState('');
   const [password2, setPassword2] = useState('');
   const { setIsAuthenticated } = useContext(AuthContext);
@@ -11,7 +12,7 @@ function Register(props) {
   const handleSubmit = (event) => {
     event.preventDefault();
     apiService.post('/dj-rest-auth/registration/', {
-      username,
+      email,
       password1,
       password2,
     })
@@ -30,8 +31,8 @@ function Register(props) {
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        Username:
-        <input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+        Email:
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
       </label>
       <label>
         Password:
@@ -47,3 +48,10 @@ function Register(props) {
 }
 
 export default Register;
+
+/*
+<label>
+Username:
+<input type="text" value={username} onChange={e => setUsername(e.target.value)} />
+</label>
+*/
