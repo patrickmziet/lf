@@ -17,5 +17,5 @@ class Message:
 
 class Metadata:
     def __init__(self):
-        self.api = "api_django_python_hello-world"
+        self.api = "api_django_python_learnfast"
         self.branch = "basic-authorization"
