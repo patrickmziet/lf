@@ -29,10 +29,9 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 
-#from decouple import config
 import dotenv
 from pathlib import Path
-from decouple import config
+from decouple import config as conf
 #from common.utils import get_env_var
 #import base64
 
@@ -45,7 +44,7 @@ dotenv.load_dotenv(BASE_DIR / '.env')
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("DJANGO_SECRET_KEY")
+SECRET_KEY = conf("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG_ENABLED")
@@ -161,7 +160,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Security
 
-CLIENT_ORIGIN_URL = config("CLIENT_ORIGIN_URL")
+CLIENT_ORIGIN_URL = conf("CLIENT_ORIGIN_URL")
 
 CORS_ALLOWED_ORIGINS = [CLIENT_ORIGIN_URL]
 
@@ -204,8 +203,8 @@ REST_FRAMEWORK = {
 
 # JWT
 
-AUTH0_DOMAIN = config("AUTH0_DOMAIN")
-AUTH0_AUDIENCE = config("AUTH0_AUDIENCE")
+AUTH0_DOMAIN = conf("AUTH0_DOMAIN")
+AUTH0_AUDIENCE = conf("AUTH0_AUDIENCE")
 
 SIMPLE_JWT = {
     'ALGORITHM': 'RS256',
