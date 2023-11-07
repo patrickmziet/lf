@@ -28,8 +28,8 @@ from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import exception_handler
 
-from messages_api.models import Message
-from messages_api.serializers import MessageSerializer
+from core.models import Message
+from core.serializers import MessageSerializer
 
 
 class MessageApiView(RetrieveAPIView):

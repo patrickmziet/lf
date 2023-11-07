@@ -9,24 +9,43 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+#import sys
+#from pathlib import Path
+#print("!!!")
+#print(str(Path(__file__).resolve().parent.parent))
+#print("!!!")
+#sys.path.append(str(Path(__file__).resolve().parent))
+
+
+#COMMON_DIR = Path(__file__).resolve().parent.parent / 'common'  # Adjust this path to the 'common' directory location
+#print("!!!")
+#print(COMMON_DIR)
+#print("Is it in the path?")
+#print(str(COMMON_DIR) in sys.path)
+
+#if str(COMMON_DIR) not in sys.path:
+#    sys.path.append(str(COMMON_DIR))
+
+
 import os
 
 #from decouple import config
 import dotenv
 from pathlib import Path
-from common.utils import get_env_var
+from decouple import config
+#from common.utils import get_env_var
 #import base64
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 dotenv.load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = get_env_var("DJANGO_SECRET_KEY")
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG_ENABLED")
@@ -142,7 +161,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Security
 
-CLIENT_ORIGIN_URL = get_env_var("CLIENT_ORIGIN_URL")
+CLIENT_ORIGIN_URL = config("CLIENT_ORIGIN_URL")
 
 CORS_ALLOWED_ORIGINS = [CLIENT_ORIGIN_URL]
 
@@ -185,8 +204,8 @@ REST_FRAMEWORK = {
 
 # JWT
 
-AUTH0_DOMAIN = get_env_var("AUTH0_DOMAIN")
-AUTH0_AUDIENCE = get_env_var("AUTH0_AUDIENCE")
+AUTH0_DOMAIN = config("AUTH0_DOMAIN")
+AUTH0_AUDIENCE = config("AUTH0_AUDIENCE")
 
 SIMPLE_JWT = {
     'ALGORITHM': 'RS256',
