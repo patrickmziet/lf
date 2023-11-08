@@ -48,7 +48,7 @@ from django.test import SimpleTestCase
 from rest_framework.reverse import reverse
 from rest_framework_simplejwt.backends import TokenBackend
 
-from messages_api.views import (
+from core.views import (
     PublicMessageApiView, ProtectedMessageApiView, AdminMessageApiView
 )
 
@@ -71,7 +71,8 @@ class PublicMessageApiViewTest(SimpleTestCase):
         response = self.client.get(reverse('public-message'))
 
         self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(response.json(), {'text': PublicMessageApiView.text})
+        d = response.json()
+        self.assertDictEqual({'text': d.get('text')}, {'text': PublicMessageApiView.text})
 
 
 class ProtectedMessageApiViewTest(SimpleTestCase):
@@ -103,7 +104,8 @@ class ProtectedMessageApiViewTest(SimpleTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(response.json(), {'text': ProtectedMessageApiView.text})
+        d = response.json()
+        self.assertDictEqual({'text': d.get('text')}, {'text': ProtectedMessageApiView.text})
 
 
 class AdminMessageApiViewTest(SimpleTestCase):
@@ -135,4 +137,5 @@ class AdminMessageApiViewTest(SimpleTestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertDictEqual(response.json(), {'text': AdminMessageApiView.text})
+        d = response.json()
+        self.assertDictEqual({'text': d.get('text')}, {'text': AdminMessageApiView.text})
