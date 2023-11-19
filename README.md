@@ -96,6 +96,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [YaRN: Efficient Context Window Extension of Large Language Models](https://twitter.com/nearcyan/status/1720243724901638413?s=20)
 - [YouTune: Finetune image models on YouTube videos](https://x.com/charliebholtz/status/1719847667495231700?s=20)
 - [OpenAI cookbook](https://cookbook.openai.com/examples/assistants_api_overview_python)
+- [So it seems we may finally have a GPT-4 level model in open source. https://reddit.com/r/LocalLLaMA/comments/17vcr9d/llm_comparisontest_2x_34b_yi_dolphin_nous/ It's a merge of two llama 70b](https://x.com/Dorialexander/status/1724583911789842522?s=20)
 
 
 ### AI Economics and Doom
