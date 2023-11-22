@@ -98,6 +98,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [OpenAI cookbook](https://cookbook.openai.com/examples/assistants_api_overview_python)
 - [So it seems we may finally have a GPT-4 level model in open source. https://reddit.com/r/LocalLLaMA/comments/17vcr9d/llm_comparisontest_2x_34b_yi_dolphin_nous/ It's a merge of two llama 70b](https://x.com/Dorialexander/status/1724583911789842522?s=20)
 - [Another small powerful LLM: Orca](https://x.com/pwang/status/1726957354288111948?s=20)
+- [More on Orca](https://twitter.com/gradio/status/1727304093801316448?s=51)
 
 ### Tech stack
 - [Perhaps a good tech stack for a web app](https://x.com/tair/status/1726631560752115840?s=20)
@@ -278,3 +279,6 @@ More broadly, we hope the principles in this essay will help support the creatio
 - Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
 - Try to catch up-and-coming influencers. If you can see that someone is talented/good and underfollowed then use them.
 - One way to lure up-and-comers could be to offer them a gift subscription to video editing tools which help them produce their videos.
+
+### Strategy
+- How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature.Very difficult for them to have that in “general intelligence”. 
