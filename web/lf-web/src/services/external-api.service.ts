@@ -4,7 +4,7 @@ import { AppError } from "../models/app-error";
 
 export const callExternalApi = async (options: {
   config: AxiosRequestConfig;
-}): Promise<ApiResponse> => {
+}): Promise<ApiResponse<any>> => {
   try {
     const response: AxiosResponse = await axios(options.config);
     const { data } = response;

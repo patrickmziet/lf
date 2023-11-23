@@ -1,7 +1,7 @@
 import { AppError } from "./app-error";
 import { Message } from "./message";
 
-export interface ApiResponse {
-  data: Message | null;
+export interface ApiResponse<T> {
+  data: T | null;
   error: AppError | null;
 }

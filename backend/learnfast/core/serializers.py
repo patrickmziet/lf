@@ -12,6 +12,7 @@ class NoteSerializer(serializers.ModelSerializer):
  """    
 
 from rest_framework import serializers
+from .models import Note
 
 
 class MetadataSerializer(serializers.Serializer):
@@ -22,3 +23,10 @@ class MetadataSerializer(serializers.Serializer):
 class MessageSerializer(serializers.Serializer):
     text = serializers.CharField()
     metadata = MetadataSerializer()
+
+
+class NoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Note
+        fields = ['id', 'title', 'content', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'created_at', 'updated_at']

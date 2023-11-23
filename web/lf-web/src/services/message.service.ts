@@ -1,10 +1,52 @@
 import { AxiosRequestConfig } from "axios";
 import { ApiResponse } from "../models/api-response";
 import { callExternalApi } from "./external-api.service";
+import { Message } from "../models/message";
+import { Note } from "../models/note";
 
 const apiServerUrl = process.env.REACT_APP_API_SERVER_URL;
 
-export const getPublicResource = async (): Promise<ApiResponse> => {
+// Function to get notes for the authenticated user
+export const getUserNotes = async (accessToken: string): Promise<ApiResponse<{ notes: Note[] }>> => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/api/notes/`,
+    method: "GET",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<{ notes: Note[] }>;
+
+  return {
+    data,
+    error,
+  };
+};
+
+// Function to create a new note for the authenticated user
+export const createNote = async (accessToken: string, noteData: object): Promise<ApiResponse<Note>> => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/api/notes/`,
+    method: "POST",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: noteData, // This should include the title and content of the note
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<Note>;
+
+  return {
+    data,
+    error,
+  };
+};
+
+
+export const getPublicResource = async (): Promise<ApiResponse<Message>> => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/api/public`,
     method: "GET",
@@ -13,7 +55,7 @@ export const getPublicResource = async (): Promise<ApiResponse> => {
     },
   };
 
-  const { data, error } = (await callExternalApi({ config })) as ApiResponse;
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<Message>;
 
   return {
     data,
@@ -23,7 +65,7 @@ export const getPublicResource = async (): Promise<ApiResponse> => {
 
 export const getProtectedResource = async (
   accessToken: string
-): Promise<ApiResponse> => {
+): Promise<ApiResponse<Message>> => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/api/protected`,
     method: "GET",
@@ -33,7 +75,7 @@ export const getProtectedResource = async (
     },
   };
 
-  const { data, error } = (await callExternalApi({ config })) as ApiResponse;
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<Message>;
 
   return {
     data,
@@ -43,7 +85,7 @@ export const getProtectedResource = async (
 
 export const getAdminResource = async (
   accessToken: string
-): Promise<ApiResponse> => {
+): Promise<ApiResponse<Message>> => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/api/admin`,
     method: "GET",
@@ -53,7 +95,7 @@ export const getAdminResource = async (
     },
   };
 
-  const { data, error } = (await callExternalApi({ config })) as ApiResponse;
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<Message>;
 
   return {
     data,

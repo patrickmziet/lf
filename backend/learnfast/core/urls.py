@@ -13,11 +13,12 @@ urlpatterns = [
  """
 from django.urls import path
 
-from .views import PublicMessageApiView, ProtectedMessageApiView, AdminMessageApiView
+from .views import PublicMessageApiView, ProtectedMessageApiView, AdminMessageApiView, NoteListCreateAPIView
 
 
 urlpatterns = [
     path('public', PublicMessageApiView.as_view(), name='public-message'),
     path('protected', ProtectedMessageApiView.as_view(), name='protected-message'),
     path('admin', AdminMessageApiView.as_view(), name='admin-message'),
+    path('notes/', NoteListCreateAPIView.as_view(), name='note-list-create'),
 ]

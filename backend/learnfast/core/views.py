@@ -61,3 +61,22 @@ def api_exception_handler(exc, context=None):
     else:
         response.data = {'message': 'API Error'}
     return response
+
+
+from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
+from .models import Note
+from .serializers import NoteSerializer
+
+class NoteListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Note.objects.all()
+    serializer_class = NoteSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        # Associate the note with the current user
+        serializer.save(user=self.request.user)
+
+    def get_queryset(self):
+        # Ensure users can only see their own notes
+        return self.queryset.filter(user=self.request.user)
