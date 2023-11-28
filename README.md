@@ -99,9 +99,12 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [So it seems we may finally have a GPT-4 level model in open source. https://reddit.com/r/LocalLLaMA/comments/17vcr9d/llm_comparisontest_2x_34b_yi_dolphin_nous/ It's a merge of two llama 70b](https://x.com/Dorialexander/status/1724583911789842522?s=20)
 - [Another small powerful LLM: Orca](https://x.com/pwang/status/1726957354288111948?s=20)
 - [More on Orca](https://twitter.com/gradio/status/1727304093801316448?s=51)
+- [Introducing OpenWebMath, a massive dataset containing every math document found on the internet - with equations in LaTeX format!](https://x.com/keirp1/status/1711918424866361610?s=20)
+
 
 ### Tech stack
 - [Perhaps a good tech stack for a web app](https://x.com/tair/status/1726631560752115840?s=20)
+- [Georgi Gerganov: Wrote a short tutorial for setting up llama.cpp on AWS instances](https://x.com/ggerganov/status/1729232091370369160?s=20)
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
