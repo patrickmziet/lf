@@ -9,31 +9,11 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-#import sys
-#from pathlib import Path
-#print("!!!")
-#print(str(Path(__file__).resolve().parent.parent))
-#print("!!!")
-#sys.path.append(str(Path(__file__).resolve().parent))
-
-
-#COMMON_DIR = Path(__file__).resolve().parent.parent / 'common'  # Adjust this path to the 'common' directory location
-#print("!!!")
-#print(COMMON_DIR)
-#print("Is it in the path?")
-#print(str(COMMON_DIR) in sys.path)
-
-#if str(COMMON_DIR) not in sys.path:
-#    sys.path.append(str(COMMON_DIR))
-
-
 import os
 
 import dotenv
 from pathlib import Path
 from decouple import config as conf
-#from common.utils import get_env_var
-#import base64
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -202,7 +182,7 @@ REST_FRAMEWORK = {
 
 
 # JWT
-
+AUTH_USER_MODEL = 'core.User'
 AUTH0_DOMAIN = conf("AUTH0_DOMAIN")
 AUTH0_AUDIENCE = conf("AUTH0_AUDIENCE")
 

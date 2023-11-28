@@ -2,7 +2,8 @@ import { useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, useState, FormEvent } from "react";
 import { getUserNotes, createNote } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
-import { Note } from "../models/note"; // Make sure you have a Note model defined
+import { Note } from "../models/note"; 
+import { CodeSnippet } from "../components/code-snippet";
 
 export const NotesPage: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -16,17 +17,21 @@ export const NotesPage: React.FC = () => {
       const accessToken = await getAccessTokenSilently();
       const { data } = await getUserNotes(accessToken);
 
-      if (isMounted && data) {
+      console.log('Data from API:', data);
+      
+      if (isMounted && data && Array.isArray(data.notes)) {
         setNotes(data.notes); // Ensure your API returns an object with a `notes` key
       }
+
+      console.log('Notes from API:', notes);
     };
 
     fetchNotes();
-
+    console.log('Notes from API after fetching:', notes);
     return () => {
       isMounted = false;
     };
-  }, [getAccessTokenSilently]);
+  }, [getAccessTokenSilently, notes]);
 
   const handleNewNoteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setNewNote({
@@ -49,8 +54,16 @@ export const NotesPage: React.FC = () => {
   return (
     <PageLayout>
       <div className="content-layout">
-        <h1 className="content__title">Notes</h1>
-        <form onSubmit={handleCreateNote}>
+        <h1 id="page-title" className="content__title">
+          Notes
+        </h1>
+        <div className="content__body">
+        <p id="page-description">
+          <span>
+            This is a notes page.  
+          </span>
+        </p>
+        <form onSubmit={handleCreateNote} className="note-form">
           <input
             type="text"
             name="title"
@@ -58,6 +71,7 @@ export const NotesPage: React.FC = () => {
             value={newNote.title}
             onChange={handleNewNoteChange}
             required
+            className="note-input"
           />
           <textarea
             name="content"
@@ -65,16 +79,18 @@ export const NotesPage: React.FC = () => {
             value={newNote.content}
             onChange={handleNewNoteChange}
             required
+            className="note-textarea"
           />
-          <button type="submit">Create Note</button>
+          <button type="submit" className="note-button">Create Note</button>
         </form>
-        <div className="content__body">
-          {notes.map(note => (
-            <div key={note.id}>
-              <h3>{note.title}</h3>
-              <p>{note.content}</p>
-            </div>
-          ))}
+        <h2 className="content__header">Previous notes</h2>
+          {Array.isArray(notes) && notes.length > 0 ? (
+            notes.map(note => (
+              <CodeSnippet key={note.id} title={note.title} code={JSON.stringify(note, null, 2)} />
+            ))
+          ) : (
+          <p>No previous notes</p>
+          )}       
         </div>
       </div>
     </PageLayout>

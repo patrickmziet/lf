@@ -1,0 +1,20 @@
+.note-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .note-input, .note-textarea {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid var(--aqua);
+  }
+  
+  .note-button {
+    padding: 10px 20px;
+    background-color: var(--aqua);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }

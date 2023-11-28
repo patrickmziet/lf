@@ -18,6 +18,10 @@
   color: var(--white);
 }
 
+.content__header {
+  color: var(--white);
+}
+
 .content__body {
   /* responsive */
 
