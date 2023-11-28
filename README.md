@@ -100,6 +100,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Another small powerful LLM: Orca](https://x.com/pwang/status/1726957354288111948?s=20)
 - [More on Orca](https://twitter.com/gradio/status/1727304093801316448?s=51)
 - [Introducing OpenWebMath, a massive dataset containing every math document found on the internet - with equations in LaTeX format!](https://x.com/keirp1/status/1711918424866361610?s=20)
+- [ToolChain*: Efficient Action Space Navigation in Large Language Models with A* Search uses algorithms like A* to improve LLM answers, improving sota on both planning and reasoning tasks](https://x.com/nearcyan/status/1729355904364208603?s=20)
 
 
 ### Tech stack
@@ -282,6 +283,7 @@ More broadly, we hope the principles in this essay will help support the creatio
 - Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
 - Try to catch up-and-coming influencers. If you can see that someone is talented/good and underfollowed then use them.
 - One way to lure up-and-comers could be to offer them a gift subscription to video editing tools which help them produce their videos.
+- [Pika for generating adverts](https://x.com/pika_labs?s=20)
 
 ### Strategy
 - How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature.Very difficult for them to have that in “general intelligence”. 
