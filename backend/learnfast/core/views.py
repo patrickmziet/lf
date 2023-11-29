@@ -76,8 +76,7 @@ class CreateUserIfNotExistView(APIView):
                 sub=request.data.get('sub'),
                 email=request.data.get('email')
             )
-            return Response({"message": "User already exists", 
-                             "user": UserSerializer(user).data}, status=200)
+            return Response({"message": "User already exists"}, status=200)
         except User.DoesNotExist:
             # If the user does not exist, proceed with serializer validation and creation
             serializer = UserSerializer(data=request.data)
