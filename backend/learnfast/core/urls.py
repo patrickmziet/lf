@@ -27,5 +27,5 @@ urlpatterns = [
     path('protected', ProtectedMessageApiView.as_view(), name='protected-message'),
     path('admin', AdminMessageApiView.as_view(), name='admin-message'),
     path('notes/', NoteListCreateAPIView.as_view(), name='note-list-create'),
-    path('api/create-user-if-not-exist/', CreateUserIfNotExistView.as_view(), name='create-user-if-not-exist'),
+    path('create-user-if-not-exist/', CreateUserIfNotExistView.as_view(), name='create-user-if-not-exist'),
 ]

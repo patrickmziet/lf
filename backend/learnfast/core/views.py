@@ -44,17 +44,53 @@ from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
 from .models import Note, User
 from .serializers import NoteSerializer, UserSerializer
+import logging
 
+logging.basicConfig(filename='core.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
+logger = logging.getLogger(__name__)
+logger.info('This is an info message')
+
+#class CreateUserIfNotExistView(APIView):
+#    logger.info("CreateUserIfNotExistView has been called")
+#    permission_classes = [IsAuthenticated]
+
+#    def post(self, request):
+#        logger.info(f"Request data: {request.data}")
+#        serializer = UserSerializer(data=request.data)
+#        
+#       logger.info(serializer.validated_data)
+#       if serializer.is_valid():
+#           user, created = User.objects.get_or_create(id=serializer.validated_data['id'], defaults=serializer.validated_data)
+#           return Response({"message": "User created"} if created else {"message": "User exists"})
+#       logger.info(f"Serializer errors: {serializer.errors}")
+#       return Response(serializer.errors, status=400)
 
 class CreateUserIfNotExistView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user, created = User.objects.get_or_create(id=serializer.validated_data['sub'], defaults=serializer.validated_data)
-            return Response({"message": "User created"} if created else {"message": "User exists"})
-        return Response(serializer.errors, status=400)
+        # Try to get the user first
+        try:
+            user = User.objects.get(
+                id=request.data.get('id'),
+                sub=request.data.get('sub'),
+                email=request.data.get('email')
+            )
+            return Response({"message": "User already exists", 
+                             "user": UserSerializer(user).data}, status=200)
+        except User.DoesNotExist:
+            # If the user does not exist, proceed with serializer validation and creation
+            serializer = UserSerializer(data=request.data)
+            if serializer.is_valid():
+                user, created = User.objects.get_or_create(
+                    defaults=serializer.validated_data,
+                    **{field: serializer.validated_data[field] for field in ['id', 'sub', 'email'] if field in serializer.validated_data}
+                )
+                status_code = 201 if created else 200
+                return Response({"message": "User created" if created else "User exists"}, 
+                                status=status_code)
+            return Response({"Serializer errors": serializer.errors, 
+                             "Valid serializer": False}, status=400)
 
 
 class NoteListCreateAPIView(generics.ListCreateAPIView):

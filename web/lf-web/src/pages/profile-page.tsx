@@ -1,14 +1,45 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import React from "react";
+import React, { useEffect } from "react";
 import { CodeSnippet } from "../components/code-snippet";
 import { PageLayout } from "../components/page-layout";
+import { createUserIfNotExist } from "../services/message.service";
 
 export const ProfilePage: React.FC = () => {
-  const { user } = useAuth0();
+  const { user, getAccessTokenSilently } = useAuth0();
+
+  useEffect(() => {
+    const makeUser = async () => {
+      if (!user) {
+        return;
+      }
+
+      console.log("makeUser function has started executing");
+      const token = await getAccessTokenSilently();
+
+      const userData = {
+        email: user.email,
+        is_verified: user.email_verified,
+        given_name: user.given_name,
+        family_name: user.family_name,
+        nickname: user.nickname,
+        name: user.name,
+        picture: user.picture,
+        locale: user.locale,
+        sub: user.sub,
+        id: user?.sub?.split("|")[1],
+      };
+
+      const response = await createUserIfNotExist(token, userData);
+      console.log("Response from backend", response);
+    };
+
+    makeUser();
+  }, [user, getAccessTokenSilently]);
 
   if (!user) {
     return null;
   }
+
 
   return (
     <PageLayout>

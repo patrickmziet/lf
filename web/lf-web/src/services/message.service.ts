@@ -7,7 +7,7 @@ import { Note } from "../models/note";
 const apiServerUrl = process.env.REACT_APP_API_SERVER_URL;
 
 // Create a user if they do not exist
-export const createUserIfNotExist = async (accessToken: string): Promise<ApiResponse<any>> => {
+export const createUserIfNotExist = async (accessToken: string, userData: object): Promise<ApiResponse<any>> => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/api/create-user-if-not-exist/`,
     method: "POST",
@@ -15,6 +15,7 @@ export const createUserIfNotExist = async (accessToken: string): Promise<ApiResp
       "content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
+    data: userData, // This should include the user's email address
   };
 
   const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;

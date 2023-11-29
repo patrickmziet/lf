@@ -17,8 +17,9 @@ from django.contrib.auth.models import AbstractUser
 
 class User(AbstractUser):
     id = models.CharField(primary_key=True, max_length=255)  # This will store the 'sub' from Auth0 profile
+    sub = models.CharField(max_length=255, unique=True, default="")  # This will store the 'sub' from Auth0 profile
     email = models.EmailField(unique=True)
-    username = models.CharField(max_length=255, unique=True)
+    #username = models.CharField(max_length=255, unique=True)
     is_verified = models.BooleanField(default=False)
     given_name = models.CharField(max_length=255, null=True, blank=True)
     family_name = models.CharField(max_length=255, null=True, blank=True)
@@ -28,7 +29,7 @@ class User(AbstractUser):
     locale = models.CharField(max_length=10, null=True, blank=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
+    REQUIRED_FIELDS = ['name']
 
     def __str__(self):
         return self.email
