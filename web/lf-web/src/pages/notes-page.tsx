@@ -27,7 +27,7 @@ export const NotesPage: React.FC = () => {
     };
 
     fetchNotes();
-    console.log('Notes from API after fetching:', notes);
+
     return () => {
       isMounted = false;
     };

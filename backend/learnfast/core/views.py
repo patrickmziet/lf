@@ -84,57 +84,10 @@ class NoteListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
-        """         # PRINT DEBUG
-        print("self.request.user investigate:")
-        print(self.request.user)
-        print("directory of self.request.user:")
-        print(dir(self.request.user))
-        print("self.request.user.username:")
-        print(self.request.user.username)
-        print("self.request.user.username type:")
-        print(type(self.request.user.username))
-        print("Length of self.request.user.username:")
-        print(len(self.request.user.username))
-        print("--------------------")
-        for attr in dir(self.request.user):
-            print(f"{attr} = {getattr(self.request.user, attr)}")
-        """        #PRINT DEBUG
         User = get_user_model()
         user = User.objects.get(id=self.request.user.id.split('|')[1])
-        #user = User.objects.get(email=self.request.user.id)
         serializer.save(user=user)
 
     def get_queryset(self):
-        
         return self.queryset.filter(user=self.request.user.id.split('|')[1])
-        #user_id = self.request.user.id
-        #if isinstance(user_id, str) and '|' in user_id:
-        #    user_id = user_id.split('|')[1]
-        # Ensure users can only see their own notes
-        #return self.queryset.filter(user=self.request.user.id)
 
-""" from rest_framework import viewsets, permissions
-from rest_framework.views import exception_handler
-from .models import Note
-from .serializers import NoteSerializer
-
-class NoteViewSet(viewsets.ModelViewSet):
-    serializer_class = NoteSerializer
-    permission_classes = [permissions.IsAuthenticated]  # Ensure the user is logged in
-
-    def get_queryset(self):
-        # This will only return notes that belong to the current user
-        return Note.objects.filter(user=self.request.user)
-
-    def perform_create(self, serializer):
-        # This will associate the note with the user that created it
-        serializer.save(user=self.request.user)
-
-def api_exception_handler(exc, context=None):
-    response = exception_handler(exc, context=context)
-    if response and isinstance(response.data, dict):
-        response.data = {'message': response.data.get('detail', 'API Error')}
-    else:
-        response.data = {'message': 'API Error'}
-    return response
- """
