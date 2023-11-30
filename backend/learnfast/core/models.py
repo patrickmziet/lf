@@ -45,4 +45,59 @@ class Note(models.Model):
 
     def __str__(self):
         return self.title
-    
+
+
+class Topic(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='topics')
+    title = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Document(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='documents')
+    document = models.FileField(upload_to='documents/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+
+class Flashcard(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='flashcards')
+    question = models.CharField(max_length=255)
+    answer = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def to_json(self):
+        return {
+            "topic": self.topic.id,
+            "question": self.question,
+            "answer": self.answer,
+            "created_at": self.created_at,
+            "updated_at": self.updated_at
+        }
+
+
+class Chat(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='chats')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    message = models.TextField()
+    posted_at = models.DateTimeField(auto_now_add=True)
+
+
+class Test(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='tests')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class Question(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='questions')
+    question_text = models.CharField(max_length=255)
+    correct_answer = models.CharField(max_length=255)
+
+
+class Rubric(models.Model):
+    topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='rubrics')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    score = models.IntegerField()
+    updated_at = models.DateTimeField(auto_now=True)

@@ -1,11 +1,16 @@
 from rest_framework import serializers
-from .models import Note, User
+from .models import Note, User, Topic
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'sub', 'email', 'is_verified', 'given_name', 
                   'family_name', 'nickname', 'name', 'picture', 'locale']
+
+class TopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = ['id', 'title', 'created_at', 'updated_at']
 
 class MetadataSerializer(serializers.Serializer):
     api = serializers.CharField()

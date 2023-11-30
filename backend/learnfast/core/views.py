@@ -42,8 +42,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import get_user_model
-from .models import Note, User
-from .serializers import NoteSerializer, UserSerializer
+from .models import Note, User, Topic
+from .serializers import NoteSerializer, UserSerializer, TopicSerializer
 import logging
 
 logging.basicConfig(filename='core.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
@@ -76,6 +76,20 @@ class CreateUserIfNotExistView(APIView):
                                 status=status_code)
             return Response({"Serializer errors": serializer.errors, 
                              "Valid serializer": False}, status=400)
+
+
+class TopicListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        User = get_user_model()
+        user = User.objects.get(id=self.request.user.id.split('|')[1])
+        serializer.save(user=user)
+    
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user.id.split('|')[1])
 
 
 class NoteListCreateAPIView(generics.ListCreateAPIView):

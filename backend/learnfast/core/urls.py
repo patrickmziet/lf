@@ -19,6 +19,7 @@ from .views import (
     AdminMessageApiView, 
     NoteListCreateAPIView,
     CreateUserIfNotExistView,
+    TopicListCreateAPIView,
 )
     
 
@@ -28,4 +29,5 @@ urlpatterns = [
     path('admin', AdminMessageApiView.as_view(), name='admin-message'),
     path('notes/', NoteListCreateAPIView.as_view(), name='note-list-create'),
     path('create-user-if-not-exist/', CreateUserIfNotExistView.as_view(), name='create-user-if-not-exist'),
+    path('topics/', TopicListCreateAPIView.as_view(), name='topic-list-create'),
 ]

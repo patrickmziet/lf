@@ -27,6 +27,46 @@ export const createUserIfNotExist = async (accessToken: string, userData: object
   };
 };
 
+// Function to create a topic for the authenticated user
+export const createTopic = async (accessToken: string, topicData: object): Promise<ApiResponse<any>> => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/api/topics/`,
+    method: "POST",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    data: topicData, 
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
+
+  return {
+    data,
+    error,
+  };
+};
+
+// Function to get topics for the authenticated user
+export const getUserTopics = async (accessToken: string): Promise<ApiResponse<{ topics: any }>> => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/api/topics/`,
+    method: "GET",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    }, 
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<{ topics: any }>;
+
+  return {
+    data,
+    error,
+  };
+};
+
+
 // Function to get notes for the authenticated user
 export const getUserNotes = async (accessToken: string): Promise<ApiResponse<{ notes: Note[] }>> => {
   const config: AxiosRequestConfig = {
