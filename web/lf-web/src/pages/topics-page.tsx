@@ -4,8 +4,9 @@
 // numbered list.
 
 import React, { useEffect, useState, FormEvent } from "react";
-import { PageLayout } from "../components/page-layout";
 import { useAuth0 } from "@auth0/auth0-react";
+import { useNavigate } from "react-router-dom";
+import { PageLayout } from "../components/page-layout";
 import { getUserTopics, createTopic } from "../services/message.service";
 import { Topic } from "../models/topic";
 
@@ -13,6 +14,7 @@ export const TopicsPage: React.FC = () => {
     const [topics, setTopics] = useState<Topic[]>([]);
     const [newTopic, setNewTopic] = useState({ title: ''});
     const { user, getAccessTokenSilently } = useAuth0();
+    const navigate = useNavigate();
 
     useEffect(() => {
         let isMounted = true;
@@ -52,6 +54,7 @@ export const TopicsPage: React.FC = () => {
         if (data) {
             setTopics([...topics, data]); // Add the new topic to the local state to update the list
             setNewTopic({ title: '' }); // Reset the input after successful creation
+            navigate(`/upload/${data.id}`);
         }
     };
 
