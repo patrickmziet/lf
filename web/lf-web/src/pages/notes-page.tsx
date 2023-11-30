@@ -8,14 +8,34 @@ import { CodeSnippet } from "../components/code-snippet";
 export const NotesPage: React.FC = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [newNote, setNewNote] = useState({ title: '', content: '' });
-  const { getAccessTokenSilently } = useAuth0();
+  const { user, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     let isMounted = true;
 
     const fetchNotes = async () => {
-      const accessToken = await getAccessTokenSilently();
-      const { data } = await getUserNotes(accessToken);
+      if (!user) {
+        return;
+      }
+
+      const token = await getAccessTokenSilently();
+
+      const userData = {
+        email: user.email,
+        is_verified: user.email_verified,
+        given_name: user.given_name,
+        family_name: user.family_name,
+        nickname: user.nickname,
+        name: user.name,
+        picture: user.picture,
+        locale: user.locale,
+        sub: user.sub,
+        id: user?.sub?.split("|")[1],
+      };
+      
+      console.log('User data:', userData);
+      
+      const { data } = await getUserNotes(token, userData);
 
       console.log('Data from API:', data);
       

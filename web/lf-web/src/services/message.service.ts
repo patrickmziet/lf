@@ -15,9 +15,10 @@ export const createUserIfNotExist = async (accessToken: string, userData: object
       "content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
-    data: userData, // This should include the user's email address
+    data: userData, 
   };
 
+  // May need someway to link the user and auth0 user
   const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
 
   return {
@@ -26,8 +27,11 @@ export const createUserIfNotExist = async (accessToken: string, userData: object
   };
 };
 
+
+
+
 // Function to get notes for the authenticated user
-export const getUserNotes = async (accessToken: string): Promise<ApiResponse<{ notes: Note[] }>> => {
+export const getUserNotes = async (accessToken: string, userData: object): Promise<ApiResponse<{ notes: Note[] }>> => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/api/notes/`,
     method: "GET",
@@ -35,6 +39,7 @@ export const getUserNotes = async (accessToken: string): Promise<ApiResponse<{ n
       "content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
     },
+    data: userData, 
   };
 
   const { data, error } = (await callExternalApi({ config })) as ApiResponse<{ notes: Note[] }>;

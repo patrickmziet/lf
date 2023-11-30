@@ -50,20 +50,6 @@ logging.basicConfig(filename='core.log', filemode='w', format='%(name)s - %(leve
 logger = logging.getLogger(__name__)
 logger.info('This is an info message')
 
-#class CreateUserIfNotExistView(APIView):
-#    logger.info("CreateUserIfNotExistView has been called")
-#    permission_classes = [IsAuthenticated]
-
-#    def post(self, request):
-#        logger.info(f"Request data: {request.data}")
-#        serializer = UserSerializer(data=request.data)
-#        
-#       logger.info(serializer.validated_data)
-#       if serializer.is_valid():
-#           user, created = User.objects.get_or_create(id=serializer.validated_data['id'], defaults=serializer.validated_data)
-#           return Response({"message": "User created"} if created else {"message": "User exists"})
-#       logger.info(f"Serializer errors: {serializer.errors}")
-#       return Response(serializer.errors, status=400)
 
 class CreateUserIfNotExistView(APIView):
     permission_classes = [IsAuthenticated]
@@ -98,8 +84,23 @@ class NoteListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
 
     def perform_create(self, serializer):
+        """         # PRINT DEBUG
+        print("self.request.user investigate:")
+        print(self.request.user)
+        print("directory of self.request.user:")
+        print(dir(self.request.user))
+        print("self.request.user.username:")
+        print(self.request.user.username)
+        print("self.request.user.username type:")
+        print(type(self.request.user.username))
+        print("Length of self.request.user.username:")
+        print(len(self.request.user.username))
+        print("--------------------")
+        for attr in dir(self.request.user):
+            print(f"{attr} = {getattr(self.request.user, attr)}")
+        """        #PRINT DEBUG
         User = get_user_model()
-        user = User.objects.get(id=self.request.user.id)
+        user = User.objects.get(id=self.request.user.id.split('|')[1])
         #user = User.objects.get(email=self.request.user.id)
         serializer.save(user=user)
 
