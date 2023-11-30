@@ -106,7 +106,7 @@ class NoteListCreateAPIView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         
-        return self.queryset.filter(user=self.request.user.id)
+        return self.queryset.filter(user=self.request.user.id.split('|')[1])
         #user_id = self.request.user.id
         #if isinstance(user_id, str) and '|' in user_id:
         #    user_id = user_id.split('|')[1]

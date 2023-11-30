@@ -21,13 +21,9 @@ export const NotesPage: React.FC = () => {
       const token = await getAccessTokenSilently();      
       const { data } = await getUserNotes(token);
 
-      console.log('Data from API:', data);
-      
-      if (isMounted && data && Array.isArray(data.notes)) {
-        setNotes(data.notes); // Ensure your API returns an object with a `notes` key
+      if (isMounted && data && Array.isArray(data)) {
+        setNotes(data); 
       }
-
-      console.log('Notes from API:', notes);
     };
 
     fetchNotes();
@@ -35,7 +31,7 @@ export const NotesPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, [getAccessTokenSilently, notes]);
+  }, [user, getAccessTokenSilently]);
 
   const handleNewNoteChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setNewNote({
