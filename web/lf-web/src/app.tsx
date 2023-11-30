@@ -12,6 +12,8 @@ import { ProtectedPage } from "./pages/protected-page";
 import { PublicPage } from "./pages/public-page";
 import { NotesPage } from "./pages/notes-page";
 import { TopicsPage } from "./pages/topics-page";
+import { UploadPage } from "./pages/upload-page";
+import { LearnPage } from "./pages/learn-page";
 
 export const App: React.FC = () => {
   const { isLoading } = useAuth0();
@@ -48,6 +50,14 @@ export const App: React.FC = () => {
       <Route
         path="/topics"
         element={<AuthenticationGuard component={TopicsPage} />}
+      />
+      <Route
+        path="/upload/:topicId"
+        element={<AuthenticationGuard component={UploadPage} />}
+      />
+      <Route
+        path="/learn/:topicId"
+        element={<AuthenticationGuard component={LearnPage} />}
       />
     </Routes>
   );

@@ -5,7 +5,7 @@
 
 import React, { useEffect, useState, FormEvent } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
 import { getUserTopics, createTopic } from "../services/message.service";
 import { Topic } from "../models/topic";
@@ -89,7 +89,7 @@ export const TopicsPage: React.FC = () => {
                         {Array.isArray(topics) && topics.length > 0 ? (
                             topics.map(topic => (
                                 <li key={topic.id}>
-                                    <a href={`/topics/${topic.id}`}>{topic.title}</a>
+                                    <Link to={`/learn/${topic.id}`}>{topic.title}</Link>
                                 </li>
                             ))                            
                         ) : (

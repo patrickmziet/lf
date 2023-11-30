@@ -41,9 +41,10 @@ from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
 from django.contrib.auth import get_user_model
-from .models import Note, User, Topic
-from .serializers import NoteSerializer, UserSerializer, TopicSerializer
+from .models import Note, User, Topic, Document
+from .serializers import NoteSerializer, UserSerializer, TopicSerializer, DocumentSerializer
 import logging
 
 logging.basicConfig(filename='core.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
@@ -90,6 +91,25 @@ class TopicListCreateAPIView(generics.ListCreateAPIView):
     
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user.id.split('|')[1])
+
+
+class TopicDocumentsAPIView(generics.ListAPIView):
+    serializer_class = DocumentSerializer
+
+    def get_queryset(self):
+        topic_id = self.kwargs['topic_id']
+        return Document.objects.filter(topic_id=topic_id)
+    
+
+class DocumentUploadView(APIView):
+    parser_classes = [MultiPartParser]
+
+    def post(self, request, format=None):
+        topic_id = request.data['topic']
+        topic = Topic.objects.get(id=topic_id)
+        for file in request.FILES.getlist('documents'):
+            Document.objects.create(topic=topic, document=file)
+        return Response(status=204)
 
 
 class NoteListCreateAPIView(generics.ListCreateAPIView):

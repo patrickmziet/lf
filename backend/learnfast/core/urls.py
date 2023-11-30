@@ -20,6 +20,8 @@ from .views import (
     NoteListCreateAPIView,
     CreateUserIfNotExistView,
     TopicListCreateAPIView,
+    TopicDocumentsAPIView,
+    DocumentUploadView
 )
     
 
@@ -30,4 +32,6 @@ urlpatterns = [
     path('notes/', NoteListCreateAPIView.as_view(), name='note-list-create'),
     path('create-user-if-not-exist/', CreateUserIfNotExistView.as_view(), name='create-user-if-not-exist'),
     path('topics/', TopicListCreateAPIView.as_view(), name='topic-list-create'),
+    path('documents/upload/', DocumentUploadView.as_view(), name='document-upload'),
+    path('documents/<int:topic_id>/', TopicDocumentsAPIView.as_view(), name='topic-documents'),
 ]
