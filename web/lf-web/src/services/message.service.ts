@@ -28,18 +28,15 @@ export const createUserIfNotExist = async (accessToken: string, userData: object
 };
 
 
-
-
 // Function to get notes for the authenticated user
-export const getUserNotes = async (accessToken: string, userData: object): Promise<ApiResponse<{ notes: Note[] }>> => {
+export const getUserNotes = async (accessToken: string): Promise<ApiResponse<{ notes: Note[] }>> => {
   const config: AxiosRequestConfig = {
     url: `${apiServerUrl}/api/notes/`,
     method: "GET",
     headers: {
       "content-Type": "application/json",
       Authorization: `Bearer ${accessToken}`,
-    },
-    data: userData, 
+    }, 
   };
 
   const { data, error } = (await callExternalApi({ config })) as ApiResponse<{ notes: Note[] }>;

@@ -18,24 +18,8 @@ export const NotesPage: React.FC = () => {
         return;
       }
 
-      const token = await getAccessTokenSilently();
-
-      const userData = {
-        email: user.email,
-        is_verified: user.email_verified,
-        given_name: user.given_name,
-        family_name: user.family_name,
-        nickname: user.nickname,
-        name: user.name,
-        picture: user.picture,
-        locale: user.locale,
-        sub: user.sub,
-        id: user?.sub?.split("|")[1],
-      };
-      
-      console.log('User data:', userData);
-      
-      const { data } = await getUserNotes(token, userData);
+      const token = await getAccessTokenSilently();      
+      const { data } = await getUserNotes(token);
 
       console.log('Data from API:', data);
       
