@@ -7,11 +7,12 @@ export const callExternalApi = async (options: {
 }): Promise<ApiResponse<any>> => {
   try {
     const response: AxiosResponse = await axios(options.config);
-    const { data } = response;
+    const { data, status } = response;
 
     return {
       data,
       error: null,
+      status,
     };
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -38,6 +39,7 @@ export const callExternalApi = async (options: {
         error: {
           message,
         },
+        status: response ? response.status : undefined,
       };
     }
 
@@ -46,6 +48,7 @@ export const callExternalApi = async (options: {
       error: {
         message: (error as Error).message,
       },
+      status: undefined,
     };
   }
 };

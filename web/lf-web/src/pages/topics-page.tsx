@@ -7,7 +7,7 @@ import React, { useEffect, useState, FormEvent } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useNavigate, Link } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getUserTopics, createTopic } from "../services/message.service";
+import { getUserTopics, createTopic, deleteTopic } from "../services/message.service";
 import { Topic } from "../models/topic";
 
 export const TopicsPage: React.FC = () => {
@@ -58,6 +58,17 @@ export const TopicsPage: React.FC = () => {
         }
     };
 
+    const handleDeleteTopic = async (id: number) => {
+        const accessToken = await getAccessTokenSilently();
+        const response = await deleteTopic(accessToken, id);
+        console.log("Response:", response);
+        
+        if (response.status === 204) {
+            setTopics(topics.filter(topic => topic.id !== id)); // Remove the deleted topic from the local state
+        }
+
+    };
+
     return (
         <PageLayout>
             <div className="content-layout">
@@ -89,7 +100,9 @@ export const TopicsPage: React.FC = () => {
                         {Array.isArray(topics) && topics.length > 0 ? (
                             topics.map(topic => (
                                 <li key={topic.id}>
-                                    <Link to={`/learn/${topic.id}`}>{topic.title}</Link>
+                                    <p>Title: {topic.title} -- ID: {topic.id}</p>
+                                    <Link to={`/learn/${topic.id}`}>Learn</Link> /
+                                    <button onClick={() => handleDeleteTopic(topic.id)}>Delete</button>
                                 </li>
                             ))                            
                         ) : (

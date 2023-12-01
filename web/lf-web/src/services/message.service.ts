@@ -47,6 +47,25 @@ export const createTopic = async (accessToken: string, topicData: object): Promi
   };
 };
 
+export const deleteTopic = async (accessToken: string, id: number): Promise<ApiResponse<any>> => {
+  const config: AxiosRequestConfig = {
+      url: `${apiServerUrl}/api/topics/delete/${id}/`,
+      method: "DELETE",
+      headers: {
+          "content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+      },
+  };
+
+  const response = (await callExternalApi({ config })) as ApiResponse<any>;
+
+  return {
+      data: response.data,
+      error: response.error,
+      status: response.status,
+  };
+};
+
 // Function to get topics for the authenticated user
 export const getUserTopics = async (accessToken: string): Promise<ApiResponse<{ topics: any }>> => {
   const config: AxiosRequestConfig = {

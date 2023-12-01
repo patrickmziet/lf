@@ -100,6 +100,13 @@ class TopicDocumentsAPIView(generics.ListAPIView):
         topic_id = self.kwargs['topic_id']
         return Document.objects.filter(topic_id=topic_id)
     
+class TopicDestroyAPIView(generics.DestroyAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user.id.split('|')[1])
 
 class DocumentUploadView(APIView):
     parser_classes = [MultiPartParser]
