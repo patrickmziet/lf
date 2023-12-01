@@ -208,3 +208,23 @@ SIMPLE_JWT = {
 #ACCOUNT_EMAIL_REQUIRED = True
 #ACCOUNT_USERNAME_REQUIRED = False
 
+# Media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Loggging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',
+    },
+}

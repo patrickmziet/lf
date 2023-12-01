@@ -10,10 +10,12 @@ class Metadata:
         self.branch = "basic-authorization"
 
 
+import os
+import shutil
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-
+import logging
 
 class User(AbstractUser):
     id = models.CharField(primary_key=True, max_length=255)  # This will store the 'sub' from Auth0 profile
@@ -53,11 +55,34 @@ class Topic(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    def delete(self, *args, **kwargs):
+        # Path to the folder containing the documents for this topic
+        folder_path = os.path.join(settings.MEDIA_ROOT, f'user_{self.user.id}/topic_{self.id}')
+
+        for document in self.documents.all():
+            document.delete()  # This will call delete method of Document model
+
+        # Delete the entire folder
+        if os.path.exists(folder_path) and os.path.isdir(folder_path):
+            shutil.rmtree(folder_path)
+        
+        super().delete(*args, **kwargs)
+
+
+def user_directory_path(instance, filename):
+    # file will be uploaded to MEDIA_ROOT/user_<id>/<filename>
+    return 'user_{0}/topic_{1}/{2}'.format(instance.topic.user.id, instance.topic.id, filename)
 
 class Document(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='documents')
-    document = models.FileField(upload_to='documents/')
+    document = models.FileField(upload_to=user_directory_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
+    # log that a document was uploaded
+    logging.info(f"Document uploaded: {document}")
+
+    def delete(self, *args, **kwargs):
+        self.document.delete(save=False)  # delete the actual file
+        super().delete(*args, **kwargs)  # call the original delete method
 
 
 class Flashcard(models.Model):
