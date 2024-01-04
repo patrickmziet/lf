@@ -101,11 +101,35 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [More on Orca](https://twitter.com/gradio/status/1727304093801316448?s=51)
 - [Introducing OpenWebMath, a massive dataset containing every math document found on the internet - with equations in LaTeX format!](https://x.com/keirp1/status/1711918424866361610?s=20)
 - [ToolChain*: Efficient Action Space Navigation in Large Language Models with A* Search uses algorithms like A* to improve LLM answers, improving sota on both planning and reasoning tasks](https://x.com/nearcyan/status/1729355904364208603?s=20)
+- [DocLLM: A layout-aware generative language model for multimodal document understanding](https://x.com/_akhaliq/status/1742369195034099731?s=20)
+- [Where to do evals](https://x.com/gblazex/status/1737574824753467647?s=20)
+- [Gemini: A Family of Highly Capable Multimodal Models](https://arxiv.org/abs/2312.11805)
+- [GPT-4 + Medprompt -> SOTA MMLU
+
+Mixtral 8x7B @ MLX nice and clean
+
+Beyond Human Data: Scaling Self-Training for Problem-Solving with Language Models
+
+Phi-2 (2.7B), the smallest most impressive model
+
+LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/status/1734659057938477174?s=20)
+- [Access Mixtral with the fastest inference performance anywhere! Up to 100 token/s for $0.0006/1K tokens — to our knowledge the fastest performance at the lowest price! Mixtral-8x7b-32kseqlen @MistralAI
+ & DiscoLM-mixtral-8x7b-v2 are live on Together API!](https://x.com/togethercompute/status/1734282721982324936?s=20)
+ - [Official post on Mixtral 8x7B](https://x.com/karpathy/status/1734251375163511203?s=20)
+ - [MistralAI: MegaBlocks is a light-weight library for mixture-of-experts (MoE) training.](https://github.com/mistralai/megablocks-public/tree/pstock/mixtral)
+ - [Perplexity pro](https://x.com/soumithchintala/status/1733310147743662107?s=20)
+ - [Mistral magnet link](https://x.com/MistralAI/status/1733150512395038967?s=20)
+ - [Purple Llama](https://x.com/simonw/status/1732785316585771489?s=20)
+ - [MLX is an efficient machine learning framework specifically designed for Apple silicon (i.e. your laptop!)](https://x.com/awnihannun/status/1732184443451019431?s=20)
+ - [Keeping up with AGI notes](https://docs.google.com/document/d/e/2PACX-1vQD8IlBotGdBxp3BnXkSjk8bNZlPV_0EH9ZA6wHd5dNf-BLSiwXUinvgv8ZoBEnNyTCF-chWO30NRw0/pub#h.gk70cijomli7)
+ - [llamafile: turn LLM weights into runnable llama.cpp binaries using cosmo libc](https://twitter.com/justinetunney/status/1729940628098969799?s=51)
 
 
 ### Tech stack
 - [Perhaps a good tech stack for a web app](https://x.com/tair/status/1726631560752115840?s=20)
 - [Georgi Gerganov: Wrote a short tutorial for setting up llama.cpp on AWS instances](https://x.com/ggerganov/status/1729232091370369160?s=20)
+- [Whop app ecosystem](https://twitter.com/cultured?s=11)
+- [Turbopuffer vector DB](https://twitter.com/turbopuffer?s=11)
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
@@ -125,6 +149,10 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Justin Wolfers Webinar: Assigning Homework in a World with ChatGPT](https://youtu.be/m2BvGzms0Ug?si=y-QeYTPmqFUJjCYu)
 - [Students Outrunning Faculty in AI Use](https://www.insidehighered.com/news/tech-innovation/artificial-intelligence/2023/10/31/most-students-outrunning-faculty-ai-use?utm_source=Inside+Higher+Ed&utm_campaign=23419446b9-DNU_2021_COPY_02&utm_medium=email&utm_term=0_1fcbc04421-23419446b9-236889242&mc_cid=23419446b9&mc_eid=dae49d931a) 
 - [You've been Matrix Multiplied](https://x.com/jamescham/status/1718120386687324248?s=20)
+- [Karpathy on the hallucination problem](https://x.com/karpathy/status/1733299213503787018?s=20)
+- [As AI Chatbots Rise, More Educators Look to Oral Exams — With High-Tech Twist](https://www.edsurge.com/news/2023-10-05-as-ai-chatbots-rise-more-educators-look-to-oral-exams-with-high-tech-twist)
+- [Depth of Knowledge framework](https://www.structural-learning.com/post/webbs-depth-of-knowledge#:~:text=Webb's%20Depth%20of%20Knowledge%20(DOK)%20is%20a%20framework%20used%20by,require%20deeper%20thinking%20and%20understanding.)
+- [Sherpa](https://sherpalabs.co/)
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)
