@@ -6,13 +6,17 @@ import { uploadDocuments } from "../services/document.service";
 import { PageLayout } from 'src/components/page-layout';
 
 export const UploadPage: React.FC = () => {
-    const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
+    const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    //const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const { getAccessTokenSilently } = useAuth0();
     const { topicId } = useParams<{ topicId: string }>();
     const navigate = useNavigate();
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedFiles(e.target.files);
+        if (e.target.files) {
+            const newFiles = Array.from(e.target.files);
+            setSelectedFiles(prevFiles => [...prevFiles, ...newFiles]);
+        }
     };
 
     const handleUpload = async (e: React.FormEvent) => {
@@ -24,6 +28,11 @@ export const UploadPage: React.FC = () => {
         await uploadDocuments(accessToken, topicId, selectedFiles);
         navigate(`/learn/${topicId}`);
     };
+
+    const removeFile = (index: number) => {
+        setSelectedFiles(currentFiles => currentFiles.filter((_, i) => i !== index));
+    };
+    
 
     return (
         <PageLayout>
@@ -41,6 +50,21 @@ export const UploadPage: React.FC = () => {
                     <input type="file" multiple onChange={handleFileChange} />
                     <button type="submit">Upload</button>
                     </form>
+                    <div>
+                        <h3>Selected Files:</h3>
+                        {selectedFiles.length === 0 ? (
+                            <p>No files selected.</p>
+                        ) : (
+                            <ul>
+                                {selectedFiles.map((file, index) => (
+                                    <li key={index}>
+                                        {file.name}
+                                        <button onClick={() => removeFile(index)}>Remove</button>
+                                    </li>
+                                ))}
+                            </ul>
+                            )}
+                    </div>
                 </div>
             </div>
         </PageLayout>

@@ -123,6 +123,8 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
  - [MLX is an efficient machine learning framework specifically designed for Apple silicon (i.e. your laptop!)](https://x.com/awnihannun/status/1732184443451019431?s=20)
  - [Keeping up with AGI notes](https://docs.google.com/document/d/e/2PACX-1vQD8IlBotGdBxp3BnXkSjk8bNZlPV_0EH9ZA6wHd5dNf-BLSiwXUinvgv8ZoBEnNyTCF-chWO30NRw0/pub#h.gk70cijomli7)
  - [llamafile: turn LLM weights into runnable llama.cpp binaries using cosmo libc](https://twitter.com/justinetunney/status/1729940628098969799?s=51)
+ - [Mixtral 8x7B paper](https://arxiv.org/abs/2401.04088)
+ - [𝐌𝐨𝐛𝐢𝐥𝐞 𝐀𝐋𝐎𝐇𝐀🏄 -- Hardware! A low-cost, open-source, mobile manipulator.](https://x.com/tonyzzhao/status/1742603121682153852?s=20)
 
 
 ### Tech stack
@@ -130,6 +132,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - [Georgi Gerganov: Wrote a short tutorial for setting up llama.cpp on AWS instances](https://x.com/ggerganov/status/1729232091370369160?s=20)
 - [Whop app ecosystem](https://twitter.com/cultured?s=11)
 - [Turbopuffer vector DB](https://twitter.com/turbopuffer?s=11)
+- On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
@@ -153,6 +156,9 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - [As AI Chatbots Rise, More Educators Look to Oral Exams — With High-Tech Twist](https://www.edsurge.com/news/2023-10-05-as-ai-chatbots-rise-more-educators-look-to-oral-exams-with-high-tech-twist)
 - [Depth of Knowledge framework](https://www.structural-learning.com/post/webbs-depth-of-knowledge#:~:text=Webb's%20Depth%20of%20Knowledge%20(DOK)%20is%20a%20framework%20used%20by,require%20deeper%20thinking%20and%20understanding.)
 - [Sherpa](https://sherpalabs.co/)
+- [How to raise from top-tier investors (including Sam Altman) and keep control](https://x.com/dsiroker/status/1730662665012260984?s=20)
+- [OpenAI statment on NYT lawsuit, see comments on fair use](https://openai.com/blog/openai-and-journalism)
+- [On Living in An Atomic Age](https://www.andybannister.net/wp-content/uploads/2022/03/cslewis-living-in-an-atomic-age.pdf)
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)

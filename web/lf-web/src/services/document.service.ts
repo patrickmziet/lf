@@ -4,7 +4,7 @@ import { callExternalApi } from "./external-api.service";
 
 const apiServerUrl = process.env.REACT_APP_API_SERVER_URL;
 
-export const uploadDocuments = async (accessToken: string, topicId: string, files: FileList): Promise<ApiResponse<any>> => {
+export const uploadDocuments = async (accessToken: string, topicId: string, files: File[]): Promise<ApiResponse<any>> => {
     const formData = new FormData();
     formData.append('topic', topicId);
     for (let i = 0; i < files.length; i++) {
