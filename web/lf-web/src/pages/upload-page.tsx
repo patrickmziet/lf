@@ -7,7 +7,6 @@ import { PageLayout } from 'src/components/page-layout';
 
 export const UploadPage: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
-    //const [selectedFiles, setSelectedFiles] = useState<FileList | null>(null);
     const { getAccessTokenSilently } = useAuth0();
     const { topicId } = useParams<{ topicId: string }>();
     const navigate = useNavigate();

@@ -2,7 +2,7 @@
 // and test pages. It also has a button to add more documents.
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getTopicDocuments } from "../services/document.service";
 import { PageLayout } from "../components/page-layout";
@@ -39,6 +39,7 @@ export const LearnPage: React.FC = () => {
                         <li key={index}>{doc.document.split("/").pop()}</li>
                     ))}
                 </ul>
+                <Link to={`/cards/${topicId}`}>Study Flashcards</Link>
             </div>   
         </PageLayout>
     );

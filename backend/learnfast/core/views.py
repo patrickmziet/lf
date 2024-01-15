@@ -43,6 +43,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser
 from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile, File
+from PyPDF2 import PdfReader
+from docx import Document as DocxDoc
+from io import BytesIO
 from .models import Note, User, Topic, Document
 from .serializers import NoteSerializer, UserSerializer, TopicSerializer, DocumentSerializer
 import logging
@@ -114,8 +118,33 @@ class DocumentUploadView(APIView):
     def post(self, request, format=None):
         topic_id = request.data['topic']
         topic = Topic.objects.get(id=topic_id)
+        combined_content = ""
+        file_cnt = 0
         for file in request.FILES.getlist('documents'):
             Document.objects.create(topic=topic, document=file)
+            file.seek(0)
+            file_cnt += 1
+            combined_content += "START of Document " + str(file_cnt) + ": " + file.name + "\n"
+            if file.name.endswith('.txt'):
+                file_content = file.read().decode('utf-8')
+            elif file.name.endswith('.pdf'):
+                pdf = PdfReader(file)
+                file_content = "\n".join(page.extract_text() for page in pdf.pages)
+            elif file.name.endswith('.docx'):
+                #file_content = file.read()
+                #if not file_content:
+                #    return Response({"error": "Empty file"}, status=400)
+                doc = DocxDoc(BytesIO(file.read()))
+                file_content = "\n".join(para.text for para in doc.paragraphs)
+            else:
+                return Response({"error": "Unsupported file format"}, status=400)
+            combined_content += file_content + "\n"
+            combined_content += "END of Document " + str(file_cnt) + ": " + file.name + "\n"
+
+        print(combined_content)
+        combined_file = ContentFile(combined_content.encode('utf-8'), name='combined_file.txt')
+        Document.objects.create(topic=topic, document=File(combined_file))
+
         return Response(status=204)
 
 

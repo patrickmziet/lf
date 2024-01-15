@@ -125,6 +125,11 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
  - [llamafile: turn LLM weights into runnable llama.cpp binaries using cosmo libc](https://twitter.com/justinetunney/status/1729940628098969799?s=51)
  - [Mixtral 8x7B paper](https://arxiv.org/abs/2401.04088)
  - [𝐌𝐨𝐛𝐢𝐥𝐞 𝐀𝐋𝐎𝐇𝐀🏄 -- Hardware! A low-cost, open-source, mobile manipulator.](https://x.com/tonyzzhao/status/1742603121682153852?s=20)
+ - [Perfecting MergeKit MoEs](https://x.com/main_horse/status/1746779017674702853?s=20)
+ - [script to get Paul Graham essays in txt format](https://github.com/ggerganov/llama.cpp/pull/4838)
+ - [Announcing surya - a multilingual text line detection model for documents.  It gives you accurate line-level bboxes and column breaks.](https://x.com/VikParuchuri/status/1745876562371903790?s=20)
+ - [Arxiv: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model"](https://arxiv.org/abs/2305.18290) and [Andrew Ng praise: "This beautiful paper proposes a much simpler alternative to RLHF (reinforcement learning from human feedback) for aligning language models to human preferences."](https://x.com/AndrewYNg/status/1745516258697863259?s=20)
+
 
 
 ### Tech stack
@@ -133,6 +138,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - [Whop app ecosystem](https://twitter.com/cultured?s=11)
 - [Turbopuffer vector DB](https://twitter.com/turbopuffer?s=11)
 - On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
+- [one person/customer - one sqlite model.](https://x.com/sriramk/status/1746598735885254785?s=20)
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
@@ -159,6 +165,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - [How to raise from top-tier investors (including Sam Altman) and keep control](https://x.com/dsiroker/status/1730662665012260984?s=20)
 - [OpenAI statment on NYT lawsuit, see comments on fair use](https://openai.com/blog/openai-and-journalism)
 - [On Living in An Atomic Age](https://www.andybannister.net/wp-content/uploads/2022/03/cslewis-living-in-an-atomic-age.pdf)
+- [Tom Blomfield: Consumer Startup Metrics](https://youtu.be/fdD4y4Civp4?si=MPFkB6usN-fX5q98)
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)
@@ -175,6 +182,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - [Britain Is Much Worse Off Than It Understands](https://foreignpolicy.com/2023/02/03/britain-worse-off-1970s/)
 - [How to Start a Hard Tech Start Up by Sam Altman](https://www.youtube.com/watch?v=RHSb4G18gFY)
 - [In Conversation with Tyler Cowen and Fraser Nelson about England](https://www.youtube.com/watch?v=0jhhsgoEDAE)
+- [Sigil Wen: I JUST got my O-1 Visa and moved to the US!](https://x.com/0xSigil/status/1745815757651591204?s=20)
 
 ### Spaced repetition memory systems
 #### [Using Artificial Intelligence to Augment Human Intelligence](https://distill.pub/2017/aia/)
