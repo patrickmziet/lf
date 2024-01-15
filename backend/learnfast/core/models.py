@@ -15,6 +15,7 @@ import shutil
 from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+import time
 import logging
 
 class User(AbstractUser):
@@ -52,6 +53,7 @@ class Note(models.Model):
 class Topic(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='topics')
     title = models.CharField(max_length=255)
+    card_msg_chain = models.TextField(default="")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -87,16 +89,56 @@ class Document(models.Model):
 
 class Flashcard(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='flashcards')
-    question = models.CharField(max_length=255)
-    answer = models.CharField(max_length=255)
+    question = models.TextField()
+    answer = models.TextField()
+    easiness = models.FloatField(default=2.4)
+    interval = models.IntegerField(default=1)
+    repetitions = models.IntegerField(default=0)
+    record = models.TextField(default="")
+    due_date = models.FloatField(default=time.time() - 1 * 60)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+    def update(self, correct):
+        if correct:
+            self.record += "1"
+            self.repetitions += 1
+
+            if self.repetitions == 1:
+                self.interval = 10 * 60
+            elif self.repetitions == 2:
+                self.interval = 1 * 24 * 60 * 60
+            elif self.repetitions == 3:
+                self.interval = 3 * 24 * 60 * 60
+            else:
+                self.interval = round(self.interval * self.easiness)
+        else:
+            self.record += "0"
+            self.repetitions = 0
+            self.interval = 1 * 60
+        self.updated_at = time.time()
+        self.due_date = time.time() + self.interval
+
+    def is_due(self):
+        return self.due_date <= time.time() + 15 * 60
+
+    def due_date_str(self):
+        return time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(self.due_date))
+
+    def get_string(self):
+        return f"Question: {self.question} | Answer: {self.answer} | Easiness: {self.easiness} | Interval: {self.interval} | Repetitions: {self.repetitions} | Record: {self.record} | Due date: {self.due_date_str()}"
 
     def to_json(self):
         return {
             "topic": self.topic.id,
             "question": self.question,
             "answer": self.answer,
+            "easiness": self.easiness,
+            "interval": self.interval,
+            "repetitions": self.repetitions,
+            "record": self.record,
+            "due_date": self.due_date_str(),
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }

@@ -47,13 +47,12 @@ from django.core.files.base import ContentFile, File
 from PyPDF2 import PdfReader
 from docx import Document as DocxDoc
 from io import BytesIO
-from .models import Note, User, Topic, Document
+import openai
+from openai import OpenAI
+import os
+from decouple import config as conf
+from .models import Note, User, Topic, Document, Flashcard
 from .serializers import NoteSerializer, UserSerializer, TopicSerializer, DocumentSerializer
-import logging
-
-logging.basicConfig(filename='core.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
-logger = logging.getLogger(__name__)
-logger.info('This is an info message')
 
 
 class CreateUserIfNotExistView(APIView):
@@ -131,9 +130,6 @@ class DocumentUploadView(APIView):
                 pdf = PdfReader(file)
                 file_content = "\n".join(page.extract_text() for page in pdf.pages)
             elif file.name.endswith('.docx'):
-                #file_content = file.read()
-                #if not file_content:
-                #    return Response({"error": "Empty file"}, status=400)
                 doc = DocxDoc(BytesIO(file.read()))
                 file_content = "\n".join(para.text for para in doc.paragraphs)
             else:
@@ -143,9 +139,78 @@ class DocumentUploadView(APIView):
 
         print(combined_content)
         combined_file = ContentFile(combined_content.encode('utf-8'), name='combined_file.txt')
+        # Generate initial batch of flashcards
+        initial_flashcards(combined_content, topic_id=topic_id, num_cards=10)
         Document.objects.create(topic=topic, document=File(combined_file))
 
         return Response(status=204)
+
+
+def initial_flashcards(text, topic_id, num_cards=10):
+    # Generate initial batch of flashcards
+    # This is a very naive implementation
+    #openai.api_key = os.environ.get('OPENAI_API_KEY')
+    client = OpenAI(
+        api_key=os.environ.get("OPENAI_API_KEY"),
+    )
+
+    msg_chn = [
+        {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
+        {"role": "user", "content": supply_example_text.format(example_text=example_text)},
+        {"role": "assistant", "content": example_flashcards},
+        {"role": "user", "content": ask_for_flashcards.format(sample_text=text, num_cards=num_cards)},
+    ]
+
+    response = client.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=msg_chn    
+    )
+    
+    parsed_flashcards = parse_flashcards(response.choices[0].message.content)
+    for card_number, card in parsed_flashcards.items():
+        Flashcard.objects.create(
+            topic_id=topic_id,
+            question=card['Question'],
+            answer=card['Answer'],
+        )
+    for flashcard in Flashcard.objects.filter(topic_id=topic_id):
+        print(flashcard.to_json())
+
+# Functions to be used in getting the flashcards
+import math
+import re
+
+def generate_list(x, max_num):
+    quotient = math.floor(x / max_num)
+    remainder = x % max_num
+    return [max_num] * quotient + ([remainder] if remainder != 0 else [])
+
+def extract_text_between_markers(input_string):
+    pattern = r'(?<=BEGIN)(.*?)(?=END)'
+    matches = re.finditer(pattern, input_string, re.DOTALL)
+    x = [match.group(1).strip() for match in matches]
+    return x[0]
+
+def parse_flashcards(text):
+    flashcards = {}
+    
+    # Split text into lines
+    lines = text.split('\n')
+    
+    # Find the flash card lines
+    for i, line in enumerate(lines):
+        if line.startswith('- Flash card'):
+            card_number = int(line.split()[3].rstrip(':'))
+            question_line = lines[i+1].strip()
+            answer_line = lines[i+2].strip()
+            
+            question_text = question_line.split(': ', 1)[1]
+            answer_text = answer_line.split(': ', 1)[1]
+            
+            flashcards[card_number] = {'Question': question_text, 'Answer': answer_text}
+    
+    return flashcards
+
 
 
 class NoteListCreateAPIView(generics.ListCreateAPIView):
@@ -161,3 +226,111 @@ class NoteListCreateAPIView(generics.ListCreateAPIView):
     def get_queryset(self):
         return self.queryset.filter(user=self.request.user.id.split('|')[1])
 
+
+
+# Prompt templates
+card_axioms = """
+- Most flash cards should be atomic, i.e. they focus on a single piece of information.
+- Make sure that that some of the flash cards are trivial so that users are able to build up key context on the topic.
+- Avoid isolated flash cards which are not connected to other flash cards, that is ensure that the flash cards are connected to each other in such a way that when taken together they build up understanding.
+- Do not, under any circumstances, make flash cards containing information which is not found in the provived text.
+- The flash cards should be less than 8 words long.
+"""
+
+card_format = """
+- Flash card X:
+-- Question: Y
+-- Answer: Z
+
+Where X is the number of the flash card, Y is the question and Z is the answer. 
+"""
+
+system_message = """
+You are a helpful study assistant. I want you to create flash cards to be used for studying. The cards should obey these axioms:
+
+{card_axioms}
+
+and have this format:
+
+{card_format}
+
+where X is the number of the flash card, Y is the question and Z is the answer.
+"""
+
+supply_example_text = """
+
+Here is an example text:
+
+"{example_text}"
+
+Make 6 flash cards from this text.
+"""
+
+example_text = """
+Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  
+
+Last year COVID-19 kept us apart. This year we are finally together again. 
+
+Tonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. 
+
+With a duty to one another to the American people to the Constitution. 
+
+And with an unwavering resolve that freedom will always triumph over tyranny. 
+
+Six days ago, Russia’s Vladimir Putin sought to shake the foundations of the free world thinking he could make it bend to his menacing ways. But he badly miscalculated. 
+
+He thought he could roll into Ukraine and the world would roll over. Instead he met a wall of strength he never imagined. 
+
+He met the Ukrainian people. 
+
+From President Zelenskyy to every Ukrainian, their fearlessness, their courage, their determination, inspires the world. 
+
+Groups of citizens blocking tanks with their bodies. Everyone from students to retirees teachers turned soldiers defending their homeland. 
+
+In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” The Ukrainian Ambassador to the United States is here tonight. 
+
+Let each of us here tonight in this Chamber send an unmistakable signal to Ukraine and to the world. 
+
+Please rise if you are able and show that, Yes, we the United States of America stand with the Ukrainian people. 
+
+Throughout our history we’ve learned this lesson when dictators do not pay a price for their aggression they cause more chaos.   
+
+They keep moving.   
+
+And the costs and the threats to America and the world keep rising.   
+
+That’s why the NATO Alliance was created to secure peace and stability in Europe after World War 2. 
+
+The United States is a member along with 29 other nations. 
+"""
+
+example_flashcards = """
+- Flash card 1:
+-- Question: How many members are in the NATO Alliance?
+-- Answer: 30
+- Flash card 2:
+-- Question: What is the name of the Ukrainian President?
+-- Answer: Volodymyr Zelenskyy
+- Flash card 3:
+-- Question: Who did the speaker of this speech greet first?
+-- Answer: Madam Speaker
+- Flash card 4:
+-- Question: Why was, according to the speaker, was NATO created?
+-- Answer: To secure peace in Europe after WW2.
+- Flash card 5:
+-- Question: Who from Russia is repsonsible for the invasion?
+-- Answer: Vladimir Putin
+- Flash card 6:
+-- Question: How many days before the speech did the invasion happen?
+-- Answer: 6 days
+"""
+
+ask_for_flashcards = """
+
+Here is the text I want you to create flash cards from:
+
+"{sample_text}"
+
+Now provide {num_cards} flash cards on the above information. 
+
+"""
