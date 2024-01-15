@@ -23,6 +23,7 @@ from .views import (
     TopicDocumentsAPIView,
     DocumentUploadView,
     TopicDestroyAPIView,
+    FlashcardListCreateAPIView,
 )
     
 
@@ -36,4 +37,5 @@ urlpatterns = [
     path('topics/delete/<int:pk>/', TopicDestroyAPIView.as_view(), name='topic-destroy'),
     path('documents/upload/', DocumentUploadView.as_view(), name='document-upload'),
     path('documents/<int:topic_id>/', TopicDocumentsAPIView.as_view(), name='topic-documents'),
+    path('flashcards/<int:topic_id>', FlashcardListCreateAPIView.as_view(), name='flashcards-list-create')
 ]

@@ -52,7 +52,7 @@ from openai import OpenAI
 import os
 from decouple import config as conf
 from .models import Note, User, Topic, Document, Flashcard
-from .serializers import NoteSerializer, UserSerializer, TopicSerializer, DocumentSerializer
+from .serializers import NoteSerializer, UserSerializer, TopicSerializer, DocumentSerializer, FlashcardSerializer
 
 
 class CreateUserIfNotExistView(APIView):
@@ -145,6 +145,20 @@ class DocumentUploadView(APIView):
 
         return Response(status=204)
 
+
+class FlashcardListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Flashcard.objects.all()
+    serializer_class = FlashcardSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        User = get_user_model()
+        user = User.objects.get(id=self.request.user.id.split('|')[1])
+        serializer.save(user=user)
+    
+    def get_queryset(self):
+        topic_id = self.kwargs['topic_id']
+        return self.queryset.filter(topic_id=topic_id)
 
 def initial_flashcards(text, topic_id, num_cards=10):
     # Generate initial batch of flashcards

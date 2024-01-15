@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Note, User, Topic, Document
+from .models import Note, User, Topic, Document, Flashcard
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -16,6 +16,12 @@ class DocumentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Document
         fields = ['id', 'document', 'uploaded_at', 'topic']
+
+class FlashcardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flashcard
+        fields = ['id', 'topic', 'question', 'answer', 'easiness', 
+                  'interval', 'repetitions', 'record', 'due_date', 'created_at', 'updated_at']
 
 class MetadataSerializer(serializers.Serializer):
     api = serializers.CharField()

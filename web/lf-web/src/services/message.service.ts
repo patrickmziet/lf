@@ -85,6 +85,26 @@ export const getUserTopics = async (accessToken: string): Promise<ApiResponse<{ 
   };
 };
 
+// Function to get flash cards for a specific topic for the authenticated user
+export const getTopicFlashCards = async (accessToken: string, topicId: string): Promise<ApiResponse<{ flashCards: any }>> => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/api/flashcards/${topicId}`,
+    method: "GET",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    }, 
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<{ flashCards: any }>;
+
+  return {
+    data,
+    error,
+  };
+};
+
+/* All code below will be removed when cleaning up UI */
 
 // Function to get notes for the authenticated user
 export const getUserNotes = async (accessToken: string): Promise<ApiResponse<{ notes: Note[] }>> => {
