@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
 import { getTopicFlashCards, updateFlashCards } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
@@ -7,6 +7,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 
 export const CardPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
+    const [masterFlashcards, setMasterFlashcards] = useState<Flashcard[]>([]);
     const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
     const [currentCardIndex, setCurrentCardIndex] = useState(0);
     const [showAnswer, setShowAnswer] = useState(false);
@@ -15,7 +16,9 @@ export const CardPage: React.FC = () => {
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
     const [endOfDayInSeconds, setEndOfDayInSeconds] = useState(Math.floor(endOfDay.getTime() / 1000));
+    const navigate = useNavigate();
 
+    // Fetch flashcards
     useEffect(() => {
         let isMounted = true;
 
@@ -25,6 +28,7 @@ export const CardPage: React.FC = () => {
             const { data } = await getTopicFlashCards(token, topicId);
 
             if (isMounted && data && Array.isArray(data)) {
+                setMasterFlashcards(data);
                 const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
                 dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
                 setFlashcards(dueFlashcards);
@@ -38,6 +42,7 @@ export const CardPage: React.FC = () => {
         };
     }, [topicId, getAccessTokenSilently]);
 
+    // Update time every second
     useEffect(() => { 
         const interval = setInterval(() => {
             setTime(Math.floor(Date.now() / 1000));
@@ -50,6 +55,7 @@ export const CardPage: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
+    // Keyboard shortcuts
     useEffect(() => {
         const handleKeyDown = (event: KeyboardEvent) => {
             switch (event.key) {
@@ -74,10 +80,29 @@ export const CardPage: React.FC = () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
     }, [showAnswer]); 
+    
+
+    // Debug flashcards
+    useEffect(() => {
+        console.log("Flashcards update:", flashcards);
+        console.log("Master flashcards update:", masterFlashcards);
+    }, [flashcards, masterFlashcards]);
+
+    // Handle back button
+    const handleBack = async () => {
+        if (!topicId) return;
+        const token = await getAccessTokenSilently();
+        console.log("Master flashcards:", masterFlashcards);
+        const response = await updateFlashCards(token, masterFlashcards);
+        console.log("Response:", response);
+        navigate(`/learn/${topicId}`);
+    };
+
 
     const handleCorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
+        const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.record += "1";
@@ -99,9 +124,12 @@ export const CardPage: React.FC = () => {
         updatedCard.updated_at = time;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
+        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
+
         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
         setFlashcards(dueFlashcards);
+        setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
@@ -109,6 +137,7 @@ export const CardPage: React.FC = () => {
     const handleIncorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
+        const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.record += "0";
@@ -118,22 +147,21 @@ export const CardPage: React.FC = () => {
         updatedCard.updated_at = time;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
+        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
+
         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
         setFlashcards(dueFlashcards);
+        setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
-
-    const handleFinish = async () => {
-        if (!topicId) return;
-        const token = await getAccessTokenSilently();
-        await updateFlashCards(token, flashcards, topicId);
-    };
+    
 
     return (
         <PageLayout>
             <div className="content-layout">
+                <button onClick={handleBack}>Back to Learn Page</button>
                 <h1 id="page-title" className="content__title">
                     Flashcards for topic {topicId}
                 </h1>
@@ -157,7 +185,7 @@ export const CardPage: React.FC = () => {
                 ) : (
                     <div>
                         <p>No more flashcards for this session</p>
-                        <button onClick={handleFinish}>Finish Session</button>
+                        <button onClick={handleBack}>Finish Session</button>
                     </div>
                 )}
                 {/* Upcoming flashcards */}

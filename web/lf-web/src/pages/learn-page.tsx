@@ -25,8 +25,7 @@ export const LearnPage: React.FC = () => {
 
         fetchDocuments();
     }, [topicId]);
-
-    console.log("Document data:", documents);
+    
 
     return (
         <PageLayout>

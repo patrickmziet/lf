@@ -38,6 +38,6 @@ urlpatterns = [
     path('topics/delete/<int:pk>/', TopicDestroyAPIView.as_view(), name='topic-destroy'),
     path('documents/upload/', DocumentUploadView.as_view(), name='document-upload'),
     path('documents/<int:topic_id>/', TopicDocumentsAPIView.as_view(), name='topic-documents'),
-    path('flashcards/<int:topic_id>', FlashcardListCreateAPIView.as_view(), name='flashcards-list-create'),
-    path('flashcards/update/<int:topic_id>', FlashcardUpdateAPIView.as_view(), name='flashcards-update'),
+    path('flashcards/<int:topic_id>/', FlashcardListCreateAPIView.as_view(), name='flashcards-list-create'),
+    path('flashcards/update/', FlashcardUpdateAPIView.as_view(), name='flashcards-update'),
 ]

@@ -165,12 +165,19 @@ class FlashcardUpdateAPIView(APIView):
 
     def post(self, request):
         updated_flashcards = request.data
-
+        print(f"The flashcards to update: {updated_flashcards}")
         for updated_flashcard in updated_flashcards:
             try:
+                # print updated_flashcard
+                print(f"Updated flashcard: {updated_flashcard}")
                 flashcard = Flashcard.objects.get(id=updated_flashcard['id'])
-                for key, value in updated_flashcard.items():
-                    setattr(flashcard, key, value)
+                for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'record', 'due_date', 'updated_at']:
+                    if key in updated_flashcard:
+                        # Previous value of key
+                        print(f"Previous value of {key}: {getattr(flashcard, key)}")
+                        # New value of key
+                        print(f"New value of {key}: {updated_flashcard[key]}")
+                        setattr(flashcard, key, updated_flashcard[key])
                 flashcard.save()
             except Flashcard.DoesNotExist:
                 return Response({"error": "Flashcard not found"}, status=status.HTTP_404_NOT_FOUND)

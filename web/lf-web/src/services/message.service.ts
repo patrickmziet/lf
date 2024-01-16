@@ -89,7 +89,7 @@ export const getUserTopics = async (accessToken: string): Promise<ApiResponse<{ 
 // Function to get flash cards for a specific topic for the authenticated user
 export const getTopicFlashCards = async (accessToken: string, topicId: string): Promise<ApiResponse<{ flashCards: any }>> => {
   const config: AxiosRequestConfig = {
-    url: `${apiServerUrl}/api/flashcards/${topicId}`,
+    url: `${apiServerUrl}/api/flashcards/${topicId}/`,
     method: "GET",
     headers: {
       "content-Type": "application/json",
@@ -106,9 +106,9 @@ export const getTopicFlashCards = async (accessToken: string, topicId: string): 
 };
 
 // Function to update flashcards for the authenticated user
-export const updateFlashCards = async (accessToken: string, flashcards: Flashcard[], topicId: string): Promise<ApiResponse<any>> => {
+export const updateFlashCards = async (accessToken: string, flashcards: Flashcard[]): Promise<ApiResponse<any>> => {
   const config: AxiosRequestConfig = {
-      url: `${apiServerUrl}/api/flashcards/update/${topicId}/`,
+      url: `${apiServerUrl}/api/flashcards/update/`,
       method: "POST",
       headers: {
           "content-Type": "application/json",
