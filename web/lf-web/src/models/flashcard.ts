@@ -4,7 +4,7 @@ export interface Flashcard {
     answer: string;       // Flashcard answer
     easiness: number;     // Easiness level of flashcard
     interval: number;     // Time between views
-    repetitions: number;  // Total number of views
+    repetitions: number;  // Total times correct in a row
     record: string;       // Record of success/failure
     due_date: number;     // Due date of the card
     createdAt: Date;      // Timestamp when the note was created
