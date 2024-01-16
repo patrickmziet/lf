@@ -50,6 +50,31 @@ export const CardPage: React.FC = () => {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        const handleKeyDown = (event: KeyboardEvent) => {
+            switch (event.key) {
+                case 'j':
+                    if (!showAnswer) {
+                        setShowAnswer(true);
+                    } else {
+                        handleCorrect();
+                    }
+                    break;
+                case 'l':
+                    handleIncorrect();
+                    break;
+                default:
+                    break;
+            }
+        };
+
+        window.addEventListener('keydown', handleKeyDown);
+
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+        };
+    }, [showAnswer]); 
+
     const handleCorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
