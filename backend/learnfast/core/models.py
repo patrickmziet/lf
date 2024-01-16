@@ -96,8 +96,8 @@ class Flashcard(models.Model):
     repetitions = models.IntegerField(default=0)
     record = models.TextField(default="")
     due_date = models.FloatField(default=time.time() - 1 * 60)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    created_at = models.FloatField(default=time.time())
+    updated_at = models.FloatField(default=time.time())
 
 
     def update(self, correct):

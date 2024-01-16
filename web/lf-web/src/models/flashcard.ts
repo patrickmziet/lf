@@ -7,6 +7,6 @@ export interface Flashcard {
     repetitions: number;  // Total times correct in a row
     record: string;       // Record of success/failure
     due_date: number;     // Due date of the card
-    createdAt: Date;      // Timestamp when the note was created
-    updatedAt: Date;      // Timestamp when the note was last updated
+    created_at: number;      // Timestamp when the note was created
+    updated_at: number;      // Timestamp when the note was last updated
 } 

@@ -20,10 +20,7 @@ export const TopicsPage: React.FC = () => {
         let isMounted = true;
 
         const fetchTopics = async () => {
-            if (!user) {
-                return;
-            }
-
+            if (!user) return;
             const token = await getAccessTokenSilently();
             const { data } = await getUserTopics(token);
 

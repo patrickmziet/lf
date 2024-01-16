@@ -1,5 +1,6 @@
 import { AxiosRequestConfig } from "axios";
 import { ApiResponse } from "../models/api-response";
+import { Flashcard } from "../models/flashcard";
 import { callExternalApi } from "./external-api.service";
 import { Message } from "../models/message";
 import { Note } from "../models/note";
@@ -101,6 +102,26 @@ export const getTopicFlashCards = async (accessToken: string, topicId: string): 
   return {
     data,
     error,
+  };
+};
+
+// Function to update flashcards for the authenticated user
+export const updateFlashCards = async (accessToken: string, flashcards: Flashcard[], topicId: string): Promise<ApiResponse<any>> => {
+  const config: AxiosRequestConfig = {
+      url: `${apiServerUrl}/api/flashcards/update/${topicId}/`,
+      method: "POST",
+      headers: {
+          "content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+      },
+      data: flashcards,
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
+
+  return {
+      data,
+      error,
   };
 };
 

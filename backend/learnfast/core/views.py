@@ -37,7 +37,7 @@ def api_exception_handler(exc, context=None):
     return response
 
 
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -50,7 +50,6 @@ from io import BytesIO
 import openai
 from openai import OpenAI
 import os
-from decouple import config as conf
 from .models import Note, User, Topic, Document, Flashcard
 from .serializers import NoteSerializer, UserSerializer, TopicSerializer, DocumentSerializer, FlashcardSerializer
 
@@ -140,7 +139,7 @@ class DocumentUploadView(APIView):
         print(combined_content)
         combined_file = ContentFile(combined_content.encode('utf-8'), name='combined_file.txt')
         # Generate initial batch of flashcards
-        initial_flashcards(combined_content, topic_id=topic_id, num_cards=10)
+        initial_flashcards(combined_content, topic_id=topic_id, num_cards=4)
         Document.objects.create(topic=topic, document=File(combined_file))
 
         return Response(status=204)
@@ -160,10 +159,28 @@ class FlashcardListCreateAPIView(generics.ListCreateAPIView):
         topic_id = self.kwargs['topic_id']
         return self.queryset.filter(topic_id=topic_id)
 
-def initial_flashcards(text, topic_id, num_cards=10):
+
+class FlashcardUpdateAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        updated_flashcards = request.data
+
+        for updated_flashcard in updated_flashcards:
+            try:
+                flashcard = Flashcard.objects.get(id=updated_flashcard['id'])
+                for key, value in updated_flashcard.items():
+                    setattr(flashcard, key, value)
+                flashcard.save()
+            except Flashcard.DoesNotExist:
+                return Response({"error": "Flashcard not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({"message": "Flashcards updated successfully"}, status=status.HTTP_200_OK)
+
+
+def initial_flashcards(text, topic_id, num_cards=4):
     # Generate initial batch of flashcards
     # This is a very naive implementation
-    #openai.api_key = os.environ.get('OPENAI_API_KEY')
     client = OpenAI(
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
