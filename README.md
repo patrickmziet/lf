@@ -127,7 +127,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
  - [𝐌𝐨𝐛𝐢𝐥𝐞 𝐀𝐋𝐎𝐇𝐀🏄 -- Hardware! A low-cost, open-source, mobile manipulator.](https://x.com/tonyzzhao/status/1742603121682153852?s=20)
  - [Perfecting MergeKit MoEs](https://x.com/main_horse/status/1746779017674702853?s=20)
  - [script to get Paul Graham essays in txt format](https://github.com/ggerganov/llama.cpp/pull/4838)
- - [Announcing surya - a multilingual text line detection model for documents.  It gives you accurate line-level bboxes and column breaks.](https://x.com/VikParuchuri/status/1745876562371903790?s=20)
+ - [Announcing surya - a multilingual text line detection model for documents.  It gives you accurate line-level bboxes and column breaks.](https://x.com/VikParuchuri/status/1745876562371903790?s=20) and [surya again](https://x.com/VikParuchuri/status/1747091356445770221?s=20) and [again](https://x.com/VikParuchuri/status/1747392554038177998?s=20)
  - [Arxiv: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model"](https://arxiv.org/abs/2305.18290) and [Andrew Ng praise: "This beautiful paper proposes a much simpler alternative to RLHF (reinforcement learning from human feedback) for aligning language models to human preferences."](https://x.com/AndrewYNg/status/1745516258697863259?s=20)
 
 
