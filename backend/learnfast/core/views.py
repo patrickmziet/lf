@@ -340,6 +340,24 @@ class FlashcardMoreAPIView(APIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
+class FlashcardDestroyAPIView(generics.DestroyAPIView):
+    queryset = Flashcard.objects.all()
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        return self.queryset.filter(topic__user=self.request.user.id.split('|')[1])
+
+    def delete(self, request, *args, **kwargs):
+        instance = self.get_object()
+        print(f"Deleting flashcard with ID: {instance.id}")
+        self.perform_destroy(instance)
+        print(f"Deleted flashcard with ID: {instance.id}")
+        return Response({"message": "Flashcard deleted successfully"}, status=status.HTTP_200_OK)
+
+    def perform_destroy(self, instance):
+        instance.delete()
+
+
 class NoteListCreateAPIView(generics.ListCreateAPIView):
     queryset = Note.objects.all() # perhaps very inefficient?
     serializer_class = NoteSerializer

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getTopicFlashCards, updateFlashCards, createMoreFlashCards } from "../services/message.service";
+import { getTopicFlashCards, updateFlashCards, createMoreFlashCards, deleteFlashCard } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
 import { useAuth0 } from "@auth0/auth0-react";
 import { EditFlashcard } from '../components/edit-flashcard';
@@ -200,6 +200,30 @@ export const CardPage: React.FC = () => {
     };
 
 
+    // Add the handleDelete function in your component
+const handleDelete = async (cardId: number) => {
+    const cardToDelete = flashcards.find(card => card.id === cardId);
+    if (!cardToDelete) {
+        console.error('Card not found');
+        return;
+    }
+    // Optimistically remove the card from local state
+    setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
+    setFlashcards(flashcards.filter(card => card.id !== cardId));
+
+    try {
+        // Make the API request to delete the card
+        const token = await getAccessTokenSilently();
+        await deleteFlashCard(token, cardId);
+    } catch (error) {
+        // If the request fails, revert the change in local state and inform the user
+        console.error(error);
+        setMasterFlashcards([...masterFlashcards, cardToDelete]);
+        setFlashcards([...flashcards, cardToDelete]);
+        alert('Failed to delete the card. Please try again.');
+    }
+};
+
     return (
         <PageLayout>
             <div className="content-layout">
@@ -228,6 +252,7 @@ export const CardPage: React.FC = () => {
                             </>
                         )}
                         <button onClick={() => handleEdit(currentCardIndex)}>Edit</button>
+                        <button onClick={() => handleDelete(flashcards[currentCardIndex].id)}>Delete</button>
                     </div>
                     )
                 ) : (

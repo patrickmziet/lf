@@ -146,6 +146,27 @@ export const createMoreFlashCards = async (accessToken: string, topicId: string,
   };
 };
 
+
+// Function to delete a flashcard for the authenticated user
+export const deleteFlashCard = async (accessToken: string, cardId: number): Promise<ApiResponse<any>> => {
+  const config: AxiosRequestConfig = {
+      url: `${apiServerUrl}/api/flashcards/delete/${cardId}/`,
+      method: "DELETE",
+      headers: {
+          "content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+      },
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
+
+  return {
+      data,
+      error,
+  };
+};
+
+
 /* All code below will be removed when cleaning up UI */
 
 // Function to get notes for the authenticated user
