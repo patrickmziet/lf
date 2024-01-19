@@ -1,43 +1,3 @@
-# TODO: Remove the code below related ot previous function as message API
-from rest_framework.generics import RetrieveAPIView
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import exception_handler
-
-from core.models import Message
-from core.serializers import MessageSerializer
-
-
-class MessageApiView(RetrieveAPIView):
-    serializer_class = MessageSerializer
-    text = None
-
-    def get_object(self):
-        return Message(text=self.text)
-
-
-class PublicMessageApiView(MessageApiView):
-    text = "This is a public message."
-
-
-class ProtectedMessageApiView(MessageApiView):
-    text = "This is a protected message."
-    permission_classes = [IsAuthenticated]
-
-
-class AdminMessageApiView(MessageApiView):
-    text = "This is an admin message."
-    permission_classes = [IsAuthenticated]
-
-
-def api_exception_handler(exc, context=None):
-    response = exception_handler(exc, context=context)
-    if response and isinstance(response.data, dict):
-        response.data = {'message': response.data.get('detail', 'API Error')}
-    elif response is not None:
-        response.data = {'message': 'API Error'}
-    return response
-
-
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -50,9 +10,8 @@ from docx import Document as DocxDoc
 from io import BytesIO
 from openai import OpenAI
 import os
-from .models import Note, User, Topic, Document, Flashcard
+from .models import User, Topic, Document, Flashcard
 from .serializers import (
-    NoteSerializer, 
     UserSerializer, 
     TopicSerializer, 
     DocumentSerializer, 
@@ -356,21 +315,6 @@ class FlashcardDestroyAPIView(generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         instance.delete()
-
-
-class NoteListCreateAPIView(generics.ListCreateAPIView):
-    queryset = Note.objects.all() # perhaps very inefficient?
-    serializer_class = NoteSerializer
-    permission_classes = [IsAuthenticated]
-
-    def perform_create(self, serializer):
-        User = get_user_model()
-        user = User.objects.get(id=self.request.user.id.split('|')[1])
-        serializer.save(user=user)
-
-    def get_queryset(self):
-        return self.queryset.filter(user=self.request.user.id.split('|')[1])
-
 
 
 # Prompt templates
