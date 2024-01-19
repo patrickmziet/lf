@@ -62,6 +62,9 @@ export const LearnPage: React.FC = () => {
                 <button onClick={() => navigate(`/cards/${topicId}`, { state: { flashcards } })}>
                     Study Flashcards
                 </button>
+                <button onClick={() => navigate('/topics')}>
+                    Back to Topics
+                </button>
             </div>   
         </PageLayout>
     );

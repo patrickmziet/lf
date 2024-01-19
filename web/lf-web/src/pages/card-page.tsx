@@ -4,6 +4,7 @@ import { PageLayout } from "../components/page-layout";
 import { getTopicFlashCards, updateFlashCards, createMoreFlashCards } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
 import { useAuth0 } from "@auth0/auth0-react";
+import { EditFlashcard } from '../components/edit-flashcard';
 
 export const CardPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
@@ -19,6 +20,9 @@ export const CardPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const flashcardsFromPreviousPage = (location.state as { flashcards: Flashcard[] }).flashcards;
+    const [isEditing, setIsEditing] = useState<boolean>(false);
+    //const [isEditing, setIsEditing] = useState(false);
+    //const [editedCard, setEditedCard] = useState<Flashcard | null>(null);
 
     // Fetch flashcards
     useEffect(() => {
@@ -182,6 +186,20 @@ export const CardPage: React.FC = () => {
     };
     
 
+    const handleEdit = (cardIndex: number) => {
+        setIsEditing(true);
+        setCurrentCardIndex(cardIndex);
+    };
+
+    const handleSave = (updatedCard: Flashcard) => {
+        const updatedFlashcards = flashcards.map((card, index) => 
+            index === currentCardIndex ? updatedCard : card
+        );
+        setFlashcards(updatedFlashcards);
+        setIsEditing(false);
+    };
+
+
     return (
         <PageLayout>
             <div className="content-layout">
@@ -193,6 +211,9 @@ export const CardPage: React.FC = () => {
                 <p>Current time in seconds: {time}</p>
                 <p>End of day in seconds: {endOfDayInSeconds}</p>
                 {currentCardIndex < flashcards.length ? (
+                    isEditing ? (
+                        <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
+                    ) : (
                     <div>
                         <p>{flashcards[currentCardIndex].question}</p>
                         {showAnswer && <p>{flashcards[currentCardIndex].answer}</p>}
@@ -206,7 +227,9 @@ export const CardPage: React.FC = () => {
                                 <button onClick={handleIncorrect}>Incorrect</button>
                             </>
                         )}
+                        <button onClick={() => handleEdit(currentCardIndex)}>Edit</button>
                     </div>
+                    )
                 ) : (
                     <div>
                         <p>No more flashcards for this session</p>
