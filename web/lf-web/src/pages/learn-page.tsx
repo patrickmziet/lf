@@ -2,16 +2,20 @@
 // and test pages. It also has a button to add more documents.
 
 import React, { useEffect, useState } from 'react';
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getTopicDocuments } from "../services/document.service";
+import { getTopicFlashCards } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
 import { Document } from "../models/document";
+import { Flashcard } from "../models/flashcard";
 
 export const LearnPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
     const [documents, setDocuments] = useState<Document[]>([]);
+    const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
     const { getAccessTokenSilently } = useAuth0();
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchDocuments = async () => {
@@ -22,10 +26,26 @@ export const LearnPage: React.FC = () => {
             const { data } = await getTopicDocuments(accessToken, topicId);
             setDocuments(data);
         };
+        
+        const fetchFlashcards = async () => {
+            if (!topicId) {
+                return;
+            }
+            const accessToken = await getAccessTokenSilently();
+            const { data } = await getTopicFlashCards(accessToken, topicId);
+            if (data && Array.isArray(data)) {
+                setFlashcards(data);
+            }
+        };
 
         fetchDocuments();
+        fetchFlashcards();
     }, [topicId]);
     
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+    const endOfDayInSeconds = Math.floor(endOfDay.getTime() / 1000);
+    const dueFlashcards = flashcards.filter(card => card.due_date < endOfDayInSeconds);
 
     return (
         <PageLayout>
@@ -38,7 +58,10 @@ export const LearnPage: React.FC = () => {
                         <li key={index}>{doc.document.split("/").pop()}</li>
                     ))}
                 </ul>
-                <Link to={`/cards/${topicId}`}>Study Flashcards</Link>
+                <p>{dueFlashcards.length} flashcards are due</p>
+                <button onClick={() => navigate(`/cards/${topicId}`)}>
+                    Study Flashcards
+                </button>
             </div>   
         </PageLayout>
     );

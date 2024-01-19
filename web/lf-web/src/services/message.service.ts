@@ -125,6 +125,27 @@ export const updateFlashCards = async (accessToken: string, flashcards: Flashcar
   };
 };
 
+
+// Function to create more flashcards for the authenticated user
+export const createMoreFlashCards = async (accessToken: string, topicId: string, flashcards: Flashcard[]): Promise<ApiResponse<Flashcard[]>> => {
+  const config: AxiosRequestConfig = {
+      url: `${apiServerUrl}/api/flashcards/${topicId}/`,
+      method: "GET",
+      headers: {
+          "content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+      },
+      data: flashcards,
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<Flashcard[]>;
+
+  return {
+      data,
+      error,
+  };
+};
+
 /* All code below will be removed when cleaning up UI */
 
 // Function to get notes for the authenticated user

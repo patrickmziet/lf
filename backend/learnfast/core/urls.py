@@ -25,6 +25,7 @@ from .views import (
     TopicDestroyAPIView,
     FlashcardListCreateAPIView,
     FlashcardUpdateAPIView,
+    FlashcardMoreAPIView,
 )
     
 
@@ -40,4 +41,5 @@ urlpatterns = [
     path('documents/<int:topic_id>/', TopicDocumentsAPIView.as_view(), name='topic-documents'),
     path('flashcards/<int:topic_id>/', FlashcardListCreateAPIView.as_view(), name='flashcards-list-create'),
     path('flashcards/update/', FlashcardUpdateAPIView.as_view(), name='flashcards-update'),
+    path('flashcards/more/<int:topic_id>/', FlashcardMoreAPIView.as_view(), name='flashcards-more'),
 ]

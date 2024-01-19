@@ -129,6 +129,9 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
  - [script to get Paul Graham essays in txt format](https://github.com/ggerganov/llama.cpp/pull/4838)
  - [Announcing surya - a multilingual text line detection model for documents.  It gives you accurate line-level bboxes and column breaks.](https://x.com/VikParuchuri/status/1745876562371903790?s=20) and [surya again](https://x.com/VikParuchuri/status/1747091356445770221?s=20) and [again](https://x.com/VikParuchuri/status/1747392554038177998?s=20)
  - [Arxiv: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model"](https://arxiv.org/abs/2305.18290) and [Andrew Ng praise: "This beautiful paper proposes a much simpler alternative to RLHF (reinforcement learning from human feedback) for aligning language models to human preferences."](https://x.com/AndrewYNg/status/1745516258697863259?s=20)
+ - [Iterative DPO on LLama 2 70B yields a model that beats Mistral Medium, Claude 2, Gemini Pro, GPT-4 0613 on Alpaca v2 benchmark.](https://x.com/gblazex/status/1748181621872705792?s=20)
+ - [Karpathy: Prompt engineering (or rather "Flow engineering") intensifies for code generation. Great reading and a reminder of how much alpha there is (pass@5 19% to 44%) in moving from a naive prompt:answer paradigm to a "flow" paradigm, where the answer is constructed iteratively.](https://x.com/karpathy/status/1748043513156272416?s=20)
+
 
 
 
@@ -166,6 +169,8 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - [OpenAI statment on NYT lawsuit, see comments on fair use](https://openai.com/blog/openai-and-journalism)
 - [On Living in An Atomic Age](https://www.andybannister.net/wp-content/uploads/2022/03/cslewis-living-in-an-atomic-age.pdf)
 - [Tom Blomfield: Consumer Startup Metrics](https://youtu.be/fdD4y4Civp4?si=MPFkB6usN-fX5q98)
+- [Tyler Cowen: Your Child’s Favorite Teacher May Soon Be a Chatbot](https://www.bloomberg.com/opinion/articles/2024-01-17/ai-in-the-classroom-everyone-s-favorite-teacher-may-soon-be-a-chatbot?utm_medium=email&utm_source=newsletter&utm_term=240117&utm_campaign=author_19834842)
+- [Finished software by dhh](https://world.hey.com/dhh/finished-software-8ee43637)
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)

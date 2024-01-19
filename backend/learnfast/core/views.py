@@ -1,3 +1,4 @@
+# TODO: Remove the code below related ot previous function as message API
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import exception_handler
@@ -47,11 +48,16 @@ from django.core.files.base import ContentFile, File
 from PyPDF2 import PdfReader
 from docx import Document as DocxDoc
 from io import BytesIO
-import openai
 from openai import OpenAI
 import os
 from .models import Note, User, Topic, Document, Flashcard
-from .serializers import NoteSerializer, UserSerializer, TopicSerializer, DocumentSerializer, FlashcardSerializer
+from .serializers import (
+    NoteSerializer, 
+    UserSerializer, 
+    TopicSerializer, 
+    DocumentSerializer, 
+    FlashcardSerializer
+    )
 
 
 class CreateUserIfNotExistView(APIView):
@@ -231,17 +237,15 @@ def extract_text_between_markers(input_string):
 
 def parse_flashcards(text):
     flashcards = {}
-    
     # Split text into lines
     lines = text.split('\n')
-    
     # Find the flash card lines
     for i, line in enumerate(lines):
         if line.startswith('- Flash card'):
             card_number = int(line.split()[3].rstrip(':'))
             question_line = lines[i+1].strip()
             answer_line = lines[i+2].strip()
-            
+
             question_text = question_line.split(': ', 1)[1]
             answer_text = answer_line.split(': ', 1)[1]
             
@@ -249,6 +253,91 @@ def parse_flashcards(text):
     
     return flashcards
 
+
+class FlashcardMoreAPIView(APIView):
+    # View to make more flashcards given a topic ID
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, *args, **kwargs):
+        # Update the flashcards
+        updated_flashcards = request.data
+        topic_id = self.kwargs['topic_id']
+        topic = Topic.objects.get(id=topic_id)
+        print(f"The flashcards to update: {updated_flashcards}")
+        for updated_flashcard in updated_flashcards:
+            try:
+                print(f"Updated flashcard: {updated_flashcard}")
+                flashcard = Flashcard.objects.get(id=updated_flashcard['id'])
+                for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'record', 'due_date', 'updated_at']:
+                    if key in updated_flashcard:
+                        # Previous value of key
+                        print(f"Previous value of {key}: {getattr(flashcard, key)}")
+                        # New value of key
+                        print(f"New value of {key}: {updated_flashcard[key]}")
+                        setattr(flashcard, key, updated_flashcard[key])
+                flashcard.save()
+            except Flashcard.DoesNotExist:
+                return Response({"error": "Flashcard not found"}, status=status.HTTP_404_NOT_FOUND)
+        
+        # Get the combined text file that's already been created
+        combined_file = Document.objects.filter(topic=topic, document__endswith='combined_file.txt').first()
+        print(f"Combined file pre-decode: {combined_file}")
+        combined_file = combined_file.document.read().decode('utf-8')
+        print(f"Combined file post-decode: {combined_file}")
+
+        client = OpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+        )
+
+        # fetch flashcards
+        flashcards = Flashcard.objects.filter(topic=topic)
+        flashcard_strings = []
+        for flashcard in flashcards:
+            record_array = [int(i) for i in flashcard.record]
+            print(f"Record array: {record_array}")
+            score = round(sum(record_array) / len(record_array) * 100, 2) if record_array else 0
+            flashcard_string = f"""
+                - Flash card {flashcard.id}:
+                -- Question: {flashcard.question}
+                -- Answer: {flashcard.answer}
+                -- Score: {score}%
+                """
+            print(f"Flashcard string: {flashcard_string}")
+            flashcard_strings.append(flashcard_string)
+        flashcards_string = "\n".join(flashcard_strings)
+        print(f"Full Flashcards string: {flashcards_string}")
+
+        # Reconstruct the msg_chn
+        msg_chn = [
+            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
+            {"role": "user", "content": supply_example_text.format(example_text=combined_file)},
+            {"role": "assistant", "content": flashcards_string},
+            {"role": "user", "content": ask_for_flashcards.format(sample_text=combined_file, num_cards=4)},
+            {"role": "assistant", "content": flashcards_string},
+            {"role": "user", "content": ask_for_more.format(num_cards=4, card_format=card_format, card_axioms=card_axioms)},
+        ]
+
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=msg_chn
+        )
+
+        parsed_flashcards = parse_flashcards(response.choices[0].message.content)
+        print(f"Parsed flashcards: {parsed_flashcards}")
+        for card_number, card in parsed_flashcards.items():
+            Flashcard.objects.create(
+                topic_id=topic_id,
+                question=card['Question'],
+                answer=card['Answer'],
+            )
+        for flashcard in Flashcard.objects.filter(topic_id=topic_id):
+            print("Flashcard in json:")
+            print(flashcard.to_json())
+        
+        flashcards = Flashcard.objects.filter(topic_id=topic_id)
+        serializer = FlashcardSerializer(flashcards, many=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 class NoteListCreateAPIView(generics.ListCreateAPIView):
@@ -371,4 +460,16 @@ Here is the text I want you to create flash cards from:
 
 Now provide {num_cards} flash cards on the above information. 
 
+"""
+
+ask_for_more = """
+Now provide {num_cards} more unique flash cards with card format:
+
+{card_format}
+
+and card axioms:
+
+{card_axioms}
+
+However, note the score on the already listed flashcards. This is the percentage of times the user has answered the flashcard correctly. Focus on generating flashcards which will help the user better understand topics with lower scores (< 80%).
 """

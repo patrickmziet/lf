@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getTopicFlashCards, updateFlashCards } from "../services/message.service";
+import { getTopicFlashCards, updateFlashCards, createMoreFlashCards } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -88,6 +88,21 @@ export const CardPage: React.FC = () => {
         console.log("Master flashcards update:", masterFlashcards);
     }, [flashcards, masterFlashcards]);
 
+
+    // Create more flashcards
+    const handleCreateMoreCards = async () => {
+        if (!topicId) return;
+        const token = await getAccessTokenSilently();
+        const { data } = await createMoreFlashCards(token, topicId, masterFlashcards);
+        console.log("Response:", data);
+        if (data && Array.isArray(data)) {
+            setMasterFlashcards(data);
+            const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
+            dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
+            setFlashcards(dueFlashcards);
+        }
+    };
+
     // Handle back button
     const handleBack = async () => {
         if (!topicId) return;
@@ -97,7 +112,6 @@ export const CardPage: React.FC = () => {
         console.log("Response:", response);
         navigate(`/learn/${topicId}`);
     };
-
 
     const handleCorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
@@ -162,6 +176,7 @@ export const CardPage: React.FC = () => {
         <PageLayout>
             <div className="content-layout">
                 <button onClick={handleBack}>Back to Learn Page</button>
+                <button onClick={handleCreateMoreCards}>Create More Cards</button>
                 <h1 id="page-title" className="content__title">
                     Flashcards for topic {topicId}
                 </h1>
