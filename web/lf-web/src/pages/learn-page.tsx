@@ -59,7 +59,7 @@ export const LearnPage: React.FC = () => {
                     ))}
                 </ul>
                 <p>{dueFlashcards.length} flashcards are due</p>
-                <button onClick={() => navigate(`/cards/${topicId}`)}>
+                <button onClick={() => navigate(`/cards/${topicId}`, { state: { flashcards } })}>
                     Study Flashcards
                 </button>
             </div>   

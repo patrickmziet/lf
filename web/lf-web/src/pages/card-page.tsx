@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
 import { getTopicFlashCards, updateFlashCards, createMoreFlashCards } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
@@ -17,6 +17,8 @@ export const CardPage: React.FC = () => {
     endOfDay.setHours(23, 59, 59, 999);
     const [endOfDayInSeconds, setEndOfDayInSeconds] = useState(Math.floor(endOfDay.getTime() / 1000));
     const navigate = useNavigate();
+    const location = useLocation();
+    const flashcardsFromPreviousPage = (location.state as { flashcards: Flashcard[] }).flashcards;
 
     // Fetch flashcards
     useEffect(() => {
@@ -25,7 +27,15 @@ export const CardPage: React.FC = () => {
         const fetchFlashcards = async () => {
             if (!topicId) return;
             const token = await getAccessTokenSilently();
-            const { data } = await getTopicFlashCards(token, topicId);
+            let data;
+            if (flashcardsFromPreviousPage) {
+                console.log("Flashcards from previous page");
+                data = flashcardsFromPreviousPage;
+            } else {
+                console.log("Flashcards from API");
+                const response = await getTopicFlashCards(token, topicId);
+                data = response.data;
+            }
 
             if (isMounted && data && Array.isArray(data)) {
                 setMasterFlashcards(data);
