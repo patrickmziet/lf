@@ -129,7 +129,7 @@ export const updateFlashCards = async (accessToken: string, flashcards: Flashcar
 // Function to create more flashcards for the authenticated user
 export const createMoreFlashCards = async (accessToken: string, topicId: string, flashcards: Flashcard[]): Promise<ApiResponse<Flashcard[]>> => {
   const config: AxiosRequestConfig = {
-      url: `${apiServerUrl}/api/flashcards/${topicId}/`,
+      url: `${apiServerUrl}/api/flashcards/more/${topicId}/`,
       method: "GET",
       headers: {
           "content-Type": "application/json",
