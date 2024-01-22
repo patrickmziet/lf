@@ -1,4 +1,4 @@
-export interface Auth0Resource {
+export interface LFResource {
     path: string;
     label: string;
   }
