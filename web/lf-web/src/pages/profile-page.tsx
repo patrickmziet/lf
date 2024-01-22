@@ -15,8 +15,10 @@ export const ProfilePage: React.FC = () => {
 
       console.log("makeUser function has started executing");
       const token = await getAccessTokenSilently();
-
+      console.log("Access token", token);
       const userData = {
+        id: user?.sub?.split("|")[1],
+        sub: user.sub,
         email: user.email,
         is_verified: user.email_verified,
         given_name: user.given_name,
@@ -25,10 +27,8 @@ export const ProfilePage: React.FC = () => {
         name: user.name,
         picture: user.picture,
         locale: user.locale,
-        sub: user.sub,
-        id: user?.sub?.split("|")[1],
       };
-
+      console.log("User data", userData);
       const response = await createUserIfNotExist(token, userData);
       console.log("Response from backend", response);
     };

@@ -215,17 +215,37 @@ class IsAuthenticatedUserView(APIView):
 
 class CreateUserIfNotExistView(IsAuthenticatedUserView):
     def post(self, request):
+        print("Entered CreateUserIfNotExistView")
         serializer = UserSerializer(data=request.data)
-        if serializer.is_valid():
-            user, created = User.objects.get_or_create(
-                defaults=serializer.validated_data,
-                **{field: serializer.validated_data[field] for field in ['id', 'sub', 'email'] if field in serializer.validated_data}
-            )
-            status_code = 201 if created else 200
-            return Response({"message": "User created" if created else "User exists"}, 
-                            status=status_code)
-        return Response({"Serializer errors": serializer.errors, 
-                         "Valid serializer": False}, status=400)
+        print(f"Serializer: {serializer}")
+
+
+
+        if not serializer.is_valid():
+            print("Serializer is not valid")
+            print(f"Serializer errors: {serializer.errors}")
+        
+        user_data = request.data
+        user, created = User.objects.get_or_create(
+            defaults=user_data,
+            **{field: user_data[field] for field in ['id', 'sub', 'email'] if field in user_data}
+        )
+        status_code = 201 if created else 200
+        return Response({"message": "User created" if created else "User exists"}, 
+                        status=status_code)
+        
+        
+#        if serializer.is_valid():
+#            print("Serializer is valid")
+#            user, created = User.objects.get_or_create(
+#                defaults=serializer.validated_data,
+#                **{field: serializer.validated_data[field] for field in ['id', 'sub', 'email'] if field in serializer.validated_data}
+#            )
+#            status_code = 201 if created else 200
+#            return Response({"message": "User created" if created else "User exists"}, 
+#                            status=status_code)
+#        return Response({"Serializer errors": serializer.errors, 
+#                         "Valid serializer": False}, status=400)
     
 
 class TopicListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
