@@ -1,10 +1,6 @@
 from django.urls import path
 
 from .views import (
-    PublicMessageApiView, 
-    ProtectedMessageApiView, 
-    AdminMessageApiView, 
-    NoteListCreateAPIView,
     CreateUserIfNotExistView,
     TopicListCreateAPIView,
     TopicDocumentsAPIView,
@@ -18,10 +14,6 @@ from .views import (
     
 
 urlpatterns = [
-    path('public', PublicMessageApiView.as_view(), name='public-message'),
-    path('protected', ProtectedMessageApiView.as_view(), name='protected-message'),
-    path('admin', AdminMessageApiView.as_view(), name='admin-message'),
-    path('notes/', NoteListCreateAPIView.as_view(), name='note-list-create'),
     path('create-user-if-not-exist/', CreateUserIfNotExistView.as_view(), name='create-user-if-not-exist'),
     path('topics/', TopicListCreateAPIView.as_view(), name='topic-list-create'),
     path('topics/delete/<int:pk>/', TopicDestroyAPIView.as_view(), name='topic-destroy'),

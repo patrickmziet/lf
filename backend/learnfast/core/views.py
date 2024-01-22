@@ -359,7 +359,6 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         # Print debugging
         print(f"Combined file post-decode: {combined_file}")
 
-
         # fetch flashcards
         flashcards = Flashcard.objects.filter(topic=topic)
         flashcard_strings = []
@@ -390,7 +389,7 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
             {"role": "assistant", "content": flashcards_string},
             {"role": "user", "content": ask_for_more.format(num_cards=NUM_CARDS_MORE, card_format=card_format, card_axioms=card_axioms)},
         ]
-        
+
         generate_flashcards(msg_chn, topic_id)        
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)
