@@ -4,8 +4,8 @@ from django.conf import settings
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 import time
-import logging
 
+# Models
 class User(AbstractUser):
     id = models.CharField(primary_key=True, max_length=255)  # This will store the 'sub' from Auth0 profile
     sub = models.CharField(max_length=255, unique=True, default="")  # This will store the 'sub' from Auth0 profile
@@ -67,8 +67,6 @@ class Document(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='documents')
     document = models.FileField(upload_to=user_directory_path)
     uploaded_at = models.DateTimeField(auto_now_add=True)
-    # log that a document was uploaded
-    logging.info(f"Document uploaded: {document}")
 
     def delete(self, *args, **kwargs):
         self.document.delete(save=False)  # delete the actual file
@@ -86,27 +84,6 @@ class Flashcard(models.Model):
     due_date = models.FloatField(default=time.time() - 1 * 60)
     created_at = models.DateField(auto_now_add=True)
     updated_at = models.FloatField(default=time.time())
-
-
-    def update(self, correct):
-        if correct:
-            self.record += "1"
-            self.repetitions += 1
-
-            if self.repetitions == 1:
-                self.interval = 10 * 60
-            elif self.repetitions == 2:
-                self.interval = 1 * 24 * 60 * 60
-            elif self.repetitions == 3:
-                self.interval = 3 * 24 * 60 * 60
-            else:
-                self.interval = round(self.interval * self.easiness)
-        else:
-            self.record += "0"
-            self.repetitions = 0
-            self.interval = 1 * 60
-        self.updated_at = time.time()
-        self.due_date = time.time() + self.interval
 
     def is_due(self):
         return self.due_date <= time.time() + 15 * 60

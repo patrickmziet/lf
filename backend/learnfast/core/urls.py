@@ -1,5 +1,4 @@
 from django.urls import path
-
 from .views import (
     CreateUserIfNotExistView,
     TopicListCreateAPIView,
@@ -12,7 +11,6 @@ from .views import (
     FlashcardDestroyAPIView,
 )
     
-
 urlpatterns = [
     path('create-user-if-not-exist/', CreateUserIfNotExistView.as_view(), name='create-user-if-not-exist'),
     path('topics/', TopicListCreateAPIView.as_view(), name='topic-list-create'),
