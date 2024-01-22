@@ -232,21 +232,7 @@ class CreateUserIfNotExistView(IsAuthenticatedUserView):
         )
         status_code = 201 if created else 200
         return Response({"message": "User created" if created else "User exists"}, 
-                        status=status_code)
-        
-        
-#        if serializer.is_valid():
-#            print("Serializer is valid")
-#            user, created = User.objects.get_or_create(
-#                defaults=serializer.validated_data,
-#                **{field: serializer.validated_data[field] for field in ['id', 'sub', 'email'] if field in serializer.validated_data}
-#            )
-#            status_code = 201 if created else 200
-#            return Response({"message": "User created" if created else "User exists"}, 
-#                            status=status_code)
-#        return Response({"Serializer errors": serializer.errors, 
-#                         "Valid serializer": False}, status=400)
-    
+                        status=status_code)    
 
 class TopicListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
     queryset = Topic.objects.all()
