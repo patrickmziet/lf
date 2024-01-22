@@ -135,7 +135,6 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 
 
 
-
 ### Tech stack
 - [Perhaps a good tech stack for a web app](https://x.com/tair/status/1726631560752115840?s=20)
 - [Georgi Gerganov: Wrote a short tutorial for setting up llama.cpp on AWS instances](https://x.com/ggerganov/status/1729232091370369160?s=20)
@@ -143,6 +142,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - [Turbopuffer vector DB](https://twitter.com/turbopuffer?s=11)
 - On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
 - [one person/customer - one sqlite model.](https://x.com/sriramk/status/1746598735885254785?s=20)
+- [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
