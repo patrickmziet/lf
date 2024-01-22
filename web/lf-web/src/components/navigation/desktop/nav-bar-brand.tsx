@@ -1,5 +1,6 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { Logo } from "../../logos/logo";
 
 export const NavBarBrand: React.FC = () => {
 
@@ -7,13 +8,7 @@ export const NavBarBrand: React.FC = () => {
   return (
     <div className="nav-bar__brand">
       <NavLink to="/">
-        <img
-          className="nav-bar__logo"
-          src={logoUrl}
-          alt="LF Logo"
-          width="50"
-          height="50"
-        />
+        <Logo />
       </NavLink>
     </div>
   );
