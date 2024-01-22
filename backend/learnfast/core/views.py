@@ -2,7 +2,7 @@
 from rest_framework import generics, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework.views import APIView, exception_handler
 from rest_framework.parsers import MultiPartParser
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile, File
@@ -199,8 +199,15 @@ def generate_flashcards(msg_chn, topic_id):
     for flashcard in Flashcard.objects.filter(topic_id=topic_id):
         print(flashcard.to_json())
 
+def api_exception_handler(exc, context=None):
+    response = exception_handler(exc, context=context)
+    if response and isinstance(response.data, dict):
+        response.data = {'message': response.data.get('detail', 'API Error')}
+    elif response is not None:
+        response.data = {'message': 'API Error'}
+    return response
 
-
+# Views
 class IsAuthenticatedUserView(APIView):
     permission_classes = [IsAuthenticated]
 
