@@ -4,11 +4,12 @@ import { Logo } from "../../logos/logo";
 
 export const NavBarBrand: React.FC = () => {
 
-  const logoUrl = process.env.PUBLIC_URL + '/lf.png';
   return (
     <div className="nav-bar__brand">
       <NavLink to="/">
-        <Logo />
+        <p className="nav-bar__name">
+          LearnFast
+        </p>
       </NavLink>
     </div>
   );

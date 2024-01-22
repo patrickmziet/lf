@@ -11,7 +11,7 @@ export const HeroBanner: React.FC = () => {
       </div>
       <h1 className="hero-banner__headline">Hello, welcome to LearnFast!</h1>
       <p className="hero-banner__description">
-        This is an app with helps you learn <strong>fast</strong>.
+        This is an app which helps you learn <strong>fast</strong>.
       </p>
     </div>
   );

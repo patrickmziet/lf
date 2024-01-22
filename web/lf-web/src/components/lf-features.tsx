@@ -2,29 +2,28 @@ import React from "react";
 import { LFFeature } from "./lf-feature";
 
 export const LFFeatures: React.FC = () => {
-const logoUrl = process.env.PUBLIC_URL + '/lf.png';
-const logoUrl2 = process.env.PUBLIC_URL + '/logo192.png';
+const logoUrl = process.env.PUBLIC_URL + '/logo192.png';
   const featuresList = [
     {
       title: "Demonstration 1",
       description:
         "Demonstration 1 shows you ...",
       resourceUrl: "link to demonstration 1",
-      icon: logoUrl2,
+      icon: logoUrl,
     },
     {
         title: "Demonstration 2",
         description:
           "Demonstration 2 shows you ...",
         resourceUrl: "link to demonstration 2",
-        icon: logoUrl2,
+        icon: logoUrl,
     },
     {
         title: "Demonstration 3",
         description:
           "Demonstration 3 shows you ...",
         resourceUrl: "link to demonstration 3",
-        icon: logoUrl2,
+        icon: logoUrl,
     },
 ];
 
