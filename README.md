@@ -131,6 +131,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
  - [Arxiv: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model"](https://arxiv.org/abs/2305.18290) and [Andrew Ng praise: "This beautiful paper proposes a much simpler alternative to RLHF (reinforcement learning from human feedback) for aligning language models to human preferences."](https://x.com/AndrewYNg/status/1745516258697863259?s=20)
  - [Iterative DPO on LLama 2 70B yields a model that beats Mistral Medium, Claude 2, Gemini Pro, GPT-4 0613 on Alpaca v2 benchmark.](https://x.com/gblazex/status/1748181621872705792?s=20)
  - [Karpathy: Prompt engineering (or rather "Flow engineering") intensifies for code generation. Great reading and a reminder of how much alpha there is (pass@5 19% to 44%) in moving from a naive prompt:answer paradigm to a "flow" paradigm, where the answer is constructed iteratively.](https://x.com/karpathy/status/1748043513156272416?s=20)
+ - [1 hr CUDA tutorial by Jeremy Howard](https://x.com/jeremyphoward/status/1749153507096322239?s=20)
 
 
 
