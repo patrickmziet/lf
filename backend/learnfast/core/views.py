@@ -195,9 +195,6 @@ def generate_flashcards(msg_chn, topic_id):
             question=card['Question'],
             answer=card['Answer'],
         )
-    # Print Debugging
-    for flashcard in Flashcard.objects.filter(topic_id=topic_id):
-        print(flashcard.to_json())
 
 def api_exception_handler(exc, context=None):
     response = exception_handler(exc, context=context)
@@ -313,20 +310,11 @@ class FlashcardUpdateAPIView(IsAuthenticatedUserView):
     
     def post(self, request):
         updated_flashcards = request.data
-        user = self.get_user()
-        # Print debugging
-        print(f"The flashcards to update: {updated_flashcards}")
         for updated_flashcard in updated_flashcards:
             try:
-                # Print Debugging
-                print(f"Updated flashcard: {updated_flashcard}")
-                flashcard = Flashcard.objects.get(id=updated_flashcard['id'], user=user)
+                flashcard = Flashcard.objects.get(id=updated_flashcard['id'])
                 for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'record', 'due_date', 'updated_at']:
                     if key in updated_flashcard:
-                        # Print debugging
-                        print(f"Previous value of {key}: {getattr(flashcard, key)}")
-                        # Print debugging
-                        print(f"New value of {key}: {updated_flashcard[key]}")
                         setattr(flashcard, key, updated_flashcard[key])
                 flashcard.save()
             except Flashcard.DoesNotExist:
@@ -340,19 +328,11 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         updated_flashcards = request.data
         topic_id = self.kwargs['topic_id']
         topic = Topic.objects.get(id=topic_id)
-        # Print debugging
-        print(f"The flashcards to update: {updated_flashcards}")
         for updated_flashcard in updated_flashcards:
             try:
-                # Print Debugging
-                print(f"Updated flashcard: {updated_flashcard}")
                 flashcard = Flashcard.objects.get(id=updated_flashcard['id'])
                 for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'record', 'due_date', 'updated_at']:
                     if key in updated_flashcard:
-                        # Print debugging
-                        print(f"Previous value of {key}: {getattr(flashcard, key)}")
-                        # Print debugging
-                        print(f"New value of {key}: {updated_flashcard[key]}")
                         setattr(flashcard, key, updated_flashcard[key])
                 flashcard.save()
             except Flashcard.DoesNotExist:
@@ -360,19 +340,13 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         
         # Get the combined text file that's already been created
         combined_file = Document.objects.filter(topic=topic, document__endswith='combined_file.txt').first()
-        # Print debugging
-        print(f"Combined file pre-decode: {combined_file}")
         combined_file = combined_file.document.read().decode('utf-8')
-        # Print debugging
-        print(f"Combined file post-decode: {combined_file}")
 
         # fetch flashcards
         flashcards = Flashcard.objects.filter(topic=topic)
         flashcard_strings = []
         for flashcard in flashcards:
             record_array = [int(i) for i in flashcard.record]
-            # Print debugging
-            print(f"Record array: {record_array}")
             score = round(sum(record_array) / len(record_array) * 100, 2) if record_array else 0
             flashcard_string = f"""
                 - Flash card {flashcard.id}:
@@ -380,13 +354,8 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
                 -- Answer: {flashcard.answer}
                 -- Score: {score}%
                 """
-            # Print debugging
-            print(f"Flashcard string: {flashcard_string}")
             flashcard_strings.append(flashcard_string)
-        flashcards_string = "\n".join(flashcard_strings)
-        # Print debugging
-        print(f"Full Flashcards string: {flashcards_string}")
-        
+        flashcards_string = "\n".join(flashcard_strings)        
         # Reconstruct the msg_chn
         msg_chn = [
             {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
@@ -412,9 +381,7 @@ class FlashcardDestroyAPIView(IsAuthenticatedUserView, generics.DestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         instance = self.get_object()
-        print(f"Deleting flashcard with ID: {instance.id}")
         self.perform_destroy(instance)
-        print(f"Deleted flashcard with ID: {instance.id}")
         return Response({"message": "Flashcard deleted successfully"}, status=status.HTTP_200_OK)
 
     def perform_destroy(self, instance):
