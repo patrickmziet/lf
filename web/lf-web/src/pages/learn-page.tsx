@@ -2,7 +2,7 @@
 // and test pages. It also has a button to add more documents.
 
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getTopicDocuments } from "../services/document.service";
 import { getTopicFlashCards, deleteTopic } from "../services/message.service";
@@ -16,6 +16,8 @@ export const LearnPage: React.FC = () => {
     const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
     const { getAccessTokenSilently } = useAuth0();
     const navigate = useNavigate();
+    const location = useLocation();
+    const state = location.state as { title: string };
 
     useEffect(() => {
         const fetchDocuments = async () => {
@@ -54,26 +56,37 @@ export const LearnPage: React.FC = () => {
           navigate('/topics');
         }
       };
-
+    
+    const navigateToFlashcards = (topicId: string) => {
+        navigate(`/cards/${topicId}`, { state: { flashcards } });
+    };  
+    
     return (
         <PageLayout>
             <div className="content-layout">
-                <h1 id="page-title" className="content__title">
-                    Documents for topic {topicId}
-                </h1>
-                <ul>
-                    {documents.map((doc, index) => (
-                        <li key={index}>{doc.document.split("/").pop()}</li>
-                    ))}
-                </ul>
-                <p>{dueFlashcards.length} flashcards are due</p>
-                <button onClick={() => navigate(`/cards/${topicId}`, { state: { flashcards } })}>
-                    Study Flashcards
-                </button>
-                <button onClick={handleDeleteTopic}>Delete Topic</button>
-                <button onClick={() => navigate('/topics')}>
-                    Back to Topics
-                </button>
+                <div className="content__body">
+                    <div className="learn-grid">
+                        <h1 className="learn__title">
+                                {state.title || "Default Title"}
+                        </h1>
+                        <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
+                            <p>{dueFlashcards.length} flashcards are due</p>
+                        </div>
+                        
+                        <button onClick={handleDeleteTopic}>Delete Topic</button>
+                        <button onClick={() => navigate('/topics')}>
+                            Back to Topics
+                        </button>
+                        <h1 id="page-title" className="content__title">
+                            Resources
+                        </h1>
+                        <ul>
+                            {documents.map((doc, index) => (
+                                <li key={index}>{doc.document.split("/").pop()}</li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             </div>   
         </PageLayout>
     );

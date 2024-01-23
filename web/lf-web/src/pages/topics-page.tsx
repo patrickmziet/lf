@@ -55,8 +55,8 @@ export const TopicsPage: React.FC = () => {
         }
     };
 
-    const navigateToLearnPage = (topicId: number) => {
-        navigate(`/learn/${topicId}`);
+    const navigateToLearnPage = (topic: Topic) => {
+        navigate(`/learn/${topic.id}`, { state: { title: topic.title } });
     };
 
 
@@ -83,7 +83,7 @@ export const TopicsPage: React.FC = () => {
                             </form>
                         </div>
                         {Array.isArray(topics) && topics.length > 0 && topics.map(topic => (
-                            <div key={topic.id} className="topic-item" onClick={() => navigateToLearnPage(topic.id)}>
+                            <div key={topic.id} className="topic-item" onClick={() => navigateToLearnPage(topic)}>
                                 <h3 className="content__title">{topic.title}</h3>
                             </div>
                         ))}
