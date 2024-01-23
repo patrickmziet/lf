@@ -34,7 +34,8 @@
 }
 
 .button--primary:hover {
-  background: rgba(99, 93, 255, 0.85);
+  /* background: rgba(99, 93, 255, 0.85); */
+  background: var(--indigo-hover);
 }
 
 .button--secondary {
@@ -119,6 +120,12 @@
 .button__logout:last-child,
 .button__sign-up:last-child {
   margin-right: 0;
+}
+
+.button__login:hover,
+.button__logout:hover,
+.button__sign-up:hover {
+  background: var(--dark-aluminium);
 }
 
 @media only screen and (min-width: 641px) {

@@ -104,17 +104,8 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [DocLLM: A layout-aware generative language model for multimodal document understanding](https://x.com/_akhaliq/status/1742369195034099731?s=20)
 - [Where to do evals](https://x.com/gblazex/status/1737574824753467647?s=20)
 - [Gemini: A Family of Highly Capable Multimodal Models](https://arxiv.org/abs/2312.11805)
-- [GPT-4 + Medprompt -> SOTA MMLU
-
-Mixtral 8x7B @ MLX nice and clean
-
-Beyond Human Data: Scaling Self-Training for Problem-Solving with Language Models
-
-Phi-2 (2.7B), the smallest most impressive model
-
-LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/status/1734659057938477174?s=20)
-- [Access Mixtral with the fastest inference performance anywhere! Up to 100 token/s for $0.0006/1K tokens — to our knowledge the fastest performance at the lowest price! Mixtral-8x7b-32kseqlen @MistralAI
- & DiscoLM-mixtral-8x7b-v2 are live on Together API!](https://x.com/togethercompute/status/1734282721982324936?s=20)
+- [GPT-4 + Medprompt -> SOTA MMLU, Mixtral 8x7B @ MLX nice and clean, Beyond Human Data: Scaling Self-Training for Problem-Solving with Language Models, Phi-2 (2.7B), the smallest most impressive model, LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/status/1734659057938477174?s=20)
+- [Access Mixtral with the fastest inference performance anywhere! Up to 100 token/s for $0.0006/1K tokens — to our knowledge the fastest performance at the lowest price! Mixtral-8x7b-32kseqlen @MistralAI & DiscoLM-mixtral-8x7b-v2 are live on Together API!](https://x.com/togethercompute/status/1734282721982324936?s=20)
  - [Official post on Mixtral 8x7B](https://x.com/karpathy/status/1734251375163511203?s=20)
  - [MistralAI: MegaBlocks is a light-weight library for mixture-of-experts (MoE) training.](https://github.com/mistralai/megablocks-public/tree/pstock/mixtral)
  - [Perplexity pro](https://x.com/soumithchintala/status/1733310147743662107?s=20)
@@ -132,6 +123,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
  - [Iterative DPO on LLama 2 70B yields a model that beats Mistral Medium, Claude 2, Gemini Pro, GPT-4 0613 on Alpaca v2 benchmark.](https://x.com/gblazex/status/1748181621872705792?s=20)
  - [Karpathy: Prompt engineering (or rather "Flow engineering") intensifies for code generation. Great reading and a reminder of how much alpha there is (pass@5 19% to 44%) in moving from a naive prompt:answer paradigm to a "flow" paradigm, where the answer is constructed iteratively.](https://x.com/karpathy/status/1748043513156272416?s=20)
  - [1 hr CUDA tutorial by Jeremy Howard](https://x.com/jeremyphoward/status/1749153507096322239?s=20)
+ - [Implementation of the training framework proposed in Self-Rewarding Language Model, from MetaAI](https://github.com/lucidrains/self-rewarding-lm-pytorch) and his [github](https://github.com/lucidrains) with many other implementations.
 
 
 
@@ -143,6 +135,7 @@ LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/statu
 - On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
 - [one person/customer - one sqlite model.](https://x.com/sriramk/status/1746598735885254785?s=20)
 - [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
+- [Favicon generator](https://favicon.io/favicon-converter/)
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
