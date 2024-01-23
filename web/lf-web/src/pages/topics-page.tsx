@@ -59,43 +59,25 @@ export const TopicsPage: React.FC = () => {
         navigate(`/learn/${topicId}`);
     };
 
-    /*
-    const handleDeleteTopic = async (id: number) => {
-        const accessToken = await getAccessTokenSilently();
-        const response = await deleteTopic(accessToken, id);
-        console.log("Response:", response);
-        
-        if (response.status === 204) {
-            setTopics(topics.filter(topic => topic.id !== id)); // Remove the deleted topic from the local state
-        }
-
-    };
-    */
 
     return (
         <PageLayout>
             <div className="content-layout">
-                <h1 id="page-title" className="content__title">
-                    Topics
-                </h1>
                 <div className="content__body">
-                    <p id="page-description">
-                        This is a notes page.
-                    </p>
                     <div className="topics-grid">
                         <div className="topic-item add-new-topic">
                             <form onSubmit={handleCreateTopic}>
                                 <div className="form-group">
-                                    <label htmlFor="title">Title</label>
                                     <input
                                         type="text"
                                         name="title"
-                                        className="form-control"
+                                        className="new-topic-input"
                                         value={newTopic.title}
                                         onChange={handleNewTopicChange}
+                                        placeholder="Enter Topic Title..."
                                     />
                                 </div>
-                                <button type="submit" className="btn btn-primary">
+                                <button type="submit" className="create-topic-button">
                                     Create Topic
                                 </button>
                             </form>

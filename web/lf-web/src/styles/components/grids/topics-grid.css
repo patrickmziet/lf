@@ -23,22 +23,64 @@
   
   .add-new-topic {
     background: var(--emerald-yellow-gradient); /* Different background color for 'add new' block */
-    cursor: pointer; /* Change cursor to indicate it's clickable */
+    cursor: default; 
   }
 
   .add-new-topic:hover {
     background: var(--pink-yellow-gradient); /* Different background color when hovering over 'add new' block */
   }
+
+  .topic-item, .add-new-topic {
+    height: 150px; /* Default height for larger screens */
+    /* Other styles */
+  } 
+
+  .new-topic-input {
+    border-radius: 10px; /* Adjust as needed */
+    background-color: transparent;
+    border: 2px solid var(--dark-aluminium);
+    text-align: center;
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    /* Other styling properties */
+  }
+
+  .new-topic-input::placeholder {
+    color: var(--dark-aluminium);
+    /* Other placeholder styling if needed */
+  }
+
+  .create-topic-button {
+    border-radius: 15px; /* Adjust as needed */
+    background-color: transparent;
+    border: 2px solid var(--dark-aluminium);
+    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    cursor: pointer;
+    font-family: var(--font-secondary);
+    font-weight: 600;
+    margin-top: 10px;
+  }
   
+  .create-topic-button:hover {
+    background-color: var(--mandarine);
+    /* Other hover effects */
+  }
+
   /* Responsive design for smaller screens */
   @media (max-width: 768px) {
     .topics-grid {
       grid-template-columns: repeat(2, 1fr); /* 2 columns for smaller screens */
+    }
+    .topic-item, .add-new-topic {
+        height: 120px; /* Adjusted height for medium screens */
     }
   }
   
   @media (max-width: 480px) {
     .topics-grid {
       grid-template-columns: 1fr; /* 1 column for very small screens */
+    }
+    .topic-item, .add-new-topic {
+        height: 100px; /* Adjusted height for medium screens */
     }
   }
