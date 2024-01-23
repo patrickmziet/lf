@@ -55,6 +55,11 @@ export const TopicsPage: React.FC = () => {
         }
     };
 
+    const navigateToLearnPage = (topicId: number) => {
+        navigate(`/learn/${topicId}`);
+    };
+
+    /*
     const handleDeleteTopic = async (id: number) => {
         const accessToken = await getAccessTokenSilently();
         const response = await deleteTopic(accessToken, id);
@@ -65,6 +70,7 @@ export const TopicsPage: React.FC = () => {
         }
 
     };
+    */
 
     return (
         <PageLayout>
@@ -74,38 +80,32 @@ export const TopicsPage: React.FC = () => {
                 </h1>
                 <div className="content__body">
                     <p id="page-description">
-                        <span>
-                            This is a notes page.  
-                        </span>
+                        This is a notes page.
                     </p>
-                    <form onSubmit={handleCreateTopic}>
-                        <div className="form-group">
-                            <label htmlFor="title">Title</label>
-                            <input
-                                type="text"
-                                name="title"
-                                className="form-control"
-                                value={newTopic.title}
-                                onChange={handleNewTopicChange}
-                            />
+                    <div className="topics-grid">
+                        <div className="topic-item add-new-topic">
+                            <form onSubmit={handleCreateTopic}>
+                                <div className="form-group">
+                                    <label htmlFor="title">Title</label>
+                                    <input
+                                        type="text"
+                                        name="title"
+                                        className="form-control"
+                                        value={newTopic.title}
+                                        onChange={handleNewTopicChange}
+                                    />
+                                </div>
+                                <button type="submit" className="btn btn-primary">
+                                    Create Topic
+                                </button>
+                            </form>
                         </div>
-                        <button type="submit" className="btn btn-primary">
-                            Create Topic
-                        </button>
-                    </form>
-                    <ol>
-                        {Array.isArray(topics) && topics.length > 0 ? (
-                            topics.map(topic => (
-                                <li key={topic.id}>
-                                    <p>Title: {topic.title} -- ID: {topic.id}</p>
-                                    <Link to={`/learn/${topic.id}`}>Learn</Link> /
-                                    <button onClick={() => handleDeleteTopic(topic.id)}>Delete</button>
-                                </li>
-                            ))                            
-                        ) : (
-                            <p>No topics found</p>
-                        )}
-                    </ol>
+                        {Array.isArray(topics) && topics.length > 0 && topics.map(topic => (
+                            <div key={topic.id} className="topic-item" onClick={() => navigateToLearnPage(topic.id)}>
+                                <h3 className="content__title">{topic.title}</h3>
+                            </div>
+                        ))}
+                    </div>
                 </div>
             </div>
         </PageLayout>

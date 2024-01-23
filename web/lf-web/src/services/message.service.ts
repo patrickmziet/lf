@@ -46,9 +46,9 @@ export const createTopic = async (accessToken: string, topicData: object): Promi
   };
 };
 
-export const deleteTopic = async (accessToken: string, id: number): Promise<ApiResponse<any>> => {
+export const deleteTopic = async (accessToken: string, topicId: string): Promise<ApiResponse<any>> => {
   const config: AxiosRequestConfig = {
-      url: `${apiServerUrl}/api/topics/delete/${id}/`,
+      url: `${apiServerUrl}/api/topics/delete/${topicId}/`,
       method: "DELETE",
       headers: {
           "content-Type": "application/json",

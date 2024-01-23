@@ -9,16 +9,25 @@
     border: 1px solid var(--dark-aluminium); /* Border for each topic */
     border-radius: 10px; /* Rounded corners for each topic */
     padding: 20px; /* Padding inside each topic */
-    background-color: var(--mandarine-orange-gradient); /* Background color for each topic */
+    background: var(--yellow-mandarine-gradient); /* Background color for each topic */
     text-align: center; /* Center the text inside each topic */
     display: flex;
     align-items: center;
     justify-content: center;
+    cursor: pointer;
+  }
+
+  .topic-item:hover {
+    background: var(--pink-yellow-gradient); /* Different background color when hovering over a topic */
   }
   
   .add-new-topic {
-    background-color: var(--pink-yellow-gradient); /* Different background color for 'add new' block */
+    background: var(--emerald-yellow-gradient); /* Different background color for 'add new' block */
     cursor: pointer; /* Change cursor to indicate it's clickable */
+  }
+
+  .add-new-topic:hover {
+    background: var(--pink-yellow-gradient); /* Different background color when hovering over 'add new' block */
   }
   
   /* Responsive design for smaller screens */

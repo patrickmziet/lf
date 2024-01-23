@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getTopicDocuments } from "../services/document.service";
-import { getTopicFlashCards } from "../services/message.service";
+import { getTopicFlashCards, deleteTopic } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
 import { Document } from "../models/document";
 import { Flashcard } from "../models/flashcard";
@@ -19,9 +19,7 @@ export const LearnPage: React.FC = () => {
 
     useEffect(() => {
         const fetchDocuments = async () => {
-            if (!topicId) {
-                return;
-            }
+            if (!topicId) return;
             const accessToken = await getAccessTokenSilently();
             const { data } = await getTopicDocuments(accessToken, topicId);
             setDocuments(data);
@@ -47,6 +45,16 @@ export const LearnPage: React.FC = () => {
     const endOfDayInSeconds = Math.floor(endOfDay.getTime() / 1000);
     const dueFlashcards = flashcards.filter(card => card.due_date < endOfDayInSeconds);
 
+    const handleDeleteTopic = async () => {
+        if (!topicId) return;
+        const accessToken = await getAccessTokenSilently();
+        const response = await deleteTopic(accessToken, topicId);
+        if (response.status === 204) {
+          // Handle successful deletion, e.g., navigate back to the topics list
+          navigate('/topics');
+        }
+      };
+
     return (
         <PageLayout>
             <div className="content-layout">
@@ -62,6 +70,7 @@ export const LearnPage: React.FC = () => {
                 <button onClick={() => navigate(`/cards/${topicId}`, { state: { flashcards } })}>
                     Study Flashcards
                 </button>
+                <button onClick={handleDeleteTopic}>Delete Topic</button>
                 <button onClick={() => navigate('/topics')}>
                     Back to Topics
                 </button>
