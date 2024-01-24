@@ -167,7 +167,33 @@
   cursor: pointer;
   border-radius: 10px;
   background-color: var(--mandarine);
-  border: 2px solid var(--mandarine);
+  border: 0px solid var(--mandarine);
   color: var(--white);
+}
+
+.back-to-topics-button:hover {
+  background-color: var(--dark-aluminium);
+  /* Other hover effects */
+}
+
+.delete-topic-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px; /* Adjust as needed for spacing from the top right corner */
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+}
+
+.delete-topic-button:hover {
+  background-color: var(--orange);
+  /* Other hover effects */
 }
 

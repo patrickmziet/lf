@@ -49,11 +49,14 @@ export const LearnPage: React.FC = () => {
 
     const handleDeleteTopic = async () => {
         if (!topicId) return;
-        const accessToken = await getAccessTokenSilently();
-        const response = await deleteTopic(accessToken, topicId);
-        if (response.status === 204) {
-          // Handle successful deletion, e.g., navigate back to the topics list
-          navigate('/topics');
+        const isConfirmed = window.confirm('Are you sure you want to delete this topic?');
+        if (isConfirmed) {
+            const accessToken = await getAccessTokenSilently();
+            const response = await deleteTopic(accessToken, topicId);
+            if (response.status === 204) {
+                // Handle successful deletion, e.g., navigate back to the topics list
+                navigate('/topics');
+            }
         }
       };
     
@@ -68,6 +71,9 @@ export const LearnPage: React.FC = () => {
                     <button className="back-to-topics-button" onClick={() => navigate('/topics')}>
                             {"<< Topics"}
                     </button>
+                    <button className="delete-topic-button" onClick={handleDeleteTopic}>
+                        Delete Topic
+                    </button>
                     <div className="learn-grid">
                         <h1 className="learn__title">
                                 {state.title || "Default Title"}
@@ -75,9 +81,6 @@ export const LearnPage: React.FC = () => {
                         <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
                             <p>{dueFlashcards.length} flashcards are due</p>
                         </div>
-                        
-                        <button onClick={handleDeleteTopic}>Delete Topic</button>
-
                         <h1 id="page-title" className="content__title">
                             Resources
                         </h1>
