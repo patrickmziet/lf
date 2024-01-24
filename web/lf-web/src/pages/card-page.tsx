@@ -97,7 +97,9 @@ export const CardPage: React.FC = () => {
                     }
                     break;
                 case 'l':
-                    handleIncorrect();
+                    if (showAnswer) {
+                        handleIncorrect();
+                    }
                     break;
                 default:
                     break;
