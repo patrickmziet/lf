@@ -207,20 +207,23 @@ const handleDelete = async (cardId: number) => {
         console.error('Card not found');
         return;
     }
-    // Optimistically remove the card from local state
-    setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
-    setFlashcards(flashcards.filter(card => card.id !== cardId));
-
-    try {
-        // Make the API request to delete the card
-        const token = await getAccessTokenSilently();
-        await deleteFlashCard(token, cardId);
-    } catch (error) {
-        // If the request fails, revert the change in local state and inform the user
-        console.error(error);
-        setMasterFlashcards([...masterFlashcards, cardToDelete]);
-        setFlashcards([...flashcards, cardToDelete]);
-        alert('Failed to delete the card. Please try again.');
+    const confirmDelete = window.confirm("Are you sure you want to delete the card?");
+    if (confirmDelete) {
+        // Optimistically remove the card from local state
+        setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
+        setFlashcards(flashcards.filter(card => card.id !== cardId));
+        try {
+            // Make the API request to delete the card
+            const token = await getAccessTokenSilently();
+            await deleteFlashCard(token, cardId);
+        } catch (error) {
+            // If the request fails, revert the change in local state and inform the user
+            console.error(error);
+            setMasterFlashcards([...masterFlashcards, cardToDelete]);
+            setFlashcards([...flashcards, cardToDelete]);
+            alert('Failed to delete the card. Please try again.');
+        }
+        setShowAnswer(false);
     }
 };
 
@@ -249,9 +252,7 @@ const handleDelete = async (cardId: number) => {
                                 <p>{flashcards[currentCardIndex].answer}</p>
                             </>
                         )}
-                        {showAnswer && <p>Due date: {flashcards[currentCardIndex].due_date}</p>}
-                        {showAnswer && <p>Interval: {flashcards[currentCardIndex].interval}</p>}
-                        {showAnswer && <p>Record: {flashcards[currentCardIndex].record}</p>}
+                        
                         {!showAnswer && <button className="show-answer-button" onClick={() => setShowAnswer(true)}>
                                             Show Answer
                                         </button>
@@ -282,6 +283,9 @@ const handleDelete = async (cardId: number) => {
                     )}
                     {/* Upcoming flashcards */}
                     <div>
+                        {showAnswer && <p>Due date: {flashcards[currentCardIndex].due_date}</p>}
+                        {showAnswer && <p>Interval: {flashcards[currentCardIndex].interval}</p>}
+                        {showAnswer && <p>Record: {flashcards[currentCardIndex].record}</p>}
                         <p>Current time in seconds: {time}</p>
                         <p>End of day in seconds: {endOfDayInSeconds}</p>
                         <h2>Upcoming Flashcards</h2>
