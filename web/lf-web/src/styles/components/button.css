@@ -197,3 +197,84 @@
   /* Other hover effects */
 }
 
+.show-answer-button {
+  /* Button in the card container which is centered and at the bottom of the card container */
+  position: absolute; /* Position the button absolutely within its relative parent */
+  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  left: 50%; /* Start at 50% from the left of the container */
+  transform: translateX(-50%); /* Offset the button by half its width to center it */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+  text-align: center; /* Ensure text is centered */
+  /* Add other styles such as width or max-width if necessary */
+}
+
+.show-answer-button:hover {
+  background-color: var(--dark-aluminium);
+  /* Other hover effects */
+}
+
+.create-more-cards-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px; /* Adjust as needed for spacing from the top right corner */
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+}
+
+.create-more-cards-button:hover {
+  background-color: var(--dark-aluminium);
+}
+
+.button-container {
+  display: flex; /* Use Flexbox for layout */
+  justify-content: center; /* Center children horizontally */
+  position: absolute; /* Position the container absolutely within its relative parent */
+  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  left: 0; /* Start at the left edge of the container */
+  right: 0; /* Extend to the right edge of the container */
+  /* Add other styles such as padding or margin if necessary */
+}
+
+.correct-button, .incorrect-button, .edit-card-button, .delete-card-button {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+  text-align: center; /* Ensure text is centered */
+  margin: 0 5px; /* Adjust as needed for spacing between buttons */
+}
+
+.correct-button:hover, .incorrect-button:hover {
+  background-color: var(--green);
+  /* Other hover effects */
+}
+
+.incorrect-button:hover {
+  background-color: var(--orange);
+}
+
+.edit-card-button:hover {
+  background-color: var(--dark-aluminium);
+}
+
+.delete-card-button:hover {
+  background-color: var(--orange);
+  /* Other hover effects */
+}

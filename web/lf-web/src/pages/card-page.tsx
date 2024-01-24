@@ -227,54 +227,76 @@ const handleDelete = async (cardId: number) => {
     return (
         <PageLayout>
             <div className="content-layout">
-                <button onClick={handleBack}>Back to Learn Page</button>
-                <button onClick={handleCreateMoreCards}>Create More Cards</button>
-                <h1 id="page-title" className="content__title">
-                    Flashcards for topic {topicId}
-                </h1>
-                <p>Current time in seconds: {time}</p>
-                <p>End of day in seconds: {endOfDayInSeconds}</p>
-                {currentCardIndex < flashcards.length ? (
+                <div className="content__body"> 
+                    <button className="back-to-topics-button" onClick={handleBack}>
+                        {"<< Learn"}
+                    </button>
+                    <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
+                        Create More Cards
+                    </button>
+                    <h1 className="learn__title">
+                        Flashcards for topic {topicId}
+                    </h1>
+                    {currentCardIndex < flashcards.length ? (
                     isEditing ? (
                         <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
                     ) : (
-                    <div>
-                        <p>{flashcards[currentCardIndex].question}</p>
-                        {showAnswer && <p>{flashcards[currentCardIndex].answer}</p>}
+                    <div className="card-container">
+                        <p className="card-question">{flashcards[currentCardIndex].question}</p>
+                        {showAnswer && (
+                            <>
+                                <div className="answer-separator"></div>
+                                <p>{flashcards[currentCardIndex].answer}</p>
+                            </>
+                        )}
                         {showAnswer && <p>Due date: {flashcards[currentCardIndex].due_date}</p>}
                         {showAnswer && <p>Interval: {flashcards[currentCardIndex].interval}</p>}
                         {showAnswer && <p>Record: {flashcards[currentCardIndex].record}</p>}
-                        {!showAnswer && <button onClick={() => setShowAnswer(true)}>Show Answer</button>}
+                        {!showAnswer && <button className="show-answer-button" onClick={() => setShowAnswer(true)}>
+                                            Show Answer
+                                        </button>
+                        }
                         {showAnswer && (
-                            <>
-                                <button onClick={handleCorrect}>Correct</button>
-                                <button onClick={handleIncorrect}>Incorrect</button>
-                            </>
+                            <div className="button-container">
+                                <button className="correct-button" onClick={handleCorrect}>
+                                    Correct
+                                </button>
+                                <button className="incorrect-button" onClick={handleIncorrect}>
+                                    Incorrect
+                                </button>
+                                <button className="edit-card-button" onClick={() => handleEdit(currentCardIndex)}>
+                                    Edit
+                                </button>
+                                <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
+                                    Delete
+                                </button>
+                            </div>
                         )}
-                        <button onClick={() => handleEdit(currentCardIndex)}>Edit</button>
-                        <button onClick={() => handleDelete(flashcards[currentCardIndex].id)}>Delete</button>
                     </div>
                     )
-                ) : (
+                    ) : (
                     <div>
                         <p>No more flashcards for this session</p>
                         <button onClick={handleBack}>Finish Session</button>
                     </div>
-                )}
-                {/* Upcoming flashcards */}
-                <div>
-                <h2>Upcoming Flashcards</h2>
-                {flashcards.slice(currentCardIndex + 1).map((card, index) => (
-                    <div key={index}>
-                        <p>Order in queue: {index + 1}</p>  
-                        <p>Question: {card.question}</p>
-                        <p>Answer: {card.answer}</p>
-                        <p>Due date: {card.due_date}</p>
-                        <p>Interval: {card.interval}</p>
-                        <p>Record: {card.record}</p>
+                    )}
+                    {/* Upcoming flashcards */}
+                    <div>
+                        <p>Current time in seconds: {time}</p>
+                        <p>End of day in seconds: {endOfDayInSeconds}</p>
+                        <h2>Upcoming Flashcards</h2>
+                        {flashcards.slice(currentCardIndex + 1).map((card, index) => (
+                            <div key={index}>
+                                <p>Order in queue: {index + 1}</p>  
+                                <p>Question: {card.question}</p>
+                                <p>Answer: {card.answer}</p>
+                                <p>Due date: {card.due_date}</p>
+                                <p>Interval: {card.interval}</p>
+                                <p>Record: {card.record}</p>
+                            </div>
+                        ))}
                     </div>
-                ))}
-            </div>
+                </div>
             </div>   
         </PageLayout>
     );
