@@ -138,3 +138,19 @@
     line-height: 1.6rem;
   }
 }
+
+.create-topic-button {
+  border-radius: 15px; /* Adjust as needed */
+  background-color: transparent;
+  border: 2px solid var(--dark-aluminium);
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  cursor: pointer;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.create-topic-button:hover {
+  background-color: var(--mandarine);
+  /* Other hover effects */
+}
