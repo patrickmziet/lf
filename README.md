@@ -124,6 +124,11 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
  - [Karpathy: Prompt engineering (or rather "Flow engineering") intensifies for code generation. Great reading and a reminder of how much alpha there is (pass@5 19% to 44%) in moving from a naive prompt:answer paradigm to a "flow" paradigm, where the answer is constructed iteratively.](https://x.com/karpathy/status/1748043513156272416?s=20)
  - [1 hr CUDA tutorial by Jeremy Howard](https://x.com/jeremyphoward/status/1749153507096322239?s=20)
  - [Implementation of the training framework proposed in Self-Rewarding Language Model, from MetaAI](https://github.com/lucidrains/self-rewarding-lm-pytorch) and his [github](https://github.com/lucidrains) with many other implementations.
+- [Presents CogVLM, a powerful open-source visual language foundation model that achieves SotA perf on 10 classic cross-modal benchmarks](https://x.com/arankomatsuzaki/status/1721719130720530489?s=20)
+- [Databricks model training](https://x.com/code_star/status/1721282072147575274?s=20)
+- [Shoggoth (silk road for ML models)](https://x.com/thenetrunna/status/1720859919497236825?s=20)
+- [TinyLlama: a useful 1B model](https://x.com/Teknium1/status/1720817154747207781?s=20)
+- [Emotion Prompting](https://x.com/llama_index/status/1720838162304622617?s=20)
 
 
 
