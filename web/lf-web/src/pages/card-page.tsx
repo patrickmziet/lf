@@ -294,10 +294,9 @@ const handleDelete = async (cardId: number) => {
                     </div>
                     )
                     ) : (
-                    <div>
-                        <p>No more flashcards for this session</p>
-                        <button onClick={handleBack}>Finish Session</button>
-                    </div>
+                    <h4 className="learn__title">
+                        No more flashcards
+                    </h4>
                     )}
                     {/* Upcoming flashcards */}
                     <div>
