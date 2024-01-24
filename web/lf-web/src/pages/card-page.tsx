@@ -19,7 +19,7 @@ export const CardPage: React.FC = () => {
     const [endOfDayInSeconds, setEndOfDayInSeconds] = useState(Math.floor(endOfDay.getTime() / 1000));
     const navigate = useNavigate();
     const location = useLocation();
-    const flashcardsFromPreviousPage = (location.state as { flashcards: Flashcard[] }).flashcards;
+    const flashcardsFromPreviousPage = location.state?.flashcards;
     const [isEditing, setIsEditing] = useState<boolean>(false);
     //const [isEditing, setIsEditing] = useState(false);
     //const [editedCard, setEditedCard] = useState<Flashcard | null>(null);

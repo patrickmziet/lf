@@ -95,7 +95,7 @@ export const LearnPage: React.FC = () => {
                     </button>
                     <div className="learn-grid">
                         <h1 className="learn__title">
-                                {title || "Default Title"}
+                                {title || "Loading..."}
                         </h1>
                         <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
                             <p>{dueFlashcards.length} flashcards are due</p>
