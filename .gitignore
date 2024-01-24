@@ -12,7 +12,7 @@ media/  # Assuming media files are stored locally
 local_settings.py  # Local settings file which shouldn't be committed to the repo
 
 # React / Node related
-/node_modules/
+node_modules/
 /build/
 .npmrc
 .yarn-cache
