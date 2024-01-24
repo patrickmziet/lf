@@ -17,6 +17,7 @@ export const Auth0ProviderWithNavigate = ({
   const audience = process.env.REACT_APP_AUTH0_AUDIENCE;
 
   const onRedirectCallback = async (appState?: AppState) => {
+      //navigate("/topics");
       navigate(appState?.returnTo || window.location.pathname);
       console.log("appState", appState?.returnTo);
 

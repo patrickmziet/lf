@@ -255,6 +255,13 @@ class TopicDocumentsAPIView(generics.ListAPIView):
         topic_id = self.kwargs['topic_id']
         return Document.objects.filter(topic_id=topic_id)
 
+class TopicRetrieveAPIView(IsAuthenticatedUserView, generics.RetrieveAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.get_user())
+
 class DocumentUploadView(IsAuthenticatedUserView, APIView):
     parser_classes = [MultiPartParser]
 

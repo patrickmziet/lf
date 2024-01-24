@@ -1,6 +1,7 @@
 import { AxiosRequestConfig } from "axios";
 import { ApiResponse } from "../models/api-response";
 import { Flashcard } from "../models/flashcard";
+import { Topic } from "../models/topic";
 import { callExternalApi } from "./external-api.service";
 
 const apiServerUrl = process.env.REACT_APP_API_SERVER_URL;
@@ -64,6 +65,26 @@ export const deleteTopic = async (accessToken: string, topicId: string): Promise
       status: response.status,
   };
 };
+
+// Function to get a topic for the authenticated user given the topic id
+export const getTopic = async (accessToken: string, topicId: string): Promise<ApiResponse<Topic>> => {
+  const config: AxiosRequestConfig = {
+    url: `${apiServerUrl}/api/topics/${topicId}/`,
+    method: "GET",
+    headers: {
+      "content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    }, 
+  };
+
+  const { data, error } = (await callExternalApi({ config })) as ApiResponse<Topic>;
+
+  return {
+    data,
+    error,
+  };
+}
+
 
 // Function to get topics for the authenticated user
 export const getUserTopics = async (accessToken: string): Promise<ApiResponse<{ topics: any }>> => {

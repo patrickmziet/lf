@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { getTopicDocuments } from "../services/document.service";
-import { getTopicFlashCards, deleteTopic } from "../services/message.service";
+import { getTopicFlashCards, deleteTopic, getTopic } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
 import { Document } from "../models/document";
 import { Flashcard } from "../models/flashcard";
@@ -18,7 +18,26 @@ export const LearnPage: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const state = location.state as { title: string };
+    const [title, setTitle] = useState<string | null>(null);
+    //const title = state?.title || "Default Title";
 
+    useEffect(() => {
+        const fetchTopic = async () => {
+          if (!topicId) return;
+          const accessToken = await getAccessTokenSilently();
+          const { data } = await getTopic(accessToken, topicId); // Replace with your actual API call
+          if (data) {
+            setTitle(data.title);
+          }
+        };
+    
+        if (state && state.title) {
+          setTitle(state.title);
+        } else {
+          fetchTopic();
+        }
+      }, [topicId, state]);
+    
     useEffect(() => {
         const fetchDocuments = async () => {
             if (!topicId) return;
@@ -76,19 +95,21 @@ export const LearnPage: React.FC = () => {
                     </button>
                     <div className="learn-grid">
                         <h1 className="learn__title">
-                                {state.title || "Default Title"}
+                                {title || "Default Title"}
                         </h1>
                         <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
                             <p>{dueFlashcards.length} flashcards are due</p>
                         </div>
-                        <h1 id="page-title" className="content__title">
-                            Resources
-                        </h1>
-                        <ul>
-                            {documents.map((doc, index) => (
-                                <li key={index}>{doc.document.split("/").pop()}</li>
-                            ))}
-                        </ul>
+                        <div className="resources-container">
+                            <h1 className="learn__title">
+                                Resources
+                            </h1>
+                            <ul className="resources-list">
+                            {documents.filter(doc => !doc.document.includes("combined_file")).map((doc, index) => (
+                                    <li key={index}>{doc.document.split("/").pop()}</li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>   
