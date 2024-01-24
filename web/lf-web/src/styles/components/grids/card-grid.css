@@ -15,7 +15,7 @@
 
 .card-question {
     font-size: 1.6rem; /* Adjust font size as needed */
-    margin-bottom: 1rem; /* Space below the question */
+    margin-bottom: 2rem; /* Space below the question */
 }
 
 .answer-separator {
@@ -23,6 +23,20 @@
     width: 99%; /* Almost the full length of the card container */
     margin: 0 auto; /* Center the line horizontally */
     display: block; /* Ensure it's displayed as a block-level element */
+}
+
+.answer-container {
+    padding-top: 2rem; /* Space above the answer */
+}
+
+.edit-input {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box; /* To include padding in the width */
+    margin-bottom: 10px; /* Spacing between the input and the save button */
 }
 
 /* Responsive design for smaller screens */

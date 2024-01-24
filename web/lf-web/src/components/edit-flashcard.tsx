@@ -23,16 +23,22 @@ export const EditFlashcard: React.FC<EditFlashcardProps> = ({ card, onSave }) =>
             <input
                 type="text"
                 name="question"
+                className="edit-input"
                 onChange={formik.handleChange}
                 value={formik.values.question}
             />
             <input
                 type="text"
                 name="answer"
+                className="edit-input"
                 onChange={formik.handleChange}
                 value={formik.values.answer}
             />
-            <button type="submit">Save</button>
+            <div className="save-button-container">
+                <button className="save-button" type="submit">
+                    Save
+                </button>
+            </div>
         </form>
     );
 };

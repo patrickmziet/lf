@@ -249,7 +249,7 @@
   /* Add other styles such as padding or margin if necessary */
 }
 
-.correct-button, .incorrect-button, .edit-card-button, .delete-card-button {
+.correct-button, .incorrect-button, .edit-card-button, .delete-card-button, .save-button {
   font-family: var(--font-secondary);
   font-weight: 600;
   cursor: pointer;
@@ -277,4 +277,19 @@
 .delete-card-button:hover {
   background-color: var(--orange);
   /* Other hover effects */
+}
+
+.save-button:hover {
+  background-color: var(--dark-aluminium);
+}
+
+.save-button-container {
+  display: flex; /* Use Flexbox for layout */
+  justify-content: center; /* Center children horizontally */
+  position: relative; /* Position the container absolutely within its relative parent */
+  margin-top: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  left: 0; /* Start at the left edge of the container */
+  right: 0; /* Extend to the right edge of the container */
+  /* Add other styles such as padding or margin if necessary */
 }

@@ -265,7 +265,9 @@ const handleDelete = async (cardId: number) => {
                         {showAnswer && (
                             <>
                                 <div className="answer-separator"></div>
-                                <p>{flashcards[currentCardIndex].answer}</p>
+                                <div className="answer-container">
+                                    <p>{flashcards[currentCardIndex].answer}</p>
+                                </div>
                             </>
                         )}
                         
