@@ -154,3 +154,20 @@
   background-color: var(--mandarine);
   /* Other hover effects */
 }
+
+.back-to-topics-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 20px; /* Adjust as needed for spacing from the top left corner */
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 2px solid var(--mandarine);
+  color: var(--white);
+}
+

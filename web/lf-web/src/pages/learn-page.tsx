@@ -65,6 +65,9 @@ export const LearnPage: React.FC = () => {
         <PageLayout>
             <div className="content-layout">
                 <div className="content__body">
+                    <button className="back-to-topics-button" onClick={() => navigate('/topics')}>
+                            {"<< Topics"}
+                    </button>
                     <div className="learn-grid">
                         <h1 className="learn__title">
                                 {state.title || "Default Title"}
@@ -74,9 +77,7 @@ export const LearnPage: React.FC = () => {
                         </div>
                         
                         <button onClick={handleDeleteTopic}>Delete Topic</button>
-                        <button onClick={() => navigate('/topics')}>
-                            Back to Topics
-                        </button>
+
                         <h1 id="page-title" className="content__title">
                             Resources
                         </h1>

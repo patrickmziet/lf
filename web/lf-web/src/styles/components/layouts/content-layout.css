@@ -11,6 +11,7 @@
   /* responsive */
 
   padding: 48px;
+  position: relative;
 }
 
 .content__title {
