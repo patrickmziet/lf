@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getTopicFlashCards, updateFlashCards, createMoreFlashCards, deleteFlashCard } from "../services/message.service";
+import { getTopicFlashCards, updateFlashCards, createMoreFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
 import { useAuth0 } from "@auth0/auth0-react";
 import { EditFlashcard } from '../components/edit-flashcard';
@@ -21,8 +21,24 @@ export const CardPage: React.FC = () => {
     const location = useLocation();
     const flashcardsFromPreviousPage = location.state?.flashcards;
     const [isEditing, setIsEditing] = useState<boolean>(false);
-    //const [isEditing, setIsEditing] = useState(false);
-    //const [editedCard, setEditedCard] = useState<Flashcard | null>(null);
+    const titleFromState = location.state?.title;
+    const [title, setTitle] = useState<string | null>(titleFromState);
+
+    // Fetch topic title
+    useEffect(() => {
+        const fetchTopic = async () => {
+            if (!topicId) return;
+            const accessToken = await getAccessTokenSilently();
+            const { data } = await getTopic(accessToken, topicId);
+            if (data) {
+                setTitle(data.title);
+            }
+        };
+
+        if (!titleFromState) {
+            fetchTopic();
+        }
+    }, [topicId, getAccessTokenSilently, titleFromState]);
 
     // Fetch flashcards
     useEffect(() => {
@@ -238,7 +254,7 @@ const handleDelete = async (cardId: number) => {
                         Create More Cards
                     </button>
                     <h1 className="learn__title">
-                        Flashcards for topic {topicId}
+                        {title || "Flashcards for topic {topicId}"}
                     </h1>
                     {currentCardIndex < flashcards.length ? (
                     isEditing ? (

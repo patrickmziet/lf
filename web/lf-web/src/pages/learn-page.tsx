@@ -80,7 +80,7 @@ export const LearnPage: React.FC = () => {
       };
     
     const navigateToFlashcards = (topicId: string) => {
-        navigate(`/cards/${topicId}`, { state: { flashcards } });
+        navigate(`/cards/${topicId}`, { state: { flashcards, title } });
     };  
     
     return (
