@@ -249,7 +249,7 @@
   /* Add other styles such as padding or margin if necessary */
 }
 
-.correct-button, .incorrect-button, .edit-card-button, .delete-card-button, .save-button {
+.correct-button, .incorrect-button, .edit-card-button, .delete-card-button, .save-button, .upload-button, .remove-button {
   font-family: var(--font-secondary);
   font-weight: 600;
   cursor: pointer;
@@ -261,25 +261,43 @@
   margin: 0 5px; /* Adjust as needed for spacing between buttons */
 }
 
+.remove-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.remove-button {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+  text-align: center; /* Ensure text is centered */
+  margin: 0 5px; /* Adjust as needed for spacing between buttons */
+  /* make button text smaller */
+
+}
+
 .correct-button:hover, .incorrect-button:hover {
   background-color: var(--green);
   /* Other hover effects */
 }
 
-.incorrect-button:hover {
+.incorrect-button:hover, .delete-card-button:hover, .remove-button:hover {
   background-color: var(--orange);
 }
 
-.edit-card-button:hover {
-  background-color: var(--dark-aluminium);
-}
-
-.delete-card-button:hover {
-  background-color: var(--orange);
-  /* Other hover effects */
-}
-
-.save-button:hover {
+.edit-card-button:hover, .save-button:hover, .upload-button:hover {
   background-color: var(--dark-aluminium);
 }
 

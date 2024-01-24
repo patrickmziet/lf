@@ -47,7 +47,9 @@ export const UploadPage: React.FC = () => {
                     </p>
                     <form onSubmit={handleUpload}>
                     <input type="file" multiple onChange={handleFileChange} />
-                    <button type="submit">Upload</button>
+                    <button className="upload-button" type="submit">
+                        Upload
+                    </button>
                     </form>
                     <div>
                         <h3>Selected Files:</h3>
@@ -56,9 +58,13 @@ export const UploadPage: React.FC = () => {
                         ) : (
                             <ul>
                                 {selectedFiles.map((file, index) => (
-                                    <li key={index}>
+                                    <li key={index} className="file-item">
                                         {file.name}
-                                        <button onClick={() => removeFile(index)}>Remove</button>
+                                        <div className="remove-button-container">
+                                            <button className="remove-button" onClick={() => removeFile(index)}>
+                                                Remove
+                                            </button>
+                                        </div>
                                     </li>
                                 ))}
                             </ul>
