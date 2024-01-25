@@ -9,21 +9,25 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import os
 
+import dotenv
 from pathlib import Path
+from decouple import config as conf
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+dotenv.load_dotenv(BASE_DIR / '.env')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-@n4g%0q1t^%vd277c3gr7nfe_4x%_#th*-$ct22-hcs@&0#$xm"
+SECRET_KEY = conf("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("DEBUG_ENABLED")
 
 ALLOWED_HOSTS = ['*']
 
@@ -31,30 +35,34 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    "django.contrib.admin",
+    #"django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "rest_framework",
+    "corsheaders",
     "core",
-    'rest_framework',
-    'rest_framework.authtoken',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-    'allauth',
-    'allauth.account',
+    #'rest_framework.authtoken',
+    #'dj_rest_auth',
+    #'dj_rest_auth.registration',
+    #'allauth',
+    #'allauth.account',
 ]
 
 MIDDLEWARE = [
+    "learnfast.middleware.Auth0Middleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+    "csp.middleware.CSPMiddleware",
+    #"allauth.account.middleware.AccountMiddleware",
 ]
 
 ROOT_URLCONF = "learnfast.urls"
@@ -96,9 +104,15 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
     },
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",},
-    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
-    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
+    {
+        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+    },
+    {
+        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
 ]
 
 
@@ -124,24 +138,93 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-# Configure default authentication classes for DRF
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': [
-        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES': [
-            'rest_framework.permissions.IsAuthenticated',
-        ],
-}
+# Security
 
-REST_USE_JWT = True
-JWT_AUTH_COOKIE = 'jwt'
+CLIENT_ORIGIN_URL = conf("CLIENT_ORIGIN_URL")
 
-AUTHENTICATION_BACKENDS = [
-    'allauth.account.auth_backends.AuthenticationBackend',
+CORS_ALLOWED_ORIGINS = [CLIENT_ORIGIN_URL]
+
+CORS_ALLOW_METHODS = [
+    "GET",
+    "POST",
+    "DELETE",
 ]
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_UNIQUE_EMAIL = True
-ACCOUNT_EMAIL_REQUIRED = True
-ACCOUNT_USERNAME_REQUIRED = False
+CORS_ALLOW_HEADERS = [
+    "authorization",
+    "content-type",
+]
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_SECONDS = 31536000
+
+CSP_FRAME_ANCESTORS = "'none'"
+
+
+# Configure default authentication classes for DRF
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'EXCEPTION_HANDLER': 'core.views.api_exception_handler',
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication',
+    ],
+}
+
+# REST_FRAMEWORK = {
+#    'DEFAULT_AUTHENTICATION_CLASSES': [
+#        'dj_rest_auth.jwt_auth.JWTCookieAuthentication',
+#    ],
+#    'DEFAULT_PERMISSION_CLASSES': [
+#            'rest_framework.permissions.IsAuthenticated',
+#        ],
+#
+
+
+# JWT
+AUTH_USER_MODEL = 'core.User'
+AUTH0_DOMAIN = conf("AUTH0_DOMAIN")
+AUTH0_AUDIENCE = conf("AUTH0_AUDIENCE")
+
+SIMPLE_JWT = {
+    'ALGORITHM': 'RS256',
+    'JWK_URL': f'https://{AUTH0_DOMAIN}/.well-known/jwks.json',
+    'AUDIENCE': AUTH0_AUDIENCE,
+    'ISSUER': f'https://{AUTH0_DOMAIN}/',
+    'USER_ID_CLAIM': 'sub',
+    'AUTH_TOKEN_CLASSES': ('authz.tokens.Auth0Token',),
+}
+
+#REST_USE_JWT = True
+#JWT_AUTH_COOKIE = 'jwt'
+
+#AUTHENTICATION_BACKENDS = [
+#    'allauth.account.auth_backends.AuthenticationBackend',
+#]
+
+#ACCOUNT_AUTHENTICATION_METHOD = 'email'
+#ACCOUNT_UNIQUE_EMAIL = True
+#ACCOUNT_EMAIL_REQUIRED = True
+#ACCOUNT_USERNAME_REQUIRED = False
+
+# Media files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+
+# Loggging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'root': {
+        'handlers': ['file'],
+        'level': 'DEBUG',
+    },
+}

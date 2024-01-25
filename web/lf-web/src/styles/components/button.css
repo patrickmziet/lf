@@ -1,0 +1,313 @@
+.button {
+  border: 0;
+  border-radius: 0.8rem;
+
+  font-family: var(--font-primary);
+  font-weight: 600;
+  color: var(--white);
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: background 0.3s ease-out, color 0.3s ease-out;
+
+  /* responsive */
+
+  min-width: 10rem;
+  padding: 1.6rem 1.6rem;
+
+  font-size: 1.6rem;
+  line-height: 2.4rem;
+}
+
+.button--compact {
+  /* responsive */
+
+  padding: 1rem 1.6rem;
+
+  font-size: 1.6rem;
+  line-height: 1.6rem;
+}
+
+.button--primary {
+  background-color: var(--indigo);
+}
+
+.button--primary:hover {
+  /* background: rgba(99, 93, 255, 0.85); */
+  background: var(--indigo-hover);
+}
+
+.button--secondary {
+  background-color: var(--white);
+  color: var(--black);
+}
+
+.button--secondary:hover {
+  background: rgba(255, 255, 255, 0.85);
+}
+
+@media only screen and (max-width: 480px) {
+  .button {
+    /* responsive */
+
+    min-width: 0.8rem;
+    padding: 1rem 1.2rem;
+
+    font-size: 1.3rem;
+    line-height: 2.2rem;
+  }
+
+  .button--compact {
+    /* responsive */
+
+    padding: 0.6rem 1rem;
+
+    font-size: 1.3rem;
+    line-height: 2rem;
+  }
+}
+
+.button__login,
+.button__logout {
+  min-width: 8.4rem;
+
+  border: 0.1rem solid var(--white);
+  color: var(--white);
+  background-color: transparent;
+  width: 50%;
+  font-size: 1.6rem;
+
+  margin-right: 1.6rem;
+
+  font-family: var(--font-primary);
+  font-style: normal;
+  font-weight: 600;
+  line-height: 3.2rem;
+  padding: 0.8rem 0;
+  border-radius: 0.8rem;
+  text-align: center;
+
+  cursor: pointer;
+  user-select: none;
+
+  transition: background 0.3s ease-out, color 0.3s ease-out;
+}
+
+.button__sign-up {
+  min-width: 8.4rem;
+
+  border: 0.1rem solid var(--white);
+  color: var(--white);
+  background-color: transparent;
+  width: 50%;
+  font-size: 1.6rem;
+
+  margin-right: 1.6rem;
+
+  font-style: normal;
+  font-weight: 500;
+  line-height: 3.2rem;
+  padding: 0.8rem 0;
+  border-radius: 0.8rem;
+  text-align: center;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.button__login:last-child,
+.button__logout:last-child,
+.button__sign-up:last-child {
+  margin-right: 0;
+}
+
+.button__login:hover,
+.button__logout:hover,
+.button__sign-up:hover {
+  background: var(--dark-aluminium);
+}
+
+@media only screen and (min-width: 641px) {
+  .button__login,
+  .button__logout,
+  .button__sign-up {
+    padding: 0.8rem 1.2rem;
+
+    font-size: 1.4rem;
+    line-height: 1.6rem;
+  }
+}
+
+.create-topic-button {
+  border-radius: 15px; /* Adjust as needed */
+  background-color: transparent;
+  border: 2px solid var(--dark-aluminium);
+  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  cursor: pointer;
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  margin-top: 10px;
+}
+
+.create-topic-button:hover {
+  background-color: var(--mandarine);
+  /* Other hover effects */
+}
+
+.back-to-topics-button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin: 20px; /* Adjust as needed for spacing from the top left corner */
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+}
+
+.back-to-topics-button:hover {
+  background-color: var(--dark-aluminium);
+  /* Other hover effects */
+}
+
+.delete-topic-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px; /* Adjust as needed for spacing from the top right corner */
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+}
+
+.delete-topic-button:hover {
+  background-color: var(--orange);
+  /* Other hover effects */
+}
+
+.show-answer-button {
+  /* Button in the card container which is centered and at the bottom of the card container */
+  position: absolute; /* Position the button absolutely within its relative parent */
+  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  left: 50%; /* Start at 50% from the left of the container */
+  transform: translateX(-50%); /* Offset the button by half its width to center it */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+  text-align: center; /* Ensure text is centered */
+  /* Add other styles such as width or max-width if necessary */
+}
+
+.show-answer-button:hover {
+  background-color: var(--dark-aluminium);
+  /* Other hover effects */
+}
+
+.create-more-cards-button {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px; /* Adjust as needed for spacing from the top right corner */
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+}
+
+.create-more-cards-button:hover {
+  background-color: var(--dark-aluminium);
+}
+
+.button-container {
+  display: flex; /* Use Flexbox for layout */
+  justify-content: center; /* Center children horizontally */
+  position: absolute; /* Position the container absolutely within its relative parent */
+  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  left: 0; /* Start at the left edge of the container */
+  right: 0; /* Extend to the right edge of the container */
+  /* Add other styles such as padding or margin if necessary */
+}
+
+.correct-button, .incorrect-button, .edit-card-button, .delete-card-button, .save-button, .upload-button, .remove-button {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+  text-align: center; /* Ensure text is centered */
+  margin: 0 5px; /* Adjust as needed for spacing between buttons */
+}
+
+.remove-button-container {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.file-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.remove-button {
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  font-size: 1.2rem;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+  text-align: center; /* Ensure text is centered */
+  margin: 0 5px; /* Adjust as needed for spacing between buttons */
+  /* make button text smaller */
+
+}
+
+.correct-button:hover, .incorrect-button:hover {
+  background-color: var(--green);
+  /* Other hover effects */
+}
+
+.incorrect-button:hover, .delete-card-button:hover, .remove-button:hover {
+  background-color: var(--orange);
+}
+
+.edit-card-button:hover, .save-button:hover, .upload-button:hover {
+  background-color: var(--dark-aluminium);
+}
+
+.save-button-container {
+  display: flex; /* Use Flexbox for layout */
+  justify-content: center; /* Center children horizontally */
+  position: relative; /* Position the container absolutely within its relative parent */
+  margin-top: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
+  left: 0; /* Start at the left edge of the container */
+  right: 0; /* Extend to the right edge of the container */
+  /* Add other styles such as padding or margin if necessary */
+}

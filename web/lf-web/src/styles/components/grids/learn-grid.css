@@ -1,0 +1,44 @@
+.learn-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* Creates a 3-column layout */
+    gap: 20px; /* Space between grid items */
+    margin: 20px auto; /* Margin around the entire grid */
+    justify-content: center; /* Center grid items horizontally */
+    align-items: center; /* Center grid items vertically */
+    /* height: calc(100vh - 96px); */ 
+    /* height: 100vh;  Set the height of the grid to fill the viewport */
+  }
+
+.learn-item {
+    border: 1px solid var(--dark-aluminium); /* Border for each topic */
+    border-radius: 10px; /* Rounded corners for each topic */
+    padding: 20px; /* Padding inside each topic */
+    background: var(--yellow-mandarine-gradient); /* Background color for each topic */
+    text-align: center; /* Center the text inside each topic */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 100px;
+    width: 400px;
+}
+
+.learn-item:hover {
+    background: var(--pink-yellow-gradient); /* Different background color when hovering over a topic */
+  }
+
+.learn__title {
+    text-align: center;
+    margin-top: 0;
+}
+
+.resources-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  column-gap: 20px;
+  row-gap: 20px;
+  list-style: none;
+  padding: 0;
+  max-height: 9rem; /* Adjust based on line height and desired number of items per column */
+  overflow: auto;
+}

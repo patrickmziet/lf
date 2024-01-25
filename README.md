@@ -95,12 +95,58 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [64k and 128k context window for Mistral](https://x.com/Teknium1/status/1720108793055596978?s=20)
 - [YaRN: Efficient Context Window Extension of Large Language Models](https://twitter.com/nearcyan/status/1720243724901638413?s=20)
 - [YouTune: Finetune image models on YouTube videos](https://x.com/charliebholtz/status/1719847667495231700?s=20)
+- [OpenAI cookbook](https://cookbook.openai.com/examples/assistants_api_overview_python)
+- [So it seems we may finally have a GPT-4 level model in open source. https://reddit.com/r/LocalLLaMA/comments/17vcr9d/llm_comparisontest_2x_34b_yi_dolphin_nous/ It's a merge of two llama 70b](https://x.com/Dorialexander/status/1724583911789842522?s=20)
+- [Another small powerful LLM: Orca](https://x.com/pwang/status/1726957354288111948?s=20)
+- [More on Orca](https://twitter.com/gradio/status/1727304093801316448?s=51)
+- [Introducing OpenWebMath, a massive dataset containing every math document found on the internet - with equations in LaTeX format!](https://x.com/keirp1/status/1711918424866361610?s=20)
+- [ToolChain*: Efficient Action Space Navigation in Large Language Models with A* Search uses algorithms like A* to improve LLM answers, improving sota on both planning and reasoning tasks](https://x.com/nearcyan/status/1729355904364208603?s=20)
+- [DocLLM: A layout-aware generative language model for multimodal document understanding](https://x.com/_akhaliq/status/1742369195034099731?s=20)
+- [Where to do evals](https://x.com/gblazex/status/1737574824753467647?s=20)
+- [Gemini: A Family of Highly Capable Multimodal Models](https://arxiv.org/abs/2312.11805)
+- [GPT-4 + Medprompt -> SOTA MMLU, Mixtral 8x7B @ MLX nice and clean, Beyond Human Data: Scaling Self-Training for Problem-Solving with Language Models, Phi-2 (2.7B), the smallest most impressive model, LLM360: Towards Fully Transparent Open-Source LLMs](https://x.com/karpathy/status/1734659057938477174?s=20)
+- [Access Mixtral with the fastest inference performance anywhere! Up to 100 token/s for $0.0006/1K tokens — to our knowledge the fastest performance at the lowest price! Mixtral-8x7b-32kseqlen @MistralAI & DiscoLM-mixtral-8x7b-v2 are live on Together API!](https://x.com/togethercompute/status/1734282721982324936?s=20)
+ - [Official post on Mixtral 8x7B](https://x.com/karpathy/status/1734251375163511203?s=20)
+ - [MistralAI: MegaBlocks is a light-weight library for mixture-of-experts (MoE) training.](https://github.com/mistralai/megablocks-public/tree/pstock/mixtral)
+ - [Perplexity pro](https://x.com/soumithchintala/status/1733310147743662107?s=20)
+ - [Mistral magnet link](https://x.com/MistralAI/status/1733150512395038967?s=20)
+ - [Purple Llama](https://x.com/simonw/status/1732785316585771489?s=20)
+ - [MLX is an efficient machine learning framework specifically designed for Apple silicon (i.e. your laptop!)](https://x.com/awnihannun/status/1732184443451019431?s=20)
+ - [Keeping up with AGI notes](https://docs.google.com/document/d/e/2PACX-1vQD8IlBotGdBxp3BnXkSjk8bNZlPV_0EH9ZA6wHd5dNf-BLSiwXUinvgv8ZoBEnNyTCF-chWO30NRw0/pub#h.gk70cijomli7)
+ - [llamafile: turn LLM weights into runnable llama.cpp binaries using cosmo libc](https://twitter.com/justinetunney/status/1729940628098969799?s=51)
+ - [Mixtral 8x7B paper](https://arxiv.org/abs/2401.04088)
+ - [𝐌𝐨𝐛𝐢𝐥𝐞 𝐀𝐋𝐎𝐇𝐀🏄 -- Hardware! A low-cost, open-source, mobile manipulator.](https://x.com/tonyzzhao/status/1742603121682153852?s=20)
+ - [Perfecting MergeKit MoEs](https://x.com/main_horse/status/1746779017674702853?s=20)
+ - [script to get Paul Graham essays in txt format](https://github.com/ggerganov/llama.cpp/pull/4838)
+ - [Announcing surya - a multilingual text line detection model for documents.  It gives you accurate line-level bboxes and column breaks.](https://x.com/VikParuchuri/status/1745876562371903790?s=20) and [surya again](https://x.com/VikParuchuri/status/1747091356445770221?s=20) and [again](https://x.com/VikParuchuri/status/1747392554038177998?s=20)
+ - [Arxiv: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model"](https://arxiv.org/abs/2305.18290) and [Andrew Ng praise: "This beautiful paper proposes a much simpler alternative to RLHF (reinforcement learning from human feedback) for aligning language models to human preferences."](https://x.com/AndrewYNg/status/1745516258697863259?s=20)
+ - [Iterative DPO on LLama 2 70B yields a model that beats Mistral Medium, Claude 2, Gemini Pro, GPT-4 0613 on Alpaca v2 benchmark.](https://x.com/gblazex/status/1748181621872705792?s=20)
+ - [Karpathy: Prompt engineering (or rather "Flow engineering") intensifies for code generation. Great reading and a reminder of how much alpha there is (pass@5 19% to 44%) in moving from a naive prompt:answer paradigm to a "flow" paradigm, where the answer is constructed iteratively.](https://x.com/karpathy/status/1748043513156272416?s=20)
+ - [1 hr CUDA tutorial by Jeremy Howard](https://x.com/jeremyphoward/status/1749153507096322239?s=20)
+ - [Implementation of the training framework proposed in Self-Rewarding Language Model, from MetaAI](https://github.com/lucidrains/self-rewarding-lm-pytorch) and his [github](https://github.com/lucidrains) with many other implementations.
 - [Presents CogVLM, a powerful open-source visual language foundation model that achieves SotA perf on 10 classic cross-modal benchmarks](https://x.com/arankomatsuzaki/status/1721719130720530489?s=20)
 - [Databricks model training](https://x.com/code_star/status/1721282072147575274?s=20)
 - [Shoggoth (silk road for ML models)](https://x.com/thenetrunna/status/1720859919497236825?s=20)
 - [TinyLlama: a useful 1B model](https://x.com/Teknium1/status/1720817154747207781?s=20)
 - [Emotion Prompting](https://x.com/llama_index/status/1720838162304622617?s=20)
-- 
+
+
+
+### Tech stack
+- [Perhaps a good tech stack for a web app](https://x.com/tair/status/1726631560752115840?s=20)
+- [Georgi Gerganov: Wrote a short tutorial for setting up llama.cpp on AWS instances](https://x.com/ggerganov/status/1729232091370369160?s=20)
+- [Whop app ecosystem](https://twitter.com/cultured?s=11)
+- [Turbopuffer vector DB](https://twitter.com/turbopuffer?s=11)
+- [one person/customer - one sqlite model.](https://x.com/sriramk/status/1746598735885254785?s=20)
+- [Favicon generator](https://favicon.io/favicon-converter/)
+- [Deploy a custom model with replicate](https://replicate.com/docs/guides/deploy-a-custom-model)
+
+### Legal
+- [Set up a business UK.gov website](https://www.gov.uk/set-up-business)
+- Look at other legal disclaimers..
+- [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
+- On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
+
 
 
 ### AI Economics and Doom
@@ -121,6 +167,16 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Justin Wolfers Webinar: Assigning Homework in a World with ChatGPT](https://youtu.be/m2BvGzms0Ug?si=y-QeYTPmqFUJjCYu)
 - [Students Outrunning Faculty in AI Use](https://www.insidehighered.com/news/tech-innovation/artificial-intelligence/2023/10/31/most-students-outrunning-faculty-ai-use?utm_source=Inside+Higher+Ed&utm_campaign=23419446b9-DNU_2021_COPY_02&utm_medium=email&utm_term=0_1fcbc04421-23419446b9-236889242&mc_cid=23419446b9&mc_eid=dae49d931a) 
 - [You've been Matrix Multiplied](https://x.com/jamescham/status/1718120386687324248?s=20)
+- [Karpathy on the hallucination problem](https://x.com/karpathy/status/1733299213503787018?s=20)
+- [As AI Chatbots Rise, More Educators Look to Oral Exams — With High-Tech Twist](https://www.edsurge.com/news/2023-10-05-as-ai-chatbots-rise-more-educators-look-to-oral-exams-with-high-tech-twist)
+- [Depth of Knowledge framework](https://www.structural-learning.com/post/webbs-depth-of-knowledge#:~:text=Webb's%20Depth%20of%20Knowledge%20(DOK)%20is%20a%20framework%20used%20by,require%20deeper%20thinking%20and%20understanding.)
+- [Sherpa](https://sherpalabs.co/)
+- [How to raise from top-tier investors (including Sam Altman) and keep control](https://x.com/dsiroker/status/1730662665012260984?s=20)
+- [OpenAI statment on NYT lawsuit, see comments on fair use](https://openai.com/blog/openai-and-journalism)
+- [On Living in An Atomic Age](https://www.andybannister.net/wp-content/uploads/2022/03/cslewis-living-in-an-atomic-age.pdf)
+- [Tom Blomfield: Consumer Startup Metrics](https://youtu.be/fdD4y4Civp4?si=MPFkB6usN-fX5q98)
+- [Tyler Cowen: Your Child’s Favorite Teacher May Soon Be a Chatbot](https://www.bloomberg.com/opinion/articles/2024-01-17/ai-in-the-classroom-everyone-s-favorite-teacher-may-soon-be-a-chatbot?utm_medium=email&utm_source=newsletter&utm_term=240117&utm_campaign=author_19834842)
+- [Finished software by dhh](https://world.hey.com/dhh/finished-software-8ee43637)
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)
@@ -137,6 +193,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Britain Is Much Worse Off Than It Understands](https://foreignpolicy.com/2023/02/03/britain-worse-off-1970s/)
 - [How to Start a Hard Tech Start Up by Sam Altman](https://www.youtube.com/watch?v=RHSb4G18gFY)
 - [In Conversation with Tyler Cowen and Fraser Nelson about England](https://www.youtube.com/watch?v=0jhhsgoEDAE)
+- [Sigil Wen: I JUST got my O-1 Visa and moved to the US!](https://x.com/0xSigil/status/1745815757651591204?s=20)
 
 ### Spaced repetition memory systems
 #### [Using Artificial Intelligence to Augment Human Intelligence](https://distill.pub/2017/aia/)
@@ -277,4 +334,9 @@ More broadly, we hope the principles in this essay will help support the creatio
 ### Marketing strategy
 - Get fitness influencers like bodybuilders and College athletes (Swimmers, Soccer players, Tennis, American football, etc) to promote the app. The idea being that they represent your ideal customer, someone who is trying to balance lots of training and school work and they want to get their school work done ASAP. More importantly the perception of your brand will benefit, people who have less time to study are not viewed as lesser when they are athletes. Although they never should be viewed as such.
 - Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
-- Try to catch up and coming influencers. If you can see that someone is talented/good and underfollowed then use them.
+- Try to catch up-and-coming influencers. If you can see that someone is talented/good and underfollowed then use them.
+- One way to lure up-and-comers could be to offer them a gift subscription to video editing tools which help them produce their videos.
+- [Pika for generating adverts](https://x.com/pika_labs?s=20)
+
+### Strategy
+- How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature.Very difficult for them to have that in “general intelligence”. 

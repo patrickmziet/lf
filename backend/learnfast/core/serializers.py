@@ -1,11 +1,24 @@
 from rest_framework import serializers
-from .models import Note
+from .models import User, Topic, Document, Flashcard
 
-class NoteSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Note
-        fields = ['id', 'title', 'content', 'user']
+        model = User
+        fields = ['id', 'sub', 'email', 'is_verified', 'given_name', 
+                  'family_name', 'nickname', 'name', 'picture', 'locale']
 
-    def create(self, validated_data):
-        validated_data['user'] = self.context['request'].user
-        return super().create(validated_data)
+class TopicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Topic
+        fields = ['id', 'title', 'created_at', 'updated_at']
+
+class DocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Document
+        fields = ['id', 'document', 'uploaded_at', 'topic']
+
+class FlashcardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Flashcard
+        fields = ['id', 'topic', 'question', 'answer', 'easiness', 
+                  'interval', 'repetitions', 'record', 'due_date', 'created_at', 'updated_at']

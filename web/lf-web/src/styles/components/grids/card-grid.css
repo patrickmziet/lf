@@ -1,0 +1,60 @@
+.card-container {
+    border: 1px solid var(--dark-aluminium);
+    border-radius: 20px; /* More rounded corners */
+    padding: 20px;
+    background: transparent; /* Assuming a white background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for depth */
+    margin-bottom: 1rem; /* Space below the card */
+    height: 280px; /* Fixed height */
+    width: 800px; /* Fixed width */
+    /* Ensure the container doesn't exceed the viewport width */
+    max-width: 100%;
+    box-sizing: border-box; /* Include padding and border in the width and height */
+    position: relative;
+}
+
+.card-question {
+    font-size: 1.6rem; /* Adjust font size as needed */
+    margin-bottom: 2rem; /* Space below the question */
+}
+
+.answer-separator {
+    border-bottom: 1px solid var(--dark-aluminium); /* Thin line */
+    width: 99%; /* Almost the full length of the card container */
+    margin: 0 auto; /* Center the line horizontally */
+    display: block; /* Ensure it's displayed as a block-level element */
+}
+
+.answer-container {
+    padding-top: 2rem; /* Space above the answer */
+}
+
+.edit-input {
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    width: 100%;
+    box-sizing: border-box; /* To include padding in the width */
+    margin-bottom: 10px; /* Spacing between the input and the save button */
+}
+
+/* Responsive design for smaller screens */
+@media (max-width: 850px) {
+    .card-container {
+        width: 90%; /* Take up most of the screen width */
+        height: auto; /* Height can adjust based on content */
+        padding: 10px; /* Smaller padding */
+    }
+}
+
+@media (max-width: 500px) {
+    .card-container {
+        flex-direction: column; /* Stack elements vertically if using flexbox */
+        padding: 10px; /* Adjust padding for smaller screens */
+    }
+
+    .card-question {
+        font-size: 1.4rem; /* Adjust font size for smaller screens */
+    }
+}

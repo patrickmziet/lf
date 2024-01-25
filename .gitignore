@@ -8,11 +8,13 @@
 __pycache__/
 *.sqlite3
 db.sqlite3
-media/  # Assuming media files are stored locally
-local_settings.py  # Local settings file which shouldn't be committed to the repo
+media/  
+local_settings.py  
+backend/learnfast/myenv/  
+
 
 # React / Node related
-/node_modules/
+node_modules/
 /build/
 .npmrc
 .yarn-cache
