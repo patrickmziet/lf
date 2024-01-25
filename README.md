@@ -137,10 +137,17 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Georgi Gerganov: Wrote a short tutorial for setting up llama.cpp on AWS instances](https://x.com/ggerganov/status/1729232091370369160?s=20)
 - [Whop app ecosystem](https://twitter.com/cultured?s=11)
 - [Turbopuffer vector DB](https://twitter.com/turbopuffer?s=11)
-- On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
 - [one person/customer - one sqlite model.](https://x.com/sriramk/status/1746598735885254785?s=20)
-- [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
 - [Favicon generator](https://favicon.io/favicon-converter/)
+- [Deploy a custom model with replicate](https://replicate.com/docs/guides/deploy-a-custom-model)
+
+### Legal
+- [Set up a business UK.gov website](https://www.gov.uk/set-up-business)
+- Look at other legal disclaimers..
+- [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
+- On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
+
+
 
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
