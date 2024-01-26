@@ -338,6 +338,7 @@ More broadly, we hope the principles in this essay will help support the creatio
 - Try to catch up-and-coming influencers. If you can see that someone is talented/good and underfollowed then use them.
 - One way to lure up-and-comers could be to offer them a gift subscription to video editing tools which help them produce their videos.
 - [Pika for generating adverts](https://x.com/pika_labs?s=20)
+- [Anduril Comms strategy](https://twitter.com/piratewires/status/1750622782403301831?s=51)
 
 ### Strategy
 - How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature.Very difficult for them to have that in “general intelligence”. 
