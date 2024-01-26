@@ -129,6 +129,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Shoggoth (silk road for ML models)](https://x.com/thenetrunna/status/1720859919497236825?s=20)
 - [TinyLlama: a useful 1B model](https://x.com/Teknium1/status/1720817154747207781?s=20)
 - [Emotion Prompting](https://x.com/llama_index/status/1720838162304622617?s=20)
+- [ollama](https://github.com/ollama/ollama)
 
 
 
