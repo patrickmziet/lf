@@ -20,6 +20,24 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - Download Anki card databases for training data.
 - Measures of success: Optimize for bits (information) exchanged and retained per second.
 
+
+### Marketing strategy
+- Get fitness influencers like bodybuilders and College athletes (Swimmers, Soccer players, Tennis, American football, etc) to promote the app. The idea being that they represent your ideal customer, someone who is trying to balance lots of training and school work and they want to get their school work done ASAP. More importantly the perception of your brand will benefit, people who have less time to study are not viewed as lesser when they are athletes. Although they never should be viewed as such.
+- Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
+- Try to catch up-and-coming influencers. If you can see that someone is talented/good and underfollowed then use them.
+- One way to lure up-and-comers could be to offer them a gift subscription to video editing tools which help them produce their videos.
+- [Pika for generating adverts](https://x.com/pika_labs?s=20)
+- [Anduril Comms strategy](https://twitter.com/piratewires/status/1750622782403301831?s=51)
+- [ASML marketing video](https://twitter.com/dylan522p/status/1752446312438505808?s=51)
+
+### Strategy
+- How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature. Very difficult for them to have that in “general intelligence”. 
+
+### On company culture:
+- [Elad Gil: On resetting focus and setting aside politics](https://x.com/eladgil/status/1752709288018194692?s=20) 
+- [Brian Armstrong: Coinbase is a mission focused company](https://www.coinbase.com/en-gb/blog/coinbase-is-a-mission-focused-company)
+- [Tobi Lutke: We are not a family](https://www.businessinsider.com/shopify-ceo-email-to-managers-we-are-not-a-family-2021-5?r=US&IR=T)
+
 ## Resources
 ### Code, papers and technical notes
 - GPT4ALL [tweet here](https://twitter.com/LinusEkenstam/status/1640972573910396929?s=20) and [git repo here](https://github.com/nomic-ai/gpt4all). Demo, data and code to train an assistant-style large language model with ~800k GPT-3.5-Turbo Generations based on LLaMa.
@@ -130,7 +148,12 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [TinyLlama: a useful 1B model](https://x.com/Teknium1/status/1720817154747207781?s=20)
 - [Emotion Prompting](https://x.com/llama_index/status/1720838162304622617?s=20)
 - [ollama](https://github.com/ollama/ollama)
-
+- [How to get data from company docs](https://x.com/cto_junior/status/1752986228553650549?s=20)
+- [AI notes](https://docs.google.com/document/d/e/2PACX-1vQD8IlBotGdBxp3BnXkSjk8bNZlPV_0EH9ZA6wHd5dNf-BLSiwXUinvgv8ZoBEnNyTCF-chWO30NRw0/pub)
+- [Leaked Mistral Medium](https://huggingface.co/alpindale/miqu-1-70b-pytorch)
+- [H2O-Danube-1.8B, small model with long context window](https://x.com/abacaj/status/1752515535462420526?s=20)
+- [The case for co-designing model architectures with Hardware](https://x.com/QuentinAnthon15/status/1752393989813375119?s=20)
+- [Built a GPU rig](https://x.com/G413N/status/1752545362592878619?s=20)
 
 
 ### Tech stack
@@ -142,12 +165,12 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Favicon generator](https://favicon.io/favicon-converter/)
 - [Deploy a custom model with replicate](https://replicate.com/docs/guides/deploy-a-custom-model)
 
+
 ### Legal
 - [Set up a business UK.gov website](https://www.gov.uk/set-up-business)
 - Look at other legal disclaimers..
 - [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
 - On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
-
 
 
 ### AI Economics and Doom
@@ -178,6 +201,10 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Tom Blomfield: Consumer Startup Metrics](https://youtu.be/fdD4y4Civp4?si=MPFkB6usN-fX5q98)
 - [Tyler Cowen: Your Child’s Favorite Teacher May Soon Be a Chatbot](https://www.bloomberg.com/opinion/articles/2024-01-17/ai-in-the-classroom-everyone-s-favorite-teacher-may-soon-be-a-chatbot?utm_medium=email&utm_source=newsletter&utm_term=240117&utm_campaign=author_19834842)
 - [Finished software by dhh](https://world.hey.com/dhh/finished-software-8ee43637)
+
+
+
+
 
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)
@@ -332,13 +359,3 @@ More broadly, we hope the principles in this essay will help support the creatio
 - What is best for humans in all this? If humans try to compete with AI in procedural tasks they will (1) lose (2) end up being a thoughtless cog in the machine. On the latter point, you could take the thought experiment that if schools only gave homework kids could just mindlessly use AI and coast through school. Humans are not part of this picture.
 - Opportunities: (1) Best case is that you find something new, do it, then use AI to automate the procedure. (2) In existing domains, regulatory capture will probably occur and then the question is how you can compete in this domain.
 
-### Marketing strategy
-- Get fitness influencers like bodybuilders and College athletes (Swimmers, Soccer players, Tennis, American football, etc) to promote the app. The idea being that they represent your ideal customer, someone who is trying to balance lots of training and school work and they want to get their school work done ASAP. More importantly the perception of your brand will benefit, people who have less time to study are not viewed as lesser when they are athletes. Although they never should be viewed as such.
-- Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
-- Try to catch up-and-coming influencers. If you can see that someone is talented/good and underfollowed then use them.
-- One way to lure up-and-comers could be to offer them a gift subscription to video editing tools which help them produce their videos.
-- [Pika for generating adverts](https://x.com/pika_labs?s=20)
-- [Anduril Comms strategy](https://twitter.com/piratewires/status/1750622782403301831?s=51)
-
-### Strategy
-- How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature.Very difficult for them to have that in “general intelligence”. 
