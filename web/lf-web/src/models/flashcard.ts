@@ -5,7 +5,7 @@ export interface Flashcard {
     easiness: number;     // Easiness level of flashcard
     interval: number;     // Time between views
     repetitions: number;  // Total times correct in a row
-    consecutive_count: number; // Total times correct in a row for use in Rapid study
+    consecutive_correct: number; // Total times correct in a row for use in Rapid study
     record: string;       // Record of success/failure
     due_date: number;     // Due date of the card
     created_at: number;      // Timestamp when the note was created

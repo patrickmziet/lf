@@ -26,7 +26,7 @@ from .serializers import (
     )
 
 # Global variables
-NUM_CARDS = 4
+NUM_CARDS = 8
 NUM_CARDS_MORE = 4
 
 # Prompt templates
@@ -218,8 +218,6 @@ class CreateUserIfNotExistView(IsAuthenticatedUserView):
         print("Entered CreateUserIfNotExistView")
         serializer = UserSerializer(data=request.data)
         print(f"Serializer: {serializer}")
-
-
 
         if not serializer.is_valid():
             print("Serializer is not valid")

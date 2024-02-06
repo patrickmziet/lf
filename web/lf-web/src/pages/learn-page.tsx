@@ -105,7 +105,7 @@ export const LearnPage: React.FC = () => {
                             Rapid mode
                         </div>
                         <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
-                            <p>{dueFlashcards.length} flashcards are due</p>
+                             <p>Gradual mode: {dueFlashcards.length} flashcards are due</p>
                         </div>
                         <div className="resources-container">
                             <h1 className="learn__title">

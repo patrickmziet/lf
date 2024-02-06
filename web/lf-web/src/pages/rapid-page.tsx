@@ -169,7 +169,7 @@ export const RapidPage: React.FC = () => {
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
 
-        updatedCard.consecutive_count += 1;
+        updatedCard.consecutive_correct += 1;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
@@ -190,7 +190,7 @@ export const RapidPage: React.FC = () => {
         const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
-        updatedCard.consecutive_count = 0;
+        updatedCard.consecutive_correct = 0;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
@@ -342,9 +342,7 @@ const handleDelete = async (cardId: number) => {
                                 <p>Order in queue: {index + 1}</p>  
                                 <p>Question: {card.question}</p>
                                 <p>Answer: {card.answer}</p>
-                                <p>Due date: {card.due_date}</p>
-                                <p>Interval: {card.interval}</p>
-                                <p>Record: {card.record}</p>
+                                <p>Consecutive: {card.consecutive_correct}</p>
                             </div>
                         ))}
                     </div>
