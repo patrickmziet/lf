@@ -73,9 +73,6 @@ export const RapidPage: React.FC = () => {
 
             if (isMounted && data && Array.isArray(data)) {
                 setMasterFlashcards(data);
-/*                 const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
-                dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
- */                
                 const flashcardGroups = groupFlashcards(data, group_size); 
                 setSessionGroups(flashcardGroups);
                 setFlashcards(flashcardGroups[0] || []);
@@ -137,21 +134,6 @@ export const RapidPage: React.FC = () => {
         console.log("Master flashcards update:", masterFlashcards);
     }, [flashcards, masterFlashcards]);
 
-
-    // Create more flashcards
-/*     const handleCreateMoreCards = async () => {
-        if (!topicId) return;
-        const token = await getAccessTokenSilently();
-        const { data } = await createMoreFlashCards(token, topicId, masterFlashcards);
-        console.log("Response:", data);
-        if (data && Array.isArray(data)) {
-            setMasterFlashcards(data);
-            const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
-            dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-            setFlashcards(dueFlashcards);
-        }
-    };
- */ 
     
     // Handle back button
     const handleBack = async () => {
@@ -166,21 +148,13 @@ export const RapidPage: React.FC = () => {
     const handleCorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
-//        const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
-
         updatedCard.consecutive_correct += 1;
-
         updatedFlashcards[currentCardIndex] = updatedCard;
-//        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
         const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);        
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-/*         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
-        dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
- */     
         setFlashcards(dueFlashcards);
-//        setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
@@ -188,20 +162,13 @@ export const RapidPage: React.FC = () => {
     const handleIncorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
-//        const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct = 0;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
-//        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
-
-/*         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
-        dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
- */        
         updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
         setFlashcards(updatedFlashcards);
-//        setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
@@ -278,10 +245,7 @@ const handleDelete = async (cardId: number) => {
                     <button className="back-to-topics-button" onClick={handleBack}>
                         {"<< Learn"}
                     </button>
-{/*                     <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
-                        Create More Cards
-                    </button>
- */}                    <h1 className="learn__title">
+                     <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
                     {currentCardIndex < flashcards.length ? (
