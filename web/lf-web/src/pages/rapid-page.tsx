@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getTopicFlashCards, updateFlashCards, createMoreFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
+import { getTopicFlashCards, updateFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
 import { useAuth0 } from "@auth0/auth0-react";
 import { EditFlashcard } from '../components/edit-flashcard';
@@ -27,7 +27,25 @@ export const RapidPage: React.FC = () => {
     const [currentSessionIndex, setCurrentSessionIndex] = useState(0);
     const group_size = 5; // Group size
     const consec_limit = 3; // Consecutive correct limit
+    const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
+    const [elapsedTime, setElapsedTime] = useState(0);
+    const [sessionEnded, setSessionEnded] = useState(false);
+    const [totalAttempts, setTotalAttempts] = useState(0);
+    const [correctAttempts, setCorrectAttempts] = useState(0);
+    const [sessionHitRates, setSessionHitRates] = useState<number[]>([]);
 
+    // Start session timer
+    useEffect(() => {
+        const start = Date.now();
+        setSessionStartTime(start);
+    
+        const timer = setInterval(() => {
+            setElapsedTime(Math.floor((Date.now() - start) / 1000));
+        }, 1000);
+    
+        return () => clearInterval(timer);
+    }, []); // Empty dependency array means this effect runs once when the component mounts
+    
 
     // Fetch topic title
     useEffect(() => {
@@ -146,7 +164,10 @@ export const RapidPage: React.FC = () => {
     };
 
     const handleCorrect = () => {
+
         if (currentCardIndex >= flashcards.length) return;
+        setTotalAttempts(prevTotalAttempts => prevTotalAttempts + 1);
+        setCorrectAttempts(prevCorrectAttempts => prevCorrectAttempts + 1);
 
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
@@ -162,6 +183,8 @@ export const RapidPage: React.FC = () => {
     const handleIncorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
+        setTotalAttempts(prevTotalAttempts => prevTotalAttempts + 1);
+
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct = 0;
@@ -176,11 +199,18 @@ export const RapidPage: React.FC = () => {
     const handleNextSession = () => {
         const nextSessionIndex = currentSessionIndex + 1;
         if (nextSessionIndex < sessionGroups.length) {
+            setSessionEnded(true);
+            // Calculate hit rate for the session
+            const hitRate = (correctAttempts / totalAttempts) * 100;
+            // Add hit rate to the list
+            setSessionHitRates(prevHitRates => [...prevHitRates, hitRate]);
             // Set all cards consecutive_correct to 0
             const updatedMasterFlashcards = masterFlashcards.map(card => ({ ...card, consecutive_correct: 0 }));
             setMasterFlashcards(updatedMasterFlashcards);
             setCurrentSessionIndex(nextSessionIndex);
             setFlashcards(sessionGroups[nextSessionIndex]);
+            setTotalAttempts(0);
+            setCorrectAttempts(0);
         } else {
             // Handle the case where there are no more sessions
             console.log("No more sessions");
@@ -212,31 +242,38 @@ export const RapidPage: React.FC = () => {
 
 
     // Add the handleDelete function in your component
-const handleDelete = async (cardId: number) => {
-    const cardToDelete = flashcards.find(card => card.id === cardId);
-    if (!cardToDelete) {
-        console.error('Card not found');
-        return;
-    }
-    const confirmDelete = window.confirm("Are you sure you want to delete the card?");
-    if (confirmDelete) {
-        // Optimistically remove the card from local state
-        setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
-        setFlashcards(flashcards.filter(card => card.id !== cardId));
-        try {
-            // Make the API request to delete the card
-            const token = await getAccessTokenSilently();
-            await deleteFlashCard(token, cardId);
-        } catch (error) {
-            // If the request fails, revert the change in local state and inform the user
-            console.error(error);
-            setMasterFlashcards([...masterFlashcards, cardToDelete]);
-            setFlashcards([...flashcards, cardToDelete]);
-            alert('Failed to delete the card. Please try again.');
+    const handleDelete = async (cardId: number) => {
+        const cardToDelete = flashcards.find(card => card.id === cardId);
+        if (!cardToDelete) {
+            console.error('Card not found');
+            return;
         }
-        setShowAnswer(false);
-    }
-};
+        const confirmDelete = window.confirm("Are you sure you want to delete the card?");
+        if (confirmDelete) {
+            // Optimistically remove the card from local state
+            setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
+            setFlashcards(flashcards.filter(card => card.id !== cardId));
+            try {
+                // Make the API request to delete the card
+                const token = await getAccessTokenSilently();
+                await deleteFlashCard(token, cardId);
+            } catch (error) {
+                // If the request fails, revert the change in local state and inform the user
+                console.error(error);
+                setMasterFlashcards([...masterFlashcards, cardToDelete]);
+                setFlashcards([...flashcards, cardToDelete]);
+                alert('Failed to delete the card. Please try again.');
+            }
+            setShowAnswer(false);
+        }
+    };
+
+    const calculateProgress = () => {
+        const totalPossibleCorrects = flashcards.length * 3;
+        const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0);
+        return (sumOfCorrects / totalPossibleCorrects) * 100;
+    };
+    
 
     return (
         <PageLayout>
@@ -248,6 +285,16 @@ const handleDelete = async (cardId: number) => {
                      <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
+                    <div className="stopwatch">
+                        {elapsedTime < 3600 ? 
+                            `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` : 
+                            "> 1hr"
+                        }
+                    </div>
+                    <div className="progress-bar-container">
+                        <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>
+                    </div>
+
                     {currentCardIndex < flashcards.length ? (
                     isEditing ? (
                         <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
@@ -297,6 +344,18 @@ const handleDelete = async (cardId: number) => {
                         )}
                     </>
                     )}
+                    {sessionEnded && (
+                        <div className="session-stats">
+                            <p>Session Time: {elapsedTime < 3600 ? 
+                                `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` : 
+                                "> 1hr"
+                            }</p>
+                            // Display hit rates for past sessions
+                            {sessionHitRates.map((hitRate, index) => (
+                                <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
+                            ))}
+                        </div>
+                    )}    
                     {/* Upcoming flashcards */}
                     <div>
                         {showAnswer && <p>Due date: {flashcards[currentCardIndex].due_date}</p>}
