@@ -1,6 +1,6 @@
 // More complex version of the Auth0ProviderWithNavigate component but has extra logic which may be useful in the future.
 
-import { Auth0Provider, AppState, useAuth0 } from "@auth0/auth0-react";
+/* import { Auth0Provider, AppState, useAuth0 } from "@auth0/auth0-react";
 import React, { useEffect, PropsWithChildren } from "react"; // React imports
 import { useNavigate } from "react-router-dom"; // React Router hook
 import { createUserIfNotExist } from "./services/message.service"; // Your custom service
@@ -62,3 +62,4 @@ export const Auth0ProviderWithNavigate = ({
     </Auth0Provider>
   );
 };
+ */
