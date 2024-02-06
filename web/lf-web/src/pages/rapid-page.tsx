@@ -33,6 +33,7 @@ export const RapidPage: React.FC = () => {
     const [totalAttempts, setTotalAttempts] = useState(0);
     const [correctAttempts, setCorrectAttempts] = useState(0);
     const [sessionHitRates, setSessionHitRates] = useState<number[]>([]);
+    const [filteredCardsCount, setFilteredCardsCount] = useState(0);
 
     // Start session timer
     useEffect(() => {
@@ -174,6 +175,12 @@ export const RapidPage: React.FC = () => {
         updatedCard.consecutive_correct += 1;
         updatedFlashcards[currentCardIndex] = updatedCard;
         const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);        
+
+        // Check if a card has been filtered out and increment filteredCardsCount
+        if (dueFlashcards.length < updatedFlashcards.length) {
+            setFilteredCardsCount(prevCount => prevCount + 1);
+        }
+
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
         setFlashcards(dueFlashcards);
         setCurrentCardIndex(currentCardIndex);
@@ -211,6 +218,7 @@ export const RapidPage: React.FC = () => {
             setFlashcards(sessionGroups[nextSessionIndex]);
             setTotalAttempts(0);
             setCorrectAttempts(0);
+            setFilteredCardsCount(0);
         } else {
             // Handle the case where there are no more sessions
             console.log("No more sessions");
@@ -267,10 +275,14 @@ export const RapidPage: React.FC = () => {
             setShowAnswer(false);
         }
     };
-
+    /* YOU ARE HERE: NOW FIX TIME ELAPSED AND THE END SCREEN WHEN SESSIONS ARE COMPLETED */
     const calculateProgress = () => {
-        const totalPossibleCorrects = flashcards.length * 3;
-        const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0);
+        const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
+        console.log("Flashcards length:", flashcards.length);
+        console.log("Filtered cards count:", filteredCardsCount);
+        console.log("Total possible corrects:", totalPossibleCorrects);
+        const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0) + filteredCardsCount * consec_limit;
+        console.log("Sum of corrects:", sumOfCorrects);
         return (sumOfCorrects / totalPossibleCorrects) * 100;
     };
     
