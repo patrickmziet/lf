@@ -26,6 +26,7 @@ export const RapidPage: React.FC = () => {
     const [sessionGroups, setSessionGroups] = useState<Flashcard[][]>([]);
     const [currentSessionIndex, setCurrentSessionIndex] = useState(0);
     const group_size = 5; // Group size
+    const consec_limit = 3; // Consecutive correct limit
 
 
     // Fetch topic title
@@ -165,21 +166,21 @@ export const RapidPage: React.FC = () => {
     const handleCorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
-        const updatedMasterFlashcards = [...masterFlashcards];
+//        const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
 
         updatedCard.consecutive_correct += 1;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
-        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
-
+//        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
+        const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);        
+        dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
 /*         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
  */     
-        updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-        setFlashcards(updatedFlashcards);
-        setMasterFlashcards(updatedMasterFlashcards);
+        setFlashcards(dueFlashcards);
+//        setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
@@ -187,20 +188,20 @@ export const RapidPage: React.FC = () => {
     const handleIncorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
-        const updatedMasterFlashcards = [...masterFlashcards];
+//        const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct = 0;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
-        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
+//        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
 
 /*         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
  */        
         updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
         setFlashcards(updatedFlashcards);
-        setMasterFlashcards(updatedMasterFlashcards);
+//        setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
@@ -208,6 +209,9 @@ export const RapidPage: React.FC = () => {
     const handleNextSession = () => {
         const nextSessionIndex = currentSessionIndex + 1;
         if (nextSessionIndex < sessionGroups.length) {
+            // Set all cards consecutive_correct to 0
+            const updatedMasterFlashcards = masterFlashcards.map(card => ({ ...card, consecutive_correct: 0 }));
+            setMasterFlashcards(updatedMasterFlashcards);
             setCurrentSessionIndex(nextSessionIndex);
             setFlashcards(sessionGroups[nextSessionIndex]);
         } else {
