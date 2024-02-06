@@ -80,6 +80,7 @@ class Flashcard(models.Model):
     easiness = models.FloatField(default=2.4)
     interval = models.IntegerField(default=1)
     repetitions = models.IntegerField(default=0)
+    consecutive_correct = models.IntegerField(default=0)
     record = models.TextField(default="")
     due_date = models.FloatField(default=time.time() - 1 * 60)
     created_at = models.DateField(auto_now_add=True)
@@ -102,6 +103,7 @@ class Flashcard(models.Model):
             "easiness": self.easiness,
             "interval": self.interval,
             "repetitions": self.repetitions,
+            "consecutive_correct": self.consecutive_correct,
             "record": self.record,
             "due_date": self.due_date_str(),
             "created_at": self.created_at,
