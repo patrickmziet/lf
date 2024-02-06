@@ -11,6 +11,7 @@ import { TopicsPage } from "./pages/topics-page";
 import { UploadPage } from "./pages/upload-page";
 import { LearnPage } from "./pages/learn-page";
 import { CardPage } from "./pages/card-page";
+import { RapidPage } from "./pages/rapid-page";
 
 export const App: React.FC = () => {
   const { isLoading } = useAuth0();
@@ -46,6 +47,10 @@ export const App: React.FC = () => {
       <Route
         path="/cards/:topicId"
         element={<AuthenticationGuard component={CardPage} />}
+      />
+      <Route
+        path="/rapid/:topicId"
+        element={<AuthenticationGuard component={RapidPage} />}
       />
     </Routes>
   );

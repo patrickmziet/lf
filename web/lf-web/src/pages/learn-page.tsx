@@ -79,7 +79,11 @@ export const LearnPage: React.FC = () => {
         }
       };
     
-    const navigateToFlashcards = (topicId: string) => {
+      const navigateToRapid = (topicId: string) => {
+        navigate(`/rapid/${topicId}`, { state: { flashcards, title } });
+    };  
+
+      const navigateToFlashcards = (topicId: string) => {
         navigate(`/cards/${topicId}`, { state: { flashcards, title } });
     };  
     
@@ -97,6 +101,9 @@ export const LearnPage: React.FC = () => {
                         <h1 className="learn__title">
                                 {title || "Loading..."}
                         </h1>
+                        <div className="learn-item" onClick={() => topicId && navigateToRapid(topicId)}>
+                            Rapid mode
+                        </div>
                         <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
                             <p>{dueFlashcards.length} flashcards are due</p>
                         </div>

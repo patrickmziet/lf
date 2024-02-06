@@ -210,10 +210,18 @@ export const CardPage: React.FC = () => {
     };
 
     const handleSave = (updatedCard: Flashcard) => {
+        // Update the current session flashcards
         const updatedFlashcards = flashcards.map((card, index) => 
             index === currentCardIndex ? updatedCard : card
         );
+
+        // Find and update the edited card in masterFlashcards
+        const updatedMasterFlashcards = masterFlashcards.map(card =>
+            card.id === updatedCard.id ? updatedCard : card
+        );
+
         setFlashcards(updatedFlashcards);
+        setMasterFlashcards(updatedMasterFlashcards);
         setIsEditing(false);
     };
 

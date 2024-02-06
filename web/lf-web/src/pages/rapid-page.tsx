@@ -23,6 +23,10 @@ export const RapidPage: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const titleFromState = location.state?.title;
     const [title, setTitle] = useState<string | null>(titleFromState);
+    const [sessionGroups, setSessionGroups] = useState<Flashcard[][]>([]);
+    const [currentSessionIndex, setCurrentSessionIndex] = useState(0);
+    const group_size = 5; // Group size
+
 
     // Fetch topic title
     useEffect(() => {
@@ -39,6 +43,15 @@ export const RapidPage: React.FC = () => {
             fetchTopic();
         }
     }, [topicId, getAccessTokenSilently, titleFromState]);
+
+    // Group flashcards
+    const groupFlashcards = (flashcards: Flashcard[], groupSize: number): Flashcard[][] => {
+        const groups: Flashcard[][] = [];
+        for (let i = 0; i < flashcards.length; i += groupSize) {
+            groups.push(flashcards.slice(i, i + groupSize));
+        }
+        return groups;
+    };
 
     // Fetch flashcards
     useEffect(() => {
@@ -59,9 +72,12 @@ export const RapidPage: React.FC = () => {
 
             if (isMounted && data && Array.isArray(data)) {
                 setMasterFlashcards(data);
-                const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
+/*                 const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
                 dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-                setFlashcards(dueFlashcards);
+ */                
+                const flashcardGroups = groupFlashcards(data, group_size); 
+                setSessionGroups(flashcardGroups);
+                setFlashcards(flashcardGroups[0] || []);
             }
         };
 
@@ -122,7 +138,7 @@ export const RapidPage: React.FC = () => {
 
 
     // Create more flashcards
-    const handleCreateMoreCards = async () => {
+/*     const handleCreateMoreCards = async () => {
         if (!topicId) return;
         const token = await getAccessTokenSilently();
         const { data } = await createMoreFlashCards(token, topicId, masterFlashcards);
@@ -134,7 +150,8 @@ export const RapidPage: React.FC = () => {
             setFlashcards(dueFlashcards);
         }
     };
-
+ */ 
+    
     // Handle back button
     const handleBack = async () => {
         if (!topicId) return;
@@ -151,30 +168,17 @@ export const RapidPage: React.FC = () => {
         const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
-        updatedCard.record += "1";
-        updatedCard.repetitions += 1;
 
-        if (updatedCard.repetitions === 1) {
-            updatedCard.interval = 300;
-        } else if (updatedCard.repetitions === 2) {
-            updatedCard.interval = 600;
-        } else if (updatedCard.repetitions === 3) {
-            updatedCard.interval = 24 * 60 * 60;
-        } else if (updatedCard.repetitions === 4) {
-            updatedCard.interval = 3 * 24 * 60 * 60;
-        } else if (updatedCard.repetitions >= 5) {
-            updatedCard.interval = Math.round(updatedCard.interval * updatedCard.easiness);
-        }
-
-        updatedCard.due_date = time + updatedCard.interval;
-        updatedCard.updated_at = time;
+        updatedCard.consecutive_count += 1;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
 
-        const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
+/*         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-        setFlashcards(dueFlashcards);
+ */     
+        updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
+        setFlashcards(updatedFlashcards);
         setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
@@ -186,23 +190,32 @@ export const RapidPage: React.FC = () => {
         const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
-        updatedCard.record += "0";
-        updatedCard.repetitions = 0;
-        updatedCard.interval = 60;
-        updatedCard.due_date = time + updatedCard.interval;
-        updatedCard.updated_at = time;
+        updatedCard.consecutive_count = 0;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
 
-        const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
+/*         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-        setFlashcards(dueFlashcards);
+ */        
+        updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
+        setFlashcards(updatedFlashcards);
         setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
     
+    const handleNextSession = () => {
+        const nextSessionIndex = currentSessionIndex + 1;
+        if (nextSessionIndex < sessionGroups.length) {
+            setCurrentSessionIndex(nextSessionIndex);
+            setFlashcards(sessionGroups[nextSessionIndex]);
+        } else {
+            // Handle the case where there are no more sessions
+            console.log("No more sessions");
+        }
+    };    
+
 
     const handleEdit = (cardIndex: number) => {
         setIsEditing(true);
@@ -210,10 +223,19 @@ export const RapidPage: React.FC = () => {
     };
 
     const handleSave = (updatedCard: Flashcard) => {
+        // Update the current session flashcards
         const updatedFlashcards = flashcards.map((card, index) => 
             index === currentCardIndex ? updatedCard : card
         );
+
+        // Find and update the edited card in masterFlashcards
+        const updatedMasterFlashcards = masterFlashcards.map(card =>
+            card.id === updatedCard.id ? updatedCard : card
+        );
+
+        // Update state to reflect changes in both flashcards and masterFlashcards
         setFlashcards(updatedFlashcards);
+        setMasterFlashcards(updatedMasterFlashcards);
         setIsEditing(false);
     };
 
@@ -252,10 +274,10 @@ const handleDelete = async (cardId: number) => {
                     <button className="back-to-topics-button" onClick={handleBack}>
                         {"<< Learn"}
                     </button>
-                    <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
+{/*                     <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
                         Create More Cards
                     </button>
-                    <h1 className="learn__title">
+ */}                    <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
                     {currentCardIndex < flashcards.length ? (
@@ -296,9 +318,16 @@ const handleDelete = async (cardId: number) => {
                     </div>
                     )
                     ) : (
-                    <h4 className="learn__title">
-                        No more flashcards
-                    </h4>
+                    <>
+                        <h4 className="learn__title">
+                            No more flashcards
+                        </h4>
+                        {sessionGroups.length > currentSessionIndex + 1 && (
+                            <button className="next-session-button" onClick={handleNextSession}>
+                                Next Session
+                            </button>
+                        )}
+                    </>
                     )}
                     {/* Upcoming flashcards */}
                     <div>
