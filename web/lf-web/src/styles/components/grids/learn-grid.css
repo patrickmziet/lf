@@ -42,3 +42,27 @@
   max-height: 9rem; /* Adjust based on line height and desired number of items per column */
   overflow: auto;
 }
+
+.progress-bar-container {
+  width: 100%;
+  background-color: #e0e0e0;
+  height: 20px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #76b947;
+  border-radius: 10px;
+  transition: width 0.3s ease-in-out;
+}
+
+.stopwatch {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.session-stats {
+  margin-top: 20px;
+}
