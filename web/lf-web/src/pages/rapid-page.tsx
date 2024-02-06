@@ -6,7 +6,7 @@ import { Flashcard } from "../models/flashcard";
 import { useAuth0 } from "@auth0/auth0-react";
 import { EditFlashcard } from '../components/edit-flashcard';
 
-export const CardPage: React.FC = () => {
+export const RapidPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
     const [masterFlashcards, setMasterFlashcards] = useState<Flashcard[]>([]);
     const [flashcards, setFlashcards] = useState<Flashcard[]>([]);

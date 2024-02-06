@@ -80,7 +80,7 @@ class Flashcard(models.Model):
     easiness = models.FloatField(default=2.4)
     interval = models.IntegerField(default=1)
     repetitions = models.IntegerField(default=0)
-    consecutive_correct = models.IntegerField(default=0)
+    consecutive_correct = models.IntegerField(default=0) # for use in rapid study mode
     record = models.TextField(default="")
     due_date = models.FloatField(default=time.time() - 1 * 60)
     created_at = models.DateField(auto_now_add=True)
