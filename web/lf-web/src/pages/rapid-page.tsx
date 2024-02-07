@@ -29,14 +29,36 @@ export const RapidPage: React.FC = () => {
     const consec_limit = 3; // Consecutive correct limit
     const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
+    const [sessionElapsedTimes, setSessionElapsedTimes] = useState<number[]>([]);
     const [sessionEnded, setSessionEnded] = useState(false);
     const [totalAttempts, setTotalAttempts] = useState(0);
     const [correctAttempts, setCorrectAttempts] = useState(0);
     const [sessionHitRates, setSessionHitRates] = useState<number[]>([]);
     const [filteredCardsCount, setFilteredCardsCount] = useState(0);
 
+
     // Start session timer
     useEffect(() => {
+        // Only start the timer if there's a session active
+        if (sessionGroups.length > 0 && currentSessionIndex < sessionGroups.length) {
+            const start = Date.now();
+            setSessionStartTime(start);
+        
+            const timer = setInterval(() => {
+                // Update elapsed time only if the session hasn't ended
+                if (!sessionEnded) {
+                    setElapsedTime(prevTime => Math.floor((Date.now() - start) / 1000));
+                }
+            }, 1000);
+        
+            // Cleanup on component unmount or when the session ends
+            return () => clearInterval(timer);
+        }
+        // Return a no-op function when the condition is not met
+        return () => {};
+    }, [currentSessionIndex, sessionEnded, sessionGroups]); // Rerun the effect when starting a new session or ending one
+    
+/*     useEffect(() => {
         const start = Date.now();
         setSessionStartTime(start);
     
@@ -46,7 +68,7 @@ export const RapidPage: React.FC = () => {
     
         return () => clearInterval(timer);
     }, []); // Empty dependency array means this effect runs once when the component mounts
-    
+ */    
 
     // Fetch topic title
     useEffect(() => {
@@ -185,6 +207,19 @@ export const RapidPage: React.FC = () => {
         setFlashcards(dueFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
+        
+        // Check if there are no more flashcards
+        if (dueFlashcards.length === 0) {
+            setSessionEnded(true);
+            // Calculate hit rate for the session
+            const hitRate = (correctAttempts / totalAttempts) * 100;
+            // Add hit rate to the list
+            setSessionHitRates(prevHitRates => [...prevHitRates, hitRate]);
+            // Add elapsed time to the list
+            setSessionElapsedTimes(prevTimes => [...prevTimes, elapsedTime]);
+            // Reset elapsed time for the next session
+            setElapsedTime(0);            
+        }
     };
 
     const handleIncorrect = () => {
@@ -206,11 +241,9 @@ export const RapidPage: React.FC = () => {
     const handleNextSession = () => {
         const nextSessionIndex = currentSessionIndex + 1;
         if (nextSessionIndex < sessionGroups.length) {
-            setSessionEnded(true);
-            // Calculate hit rate for the session
-            const hitRate = (correctAttempts / totalAttempts) * 100;
-            // Add hit rate to the list
-            setSessionHitRates(prevHitRates => [...prevHitRates, hitRate]);
+            setSessionEnded(false);
+            // Reset session start time to now
+            setSessionStartTime(Date.now());
             // Set all cards consecutive_correct to 0
             const updatedMasterFlashcards = masterFlashcards.map(card => ({ ...card, consecutive_correct: 0 }));
             setMasterFlashcards(updatedMasterFlashcards);
@@ -349,6 +382,18 @@ export const RapidPage: React.FC = () => {
                         <h4 className="learn__title">
                             No more flashcards
                         </h4>
+                        <h4 className="learn__title">
+                            {/*Print elapsed time and hit rate*/}
+                            {sessionElapsedTimes.length > 0 && sessionHitRates.length > 0 && (
+                                <p>Session Hit Rate: {sessionHitRates[currentSessionIndex].toFixed(2)}%</p>
+                            )}
+                            {sessionElapsedTimes.length > 0 && (
+                                <p>Session Time: {sessionElapsedTimes[currentSessionIndex] < 3600 ? 
+                                    `${String(Math.floor(sessionElapsedTimes[currentSessionIndex] / 60)).padStart(2, '0')}:${String(sessionElapsedTimes[currentSessionIndex] % 60).padStart(2, '0')}` : 
+                                    "> 1hr"
+                                }</p>
+                            )}
+                        </h4>
                         {sessionGroups.length > currentSessionIndex + 1 && (
                             <button className="next-session-button" onClick={handleNextSession}>
                                 Next Session
@@ -358,14 +403,15 @@ export const RapidPage: React.FC = () => {
                     )}
                     {sessionEnded && (
                         <div className="session-stats">
-                            <p>Session Time: {elapsedTime < 3600 ? 
-                                `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` : 
-                                "> 1hr"
-                            }</p>
-                            // Display hit rates for past sessions
-                            {sessionHitRates.map((hitRate, index) => (
-                                <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
+                            {sessionElapsedTimes.map((time, index) => (
+                                <p key={index}>Session {index + 1} Time: {time < 3600 ? 
+                                    `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` : 
+                                    "> 1hr"
+                                }</p>
                             ))}
+                        {sessionHitRates.map((hitRate, index) => (
+                                <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
+                            ))}  
                         </div>
                     )}    
                     {/* Upcoming flashcards */}
