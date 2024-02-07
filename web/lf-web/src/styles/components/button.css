@@ -311,3 +311,25 @@
   right: 0; /* Extend to the right edge of the container */
   /* Add other styles such as padding or margin if necessary */
 }
+
+.cancel-topic-button {
+  position: absolute;
+  /* bottom: 0; /* Push to the bottom of the container */ 
+/*   left: 0; */
+  margin-top: 10px; 
+  margin-left: 5px;
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+}
+
+.cancel-topic-button:hover {
+  background-color: var(--orange);
+  /* Other hover effects */
+}

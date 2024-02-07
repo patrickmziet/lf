@@ -10,6 +10,7 @@ import { getTopicFlashCards, deleteTopic, getTopic } from "../services/message.s
 import { PageLayout } from "../components/page-layout";
 import { Document } from "../models/document";
 import { Flashcard } from "../models/flashcard";
+import { useDeleteTopic } from "../hooks/useDeleteTopic";
 
 export const LearnPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
@@ -20,7 +21,7 @@ export const LearnPage: React.FC = () => {
     const location = useLocation();
     const state = location.state as { title: string };
     const [title, setTitle] = useState<string | null>(null);
-    //const title = state?.title || "Default Title";
+    const handleDeleteTopic = useDeleteTopic(topicId || "");
 
     useEffect(() => {
         const fetchTopic = async () => {
@@ -67,7 +68,7 @@ export const LearnPage: React.FC = () => {
     const endOfDayInSeconds = Math.floor(endOfDay.getTime() / 1000);
     const dueFlashcards = flashcards.filter(card => card.due_date < endOfDayInSeconds);
 
-    const handleDeleteTopic = async () => {
+    /* const handleDeleteTopic = async () => {
         if (!topicId) return;
         const isConfirmed = window.confirm('Are you sure you want to delete this topic?');
         if (isConfirmed) {
@@ -78,7 +79,7 @@ export const LearnPage: React.FC = () => {
                 navigate('/topics');
             }
         }
-      };
+      }; */
     
     const navigateToRapid = (topicId: string) => {
         navigate(`/rapid/${topicId}`, { state: { flashcards, title } });
