@@ -308,7 +308,8 @@ export const RapidPage: React.FC = () => {
             setShowAnswer(false);
         }
     };
-    /* YOU ARE HERE: NOW FIX TIME ELAPSED AND THE END SCREEN WHEN SESSIONS ARE COMPLETED */
+
+    // Calculate progress
     const calculateProgress = () => {
         const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
         console.log("Flashcards length:", flashcards.length);
@@ -401,7 +402,7 @@ export const RapidPage: React.FC = () => {
                         )}
                     </>
                     )}
-                    {sessionEnded && (
+                    {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
                         <div className="session-stats">
                             {sessionElapsedTimes.map((time, index) => (
                                 <p key={index}>Session {index + 1} Time: {time < 3600 ? 
