@@ -29,7 +29,7 @@ const logoUrl = process.env.PUBLIC_URL + '/logo192.png';
 
   return (
     <div className="lf-features">
-      <h2 className="lf-features__title">Explore LF Features</h2>
+      <h2 className="lf-features__title">Explore LearnFast examples</h2>
       <div className="lf-features__grid">
         {featuresList.map((feature) => (
           <LFFeature

@@ -6,15 +6,15 @@ export const PageFooter = () => {
   const resourceList: LFResource[] = [
     {
       path: "link 1",
-      label: "Why LearnFast?",
-    },
-    {
-      path: "link 2",
-      label: "Cool deomos",
+      label: "About LearnFast",
     },
     {
       path: "link 3",
-      label: "Contact us",
+      label: "Disclaimer",
+    },
+    {
+      path: "link 2",
+      label: "FAQs",
     },
   ];
 
@@ -24,14 +24,7 @@ export const PageFooter = () => {
         <div className="page-footer-grid__info">
           <div className="page-footer-info__message">
             <p className="page-footer-message__headline">
-              <span>This application is brought to you by the LearnFast corporation.</span>
-            </p>
-            <p className="page-footer-message__description">
-                <>
-                  <span>
-                    Learn anything fast&nbsp;
-                  </span>
-                </>
+              Learn anything <em>fast</em>
             </p>
           </div>
           <div className="page-footer-info__resource-list">
