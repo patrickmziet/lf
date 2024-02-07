@@ -185,7 +185,7 @@
   .page-footer-info__message {
     /* responsive */
 
-    text-align: center;
+    text-align: left;
   }
 
   .page-footer-info__resource-list {
@@ -198,7 +198,7 @@
 
   .page-footer-info__resource-list-item {
     /* Ensure all resource list items are aligned to the left for smaller screens */
-    text-align: left;
+    text-align: right;
   }
 
 /*   .page-footer-info__resource-list-item:nth-child(odd) {
