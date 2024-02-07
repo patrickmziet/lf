@@ -71,7 +71,6 @@
   display: flex;
   color: var(--gray);
   font-size: 1.2rem;
-  cursor: pointer;
   align-items: left;
   width: 100%;
   position: relative;
@@ -84,10 +83,16 @@
 .drop-down-container ul { /* Assuming the dropdown content is a ul. Adjust the selector to match your HTML structure */
   position: absolute;
   width: 100%;
+  margin-top: 20px;
   left: 0;
   z-index: 1;
 }
 
-.drop-down-container:hover {
+.drop-down-container a {
+  color: var(--mandarine);
+}
+
+.drop-down-container p:hover {
+  cursor: pointer;
   color: var(--black);
 }

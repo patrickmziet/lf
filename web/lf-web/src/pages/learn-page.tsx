@@ -121,14 +121,15 @@ export const LearnPage: React.FC = () => {
                         <div className={`drop-down-container ${isInfoOpen ? 'open' : ''}`}>
                             <p onClick={toggleInfo}>
                                 {isInfoOpen ? <GoTriangleDown/> : <GoTriangleRight/>} Learn more about Rapid, Gradual and Cheat Sheet
-                                {isInfoOpen && (
+                            </p>
+                            {isInfoOpen && (
                                 <ul>
-                                    <li>Rapid: Get up to speed fast by studying cards in sessions of 10.</li>
-                                    <li>Gradual: Learn cards as they become due over with spaced repetition over days and weeks.<a href="https://en.wikipedia.org/wiki/Spaced_repetition">spaced repition</a></li>
-                                    <li>Cheat Sheet: Make and AI-generated pdf which focuses on cards you're struggling with to take with you when you're not using LearnFast.</li>
+                                    <li>Rapid: Get up to speed fast by studying cards in sessions of 10</li>
+                                    <li>Gradual: Learn cards as they become due over with <a 
+                                    href="https://en.wikipedia.org/wiki/Spaced_repetition" target="_blank" rel="noopener noreferrer">spaced repition</a> over days and weeks</li>
+                                    <li>Cheat Sheet: Make and AI-generated pdf which focuses on cards you're struggling with to take with you when you're not using LearnFast</li>
                                 </ul>
                             )}
-                            </p>
                         </div>
                         <div className="resources-container">
                             <h1 className="learn__title">
