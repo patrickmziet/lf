@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { ColorRing } from 'react-loader-spinner';
 import { uploadDocuments } from "../services/document.service";
 import { PageLayout } from 'src/components/page-layout';
+import { ColorRingSpinner } from '../components/ColorRingSpinner';
 import { useDeleteTopic } from '../hooks/useDeleteTopic';
 
 export const UploadPage: React.FC = () => {
@@ -95,15 +96,7 @@ export const UploadPage: React.FC = () => {
                     </div>
                     {selectedFiles.length > 0 && (
                         isLoading ? (
-                            <ColorRing
-                            visible={true}
-                            height="45"
-                            width="45"
-                            ariaLabel="color-ring-loading"
-                            wrapperStyle={{}}
-                            wrapperClass="color-ring-wrapper"
-                            colors={['#ff7f38', '#ff7f38', '#ff7f38', '#ff7f38','#ff7f38']}
-                            />         
+                            <ColorRingSpinner />
                         ) : (
                             <button className="upload-button" type="submit">
                                 Upload {selectedFiles.length} file{selectedFiles.length > 1 ? "s" : ""}
