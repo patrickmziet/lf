@@ -39,6 +39,31 @@
     margin-bottom: 10px; /* Spacing between the input and the save button */
 }
 
+.progress-bar-container {
+    width: 100%;
+    background-color: var(--orange);
+    height: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .progress-bar {
+    height: 100%;
+    background-color: var(--green);
+    border-radius: 10px;
+    transition: width 0.3s ease-in-out;
+  }
+  
+  .stopwatch {
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .session-stats {
+    margin-top: 20px;
+  }
+  
+
 /* Responsive design for smaller screens */
 @media (max-width: 850px) {
     .card-container {
