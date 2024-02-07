@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getTopicFlashCards, updateFlashCards, createMoreFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
+import { getTopicFlashCards, updateFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
 import { useAuth0 } from "@auth0/auth0-react";
 import { EditFlashcard } from '../components/edit-flashcard';
@@ -120,20 +120,6 @@ export const CardPage: React.FC = () => {
         console.log("Master flashcards update:", masterFlashcards);
     }, [flashcards, masterFlashcards]);
 
-
-    // Create more flashcards
-    const handleCreateMoreCards = async () => {
-        if (!topicId) return;
-        const token = await getAccessTokenSilently();
-        const { data } = await createMoreFlashCards(token, topicId, masterFlashcards);
-        console.log("Response:", data);
-        if (data && Array.isArray(data)) {
-            setMasterFlashcards(data);
-            const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
-            dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-            setFlashcards(dueFlashcards);
-        }
-    };
 
     // Handle back button
     const handleBack = async () => {
@@ -259,9 +245,6 @@ const handleDelete = async (cardId: number) => {
                 <div className="content__body"> 
                     <button className="back-to-topics-button" onClick={handleBack}>
                         {"<< Learn"}
-                    </button>
-                    <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
-                        Create More Cards
                     </button>
                     <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}

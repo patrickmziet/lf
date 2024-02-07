@@ -2,12 +2,12 @@
 // and test pages. It also has a button to add more documents.
 
 import React, { useEffect, useState } from 'react';
-import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { jsPDF } from "jspdf";
 import { GoTriangleRight, GoTriangleDown } from "react-icons/go";
 import { getTopicDocuments } from "../services/document.service";
-import { getTopicFlashCards, deleteTopic, getTopic } from "../services/message.service";
+import { getTopicFlashCards, getTopic, createMoreFlashCards } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
 import { Document } from "../models/document";
 import { Flashcard } from "../models/flashcard";
@@ -17,6 +17,7 @@ export const LearnPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
+    const [dueFlashcards, setDueFlashcards] = useState<Flashcard[]>([]);
     const [isInfoOpen, setInfoOpen] = useState<boolean>(false);
     const { getAccessTokenSilently } = useAuth0();
     const navigate = useNavigate();
@@ -51,9 +52,7 @@ export const LearnPage: React.FC = () => {
         };
         
         const fetchFlashcards = async () => {
-            if (!topicId) {
-                return;
-            }
+            if (!topicId) return;
             const accessToken = await getAccessTokenSilently();
             const { data } = await getTopicFlashCards(accessToken, topicId);
             if (data && Array.isArray(data)) {
@@ -65,10 +64,14 @@ export const LearnPage: React.FC = () => {
         fetchFlashcards();
     }, [topicId]);
     
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999);
-    const endOfDayInSeconds = Math.floor(endOfDay.getTime() / 1000);
-    const dueFlashcards = flashcards.filter(card => card.due_date < endOfDayInSeconds);
+    useEffect(() => {
+        const endOfDay = new Date();
+        endOfDay.setHours(23, 59, 59, 999);
+        const endOfDayInSeconds = Math.floor(endOfDay.getTime() / 1000);
+        const dueFlashcards = flashcards.filter(card => card.due_date < endOfDayInSeconds);
+        setDueFlashcards(dueFlashcards);
+    }, [flashcards]);
+
     
     const navigateToRapid = (topicId: string) => {
         navigate(`/rapid/${topicId}`, { state: { flashcards, title } });
@@ -95,6 +98,15 @@ export const LearnPage: React.FC = () => {
         setInfoOpen(!isInfoOpen);
     };
     
+    // Create more flashcards
+    const handleCreateMoreCards = async () => {
+        if (!topicId) return;
+        const accessToken = await getAccessTokenSilently();
+        const { data } = await createMoreFlashCards(accessToken, topicId, flashcards);
+        if (data && Array.isArray(data)) {
+            setFlashcards(data);
+        }
+    };
     return (
         <PageLayout>
             <div className="content-layout">
@@ -105,6 +117,7 @@ export const LearnPage: React.FC = () => {
                     <button className="delete-topic-button" onClick={handleDeleteTopic}>
                         Delete Topic
                     </button>
+
                     <div className="learn-grid">
                         <h1 className="learn__title">
                                 {title || "Loading..."}
@@ -118,6 +131,7 @@ export const LearnPage: React.FC = () => {
                         <div className="learn-item" onClick={handleGeneratePDF}>
                             <h4 className="content__title">Cheat Sheet</h4>
                         </div>
+
                         <div className={`drop-down-container ${isInfoOpen ? 'open' : ''}`}>
                             <p onClick={toggleInfo}>
                                 {isInfoOpen ? <GoTriangleDown/> : <GoTriangleRight/>} Learn more about Rapid, Gradual and Cheat Sheet
@@ -130,6 +144,21 @@ export const LearnPage: React.FC = () => {
                                     <li>Cheat Sheet: Make and AI-generated pdf which focuses on cards you're struggling with to take with you when you're not using LearnFast</li>
                                 </ul>
                             )}
+                        </div>
+                        <div>
+                            <h1 className="learn__title">
+                                Statistics
+                            </h1>
+                            <p>Total cards: {flashcards.length}</p>
+                            <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
+                                Create More Cards
+                            </button>
+                            <h4 className="learn__title">
+                                Rapid
+                            </h4>
+                            <h4 className="learn__title">
+                                Gradual
+                            </h4>
                         </div>
                         <div className="resources-container">
                             <h1 className="learn__title">
