@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { jsPDF } from "jspdf";
+import { GoTriangleRight, GoTriangleDown } from "react-icons/go";
 import { getTopicDocuments } from "../services/document.service";
 import { getTopicFlashCards, deleteTopic, getTopic } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
@@ -16,6 +17,7 @@ export const LearnPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
     const [documents, setDocuments] = useState<Document[]>([]);
     const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
+    const [isInfoOpen, setInfoOpen] = useState<boolean>(false);
     const { getAccessTokenSilently } = useAuth0();
     const navigate = useNavigate();
     const location = useLocation();
@@ -67,7 +69,6 @@ export const LearnPage: React.FC = () => {
     endOfDay.setHours(23, 59, 59, 999);
     const endOfDayInSeconds = Math.floor(endOfDay.getTime() / 1000);
     const dueFlashcards = flashcards.filter(card => card.due_date < endOfDayInSeconds);
-
     
     const navigateToRapid = (topicId: string) => {
         navigate(`/rapid/${topicId}`, { state: { flashcards, title } });
@@ -76,7 +77,6 @@ export const LearnPage: React.FC = () => {
     const navigateToFlashcards = (topicId: string) => {
         navigate(`/cards/${topicId}`, { state: { flashcards, title } });
     };  
-
 
     const generatePDF = (flashcards: Flashcard[]) => {
         const doc = new jsPDF();
@@ -91,6 +91,9 @@ export const LearnPage: React.FC = () => {
         generatePDF(flashcards);
     };  
 
+    const toggleInfo = () => {
+        setInfoOpen(!isInfoOpen);
+    };
     
     return (
         <PageLayout>
@@ -114,6 +117,18 @@ export const LearnPage: React.FC = () => {
                         </div>
                         <div className="learn-item" onClick={handleGeneratePDF}>
                             <h4 className="content__title">Cheat Sheet</h4>
+                        </div>
+                        <div className={`drop-down-container ${isInfoOpen ? 'open' : ''}`}>
+                            <p onClick={toggleInfo}>
+                                {isInfoOpen ? <GoTriangleDown/> : <GoTriangleRight/>} Learn more about Rapid, Gradual and Cheat Sheet
+                                {isInfoOpen && (
+                                <ul>
+                                    <li>Rapid: Get up to speed fast by studying cards in sessions of 10.</li>
+                                    <li>Gradual: Learn cards as they become due over with spaced repetition over days and weeks.<a href="https://en.wikipedia.org/wiki/Spaced_repetition">spaced repition</a></li>
+                                    <li>Cheat Sheet: Make and AI-generated pdf which focuses on cards you're struggling with to take with you when you're not using LearnFast.</li>
+                                </ul>
+                            )}
+                            </p>
                         </div>
                         <div className="resources-container">
                             <h1 className="learn__title">
