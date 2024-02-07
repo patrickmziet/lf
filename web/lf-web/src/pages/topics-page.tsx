@@ -45,6 +45,14 @@ export const TopicsPage: React.FC = () => {
 
     const handleCreateTopic = async (e: FormEvent) => {
         e.preventDefault();
+        if (newTopic.title.trim() === '') {
+            alert('Topic title cannot be empty');
+            return;
+        }
+        if (topics.some(topic => topic.title === newTopic.title)) {
+            alert('Topic title already exists');
+            return;
+        }
         const accessToken = await getAccessTokenSilently();
         const { data } = await createTopic(accessToken, newTopic);
 
