@@ -44,7 +44,7 @@
 }
 
 
-.drop-down-container {
+.drop-down-container, .drop-down-container-keys {
   display: flex;
   color: var(--gray);
   font-size: 1.2rem;
@@ -56,8 +56,11 @@
 .drop-down-container.open {
   margin-bottom: 200px; /* Replace with the actual height of your dropdown content */
 }
+.drop-down-container-keys.open {
+  margin-bottom: 50px; /* Replace with the actual height of your dropdown content */
+}
 
-.drop-down-container ul { /* Assuming the dropdown content is a ul. Adjust the selector to match your HTML structure */
+.drop-down-container ul, .drop-down-container-keys ul { /* Assuming the dropdown content is a ul. Adjust the selector to match your HTML structure */
   position: absolute;
   width: 100%;
   margin-top: 20px;
@@ -69,7 +72,7 @@
   color: var(--mandarine);
 }
 
-.drop-down-container p:hover {
+.drop-down-container p:hover, .drop-down-container-keys p:hover {
   cursor: pointer;
   color: var(--black);
 }

@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { GoTriangleRight, GoTriangleDown } from "react-icons/go";
 import { PageLayout } from "../components/page-layout";
 import { getTopicFlashCards, updateFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
@@ -35,6 +36,7 @@ export const RapidPage: React.FC = () => {
     const [correctAttempts, setCorrectAttempts] = useState(0);
     const [sessionHitRates, setSessionHitRates] = useState<number[]>([]);
     const [filteredCardsCount, setFilteredCardsCount] = useState(0);
+    const [isInfoOpen, setInfoOpen] = useState<boolean>(false);
 
 
     // Start session timer
@@ -169,12 +171,12 @@ export const RapidPage: React.FC = () => {
     }, [showAnswer]); 
     
 
-    // Debug flashcards
+/*     // Debug flashcards
     useEffect(() => {
         console.log("Flashcards update:", flashcards);
         console.log("Master flashcards update:", masterFlashcards);
     }, [flashcards, masterFlashcards]);
-
+ */
     
     // Handle back button
     const handleBack = async () => {
@@ -319,7 +321,10 @@ export const RapidPage: React.FC = () => {
         console.log("Sum of corrects:", sumOfCorrects);
         return (sumOfCorrects / totalPossibleCorrects) * 100;
     };
-    
+
+    const toggleInfo = () => {
+        setInfoOpen(!isInfoOpen);
+    };
 
     return (
         <PageLayout>
@@ -331,6 +336,9 @@ export const RapidPage: React.FC = () => {
                      <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
+                    <h3 className="learn__title">
+                        Session {currentSessionIndex + 1} of {sessionGroups.length}
+                    </h3>
                     <div className="stopwatch">
                         {elapsedTime < 3600 ? 
                             `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` : 
@@ -402,6 +410,7 @@ export const RapidPage: React.FC = () => {
                         )}
                     </>
                     )}
+                    {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
                         <div className="session-stats">
                             {sessionElapsedTimes.map((time, index) => (
@@ -414,9 +423,22 @@ export const RapidPage: React.FC = () => {
                                 <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
                             ))}  
                         </div>
-                    )}    
+                    )}
+                    {/* YOU ARE HERE NEED TO ADD NEXT SESSION KEYBOARD SHORTCUT */}
+                    <div className={`drop-down-container-keys ${isInfoOpen ? 'open' : ''}`}>
+                            <p onClick={toggleInfo}>
+                                {isInfoOpen ? <GoTriangleDown/> : <GoTriangleRight/>} Keyboard shortcuts
+                            </p>
+                            {isInfoOpen && (
+                                <ul>
+                                    <li>'j': Show answer and Correct</li>
+                                    <li>'l': Incorrect</li>
+                                </ul>
+                            )}
+                    </div>
+
                     {/* Upcoming flashcards */}
-                    <div>
+                    {/* <div>
                         {showAnswer && <p>Due date: {flashcards[currentCardIndex].due_date}</p>}
                         {showAnswer && <p>Interval: {flashcards[currentCardIndex].interval}</p>}
                         {showAnswer && <p>Record: {flashcards[currentCardIndex].record}</p>}
@@ -431,7 +453,7 @@ export const RapidPage: React.FC = () => {
                                 <p>Consecutive: {card.consecutive_correct}</p>
                             </div>
                         ))}
-                    </div>
+                    </div> */}
                 </div>
             </div>   
         </PageLayout>

@@ -57,6 +57,9 @@
   .stopwatch {
     font-size: 20px;
     margin-bottom: 20px;
+    /* Center the stopwatch */
+    display: flex;
+    justify-content: center;
   }
   
   .session-stats {
