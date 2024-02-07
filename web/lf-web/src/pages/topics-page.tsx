@@ -5,9 +5,9 @@
 
 import React, { useEffect, useState, FormEvent } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getUserTopics, createTopic, deleteTopic } from "../services/message.service";
+import { getUserTopics, createTopic } from "../services/message.service";
 import { Topic } from "../models/topic";
 
 export const TopicsPage: React.FC = () => {
