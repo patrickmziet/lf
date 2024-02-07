@@ -68,18 +68,6 @@ export const LearnPage: React.FC = () => {
     const endOfDayInSeconds = Math.floor(endOfDay.getTime() / 1000);
     const dueFlashcards = flashcards.filter(card => card.due_date < endOfDayInSeconds);
 
-    /* const handleDeleteTopic = async () => {
-        if (!topicId) return;
-        const isConfirmed = window.confirm('Are you sure you want to delete this topic?');
-        if (isConfirmed) {
-            const accessToken = await getAccessTokenSilently();
-            const response = await deleteTopic(accessToken, topicId);
-            if (response.status === 204) {
-                // Handle successful deletion, e.g., navigate back to the topics list
-                navigate('/topics');
-            }
-        }
-      }; */
     
     const navigateToRapid = (topicId: string) => {
         navigate(`/rapid/${topicId}`, { state: { flashcards, title } });
