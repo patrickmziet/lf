@@ -232,6 +232,7 @@ class CreateUserIfNotExistView(IsAuthenticatedUserView):
         return Response({"message": "User created" if created else "User exists"}, 
                         status=status_code)    
 
+
 class TopicListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
@@ -246,6 +247,7 @@ class TopicListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView
 class TopicDestroyAPIView(TopicListCreateAPIView, generics.DestroyAPIView):
     pass
 
+
 class TopicDocumentsAPIView(generics.ListAPIView):
     serializer_class = DocumentSerializer
 
@@ -253,12 +255,14 @@ class TopicDocumentsAPIView(generics.ListAPIView):
         topic_id = self.kwargs['topic_id']
         return Document.objects.filter(topic_id=topic_id)
 
+
 class TopicRetrieveAPIView(IsAuthenticatedUserView, generics.RetrieveAPIView):
     queryset = Topic.objects.all()
     serializer_class = TopicSerializer
 
     def get_queryset(self):
         return self.queryset.filter(user=self.get_user())
+
 
 class DocumentUploadView(IsAuthenticatedUserView, APIView):
     parser_classes = [MultiPartParser]
@@ -318,7 +322,6 @@ class FlashcardListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPI
 
 
 class FlashcardUpdateAPIView(IsAuthenticatedUserView):
-    
     def post(self, request):
         updated_flashcards = request.data
         for updated_flashcard in updated_flashcards:
@@ -333,8 +336,8 @@ class FlashcardUpdateAPIView(IsAuthenticatedUserView):
 
         return Response({"message": "Flashcards updated successfully"}, status=status.HTTP_200_OK)
 
-class FlashcardMoreAPIView(IsAuthenticatedUserView):
 
+class FlashcardMoreAPIView(IsAuthenticatedUserView):
     def get(self, request, *args, **kwargs):
         updated_flashcards = request.data
         topic_id = self.kwargs['topic_id']
@@ -397,3 +400,6 @@ class FlashcardDestroyAPIView(IsAuthenticatedUserView, generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         instance.delete()
+
+
+# class CheetSheetCreateAPIView(IsAuthenticatedUserView, generics.CreateAPIView):

@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
+import { jsPDF } from "jspdf";
 import { getTopicDocuments } from "../services/document.service";
 import { getTopicFlashCards, deleteTopic, getTopic } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
@@ -79,13 +80,28 @@ export const LearnPage: React.FC = () => {
         }
       };
     
-      const navigateToRapid = (topicId: string) => {
+    const navigateToRapid = (topicId: string) => {
         navigate(`/rapid/${topicId}`, { state: { flashcards, title } });
     };  
 
-      const navigateToFlashcards = (topicId: string) => {
+    const navigateToFlashcards = (topicId: string) => {
         navigate(`/cards/${topicId}`, { state: { flashcards, title } });
     };  
+
+
+    const generatePDF = (flashcards: Flashcard[]) => {
+        const doc = new jsPDF();
+        flashcards.forEach((card, index) => {
+            doc.text(index + 1 + ". " + "Question: " + card.question, 10, 20 + index * 20);
+            doc.text("Answer: " + card.answer, 10, 30 + index * 20);
+        });
+        doc.save(title + "-flashcards.pdf");
+    };
+    
+    const handleGeneratePDF = () => {
+        generatePDF(flashcards);
+    };  
+
     
     return (
         <PageLayout>
@@ -106,6 +122,9 @@ export const LearnPage: React.FC = () => {
                         </div>
                         <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
                              <p>Gradual mode: {dueFlashcards.length} flashcards are due</p>
+                        </div>
+                        <div className="learn-item" onClick={handleGeneratePDF}>
+                            Generate Cheat Sheet
                         </div>
                         <div className="resources-container">
                             <h1 className="learn__title">
