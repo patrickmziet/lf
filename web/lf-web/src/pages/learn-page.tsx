@@ -119,13 +119,13 @@ export const LearnPage: React.FC = () => {
                                 {title || "Loading..."}
                         </h1>
                         <div className="learn-item" onClick={() => topicId && navigateToRapid(topicId)}>
-                            Rapid mode
+                            <h4 className="content__title">Rapid</h4>
                         </div>
                         <div className="learn-item" onClick={() => topicId && navigateToFlashcards(topicId)}>
-                             <p>Gradual mode: {dueFlashcards.length} flashcards are due</p>
+                            <h4 className="content__title">Gradual - {dueFlashcards.length} due</h4>
                         </div>
                         <div className="learn-item" onClick={handleGeneratePDF}>
-                            Generate Cheat Sheet
+                            <h4 className="content__title">Cheat Sheet</h4>
                         </div>
                         <div className="resources-container">
                             <h1 className="learn__title">
