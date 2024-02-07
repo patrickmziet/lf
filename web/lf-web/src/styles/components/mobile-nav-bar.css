@@ -6,11 +6,10 @@
   flex-shrink: 0;
   width: 100%;
 
-  box-shadow: rgb(90 95 102) 0-1.5px 0 inset;
+ /*  box-shadow: rgb(90 95 102) 0-1.5px 0 inset; */
 
   z-index: 300;
-
-  background-color: var(--black);
+  background-color: var(--mandarine);
 }
 
 .mobile-nav-bar {
@@ -51,13 +50,34 @@
   height: 2.4rem;
 }
 
+
+.mobile-nav-bar__name {
+  min-width: 8.4rem;
+
+  color: var(--white);
+  background-color: transparent;
+  width: 50%;
+  font-size: 1.6rem;
+
+  margin: 0 auto; 
+
+  font-family: var(--font-primary);
+  font-style: normal;
+  font-weight: 600;
+  line-height: 3.2rem;
+  padding: 0.8rem 0;
+  border-radius: 0.8rem;
+  text-align: center;
+}
+
+
 .mobile-nav-bar__menu {
   width: 100%;
   height: calc(100% - 6.4rem);
   position: fixed;
   left: 0;
   top: 6.4rem;
-  background-color: var(--black);
+  background-color: var(--mandarine);
 
   z-index: 300;
 }
@@ -66,6 +86,7 @@
   margin-left: 2.4rem;
   font-size: 3.6rem;
   cursor: pointer;
+  color: var(--white);
 }
 
 .mobile-nav-bar__tabs {
@@ -87,7 +108,7 @@
   line-height: 16px;
 
   padding: 3.2rem 2.4rem;
-  background-color: var(--black);
+  background-color: var(--mandarine);
   color: var(--white);
   width: 100%;
   box-shadow: rgb(90 95 102) 0-1.5px 0 inset;
@@ -100,7 +121,7 @@
 .mobile-nav-bar__tab--active {
   text-decoration-line: underline;
   text-decoration-style: solid;
-  text-decoration-color: var(--indigo);
+  text-decoration-color: var(--white);
 
   /* responsive */
 
@@ -120,7 +141,7 @@
   display: flex;
   justify-content: center;
   padding: 3.2rem;
-  background-color: var(--black);
+  background-color: var(--mandarine);
 }
 
 @media only screen and (max-width: 640px) and (hover: none) {

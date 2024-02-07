@@ -14,29 +14,10 @@ export const MobileNavBarTabs: React.FC<MobileNavBarTabsProps> = ({
   return (
     <div className="mobile-nav-bar__tabs">
       <MobileNavBarTab
-        path="/profile"
-        label="Profile"
+        path="/topics"
+        label="Topics"
         handleClick={handleClick}
       />
-      <MobileNavBarTab
-        path="/public"
-        label="Public"
-        handleClick={handleClick}
-      />
-      {isAuthenticated && (
-        <>
-          <MobileNavBarTab
-            path="/protected"
-            label="Protected"
-            handleClick={handleClick}
-          />
-          <MobileNavBarTab
-            path="/admin"
-            label="Admin"
-            handleClick={handleClick}
-          />
-        </>
-      )}
     </div>
   );
 };
