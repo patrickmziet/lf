@@ -18,11 +18,10 @@
     box-sizing: border-box;
     /* Include padding and border in the width and height */
     position: relative;
+    font-size: 1.6rem;
 }
 
 .card-question {
-    font-size: 1.6rem;
-    /* Adjust font size as needed */
     margin-bottom: 2rem;
     /* Space below the question */
 }
@@ -119,25 +118,27 @@
 /* Responsive design for smaller screens */
 @media (max-width: 850px) {
     .card-container {
-        width: 90%;
+        width: 300px;
         /* Take up most of the screen width */
-        height: auto;
+        height: 280px;
         /* Height can adjust based on content */
         padding: 10px;
         /* Smaller padding */
+        font-size: 1.4rem;
+    }
+
+    .progress-bar, .progress-bar-container {
+        width: 100%;
     }
 }
 
 @media (max-width: 500px) {
     .card-container {
+        width: 280px;
         flex-direction: column;
         /* Stack elements vertically if using flexbox */
         padding: 10px;
         /* Adjust padding for smaller screens */
-    }
-
-    .card-question {
-        font-size: 1.4rem;
-        /* Adjust font size for smaller screens */
+        font-size: 1.2rem;
     }
 }
