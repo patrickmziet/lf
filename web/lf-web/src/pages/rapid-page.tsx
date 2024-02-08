@@ -322,21 +322,23 @@ export const RapidPage: React.FC = () => {
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
                     <h3 className="learn__title">
-                        Session {currentSessionIndex + 1} of {sessionGroups.length}
+                        Session {currentSessionIndex + 1} of {sessionGroups.length} {currentCardIndex >= flashcards.length ? "completed" : ""}
                     </h3>
                     {currentCardIndex < flashcards.length && (
                         <div className="stopwatch">
-                            {elapsedTime < 3600 ?
-                                `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
-                                "> 1hr"
-                            }
+                            <h3 className="learn__title">
+                                {elapsedTime < 3600 ?
+                                    `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
+                                    "> 1hr"
+                                }
+                            </h3>
                         </div>
                     )}
                     <div className="progress-bar-container">
                         <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>
                     </div>
 
-                    {currentCardIndex < flashcards.length ? (
+                    {currentCardIndex < flashcards.length && (
                         isEditing ? (
                             <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
                         ) : (
@@ -373,13 +375,6 @@ export const RapidPage: React.FC = () => {
                                 )}
                             </div>
                         )
-                    ) : (
-                        <>
-                            <h4 className="learn__title">
-                                Session completed
-                            </h4>
-
-                        </>
                     )}
                     {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (

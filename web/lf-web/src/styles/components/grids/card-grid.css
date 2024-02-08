@@ -71,10 +71,17 @@
 
 .stopwatch {
     font-size: 20px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
+    margin-top: 10px;
     /* Center the stopwatch */
     display: flex;
     justify-content: center;
+}
+
+.card-count__title {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    text-align: center;
 }
 
 .session-stats {
@@ -113,7 +120,7 @@
     border-right: none;
   }
 
-  
+
 /* Responsive design for smaller screens */
 @media (max-width: 850px) {
     .card-container {

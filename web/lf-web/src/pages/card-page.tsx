@@ -24,6 +24,10 @@ export const CardPage: React.FC = () => {
     const titleFromState = location.state?.title;
     const [title, setTitle] = useState<string | null>(titleFromState);
     const [elapsedTime, setElapsedTime] = useState(0);
+    const [sessionElapsedTime, setSessionElapsedTime] = useState(0);
+    const [sessionEnded, setSessionEnded] = useState(false);
+    const [totalCardsDue, setTotalCardsDue] = useState(0);
+    const [filteredCardsCount, setFilteredCardsCount] = useState(0);
 
     // Start timer
     useEffect(() => {
@@ -71,6 +75,7 @@ export const CardPage: React.FC = () => {
                 const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
                 dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
                 setFlashcards(dueFlashcards);
+                setTotalCardsDue(dueFlashcards.length);
             }
         };
 
@@ -143,6 +148,7 @@ export const CardPage: React.FC = () => {
     const handleCorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
+
         const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
@@ -168,11 +174,20 @@ export const CardPage: React.FC = () => {
         updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
 
         const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
+        if (dueFlashcards.length < updatedFlashcards.length) {
+            setFilteredCardsCount(prevCount => prevCount + 1);
+        }
+
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
         setFlashcards(dueFlashcards);
         setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
+
+        if (dueFlashcards.length === 0) {
+            setSessionElapsedTime(elapsedTime);
+            setSessionEnded(true);
+        }
     };
 
     const handleIncorrect = () => {
@@ -247,6 +262,10 @@ export const CardPage: React.FC = () => {
         }
     };
 
+    const calculateProgress = () => {
+        return (filteredCardsCount / totalCardsDue) * 100;
+    };
+
     return (
         <PageLayout>
             <div className="content-layout">
@@ -259,12 +278,28 @@ export const CardPage: React.FC = () => {
                     </h1>
                     {currentCardIndex < flashcards.length && (
                         <div className="stopwatch">
-                            {elapsedTime < 3600 ?
-                                `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
-                                "> 1hr"
-                            }
+                            <h3 className="learn__title">
+                                {elapsedTime < 3600 ?
+                                    `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
+                                    "> 1hr"
+                                }
+                            </h3>
                         </div>
                     )}
+                    {sessionEnded && (
+                        <h3 className="learn__title">
+                            {sessionElapsedTime < 3600 ?
+                                `${String(Math.floor(sessionElapsedTime / 60)).padStart(2, '0')}:${String(sessionElapsedTime % 60).padStart(2, '0')}` :
+                                "> 1hr"
+                            }
+                        </h3>
+                    )}
+                    <h3 className="card-count__title">
+                        {filteredCardsCount} out of {totalCardsDue}
+                    </h3>
+                    <div className="progress-bar-container">
+                        <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>
+                    </div>
                     {currentCardIndex < flashcards.length ? (
                         isEditing ? (
                             <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
