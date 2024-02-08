@@ -179,7 +179,6 @@ export const RapidPage: React.FC = () => {
     };
 
     const handleCorrect = () => {
-
         if (currentCardIndex >= flashcards.length) return;
         setTotalAttempts(prevTotalAttempts => prevTotalAttempts + 1);
         setCorrectAttempts(prevCorrectAttempts => prevCorrectAttempts + 1);
@@ -304,11 +303,7 @@ export const RapidPage: React.FC = () => {
     // Calculate progress
     const calculateProgress = () => {
         const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
-        /*         console.log("Flashcards length:", flashcards.length);
-                console.log("Filtered cards count:", filteredCardsCount);
-                console.log("Total possible corrects:", totalPossibleCorrects); */
         const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0) + filteredCardsCount * consec_limit;
-        /*         console.log("Sum of corrects:", sumOfCorrects); */
         return (sumOfCorrects / totalPossibleCorrects) * 100;
     };
 
