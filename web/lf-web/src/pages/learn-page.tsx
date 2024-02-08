@@ -110,14 +110,18 @@ export const LearnPage: React.FC = () => {
     return (
         <PageLayout>
             <div className="content-layout">
-                <div className="content__body">
+                <div className="content__header">
                     <button className="back-to-topics-button" onClick={() => navigate('/topics')}>
                         {"<< Topics"}
                     </button>
                     <button className="delete-topic-button" onClick={handleDeleteTopic}>
                         Delete Topic
                     </button>
-
+                    <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
+                        Create More Cards
+                    </button>
+                </div>
+                <div className="content__body">
                     <div className="learn-grid">
                         <h1 className="learn__title">
                             {title || "Loading..."}
@@ -150,9 +154,6 @@ export const LearnPage: React.FC = () => {
                                 Statistics
                             </h1>
                             <p>Total cards: {flashcards.length}</p>
-                            <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
-                                Create More Cards
-                            </button>
                             <h4 className="learn__title">
                                 Rapid
                             </h4>

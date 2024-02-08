@@ -269,10 +269,12 @@ export const CardPage: React.FC = () => {
     return (
         <PageLayout>
             <div className="content-layout">
-                <div className="content__body">
+                <div className="content__header">
                     <button className="back-to-topics-button" onClick={handleBack}>
                         {"<< Learn"}
                     </button>
+                </div>
+                <div className="content__body">
                     <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
