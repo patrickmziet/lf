@@ -187,6 +187,7 @@ export const LearnPage: React.FC = () => {
                     <button className="back-to-topics-button" onClick={() => navigate('/topics')}>
                         {"<< Topics"}
                     </button>
+                    
                     <button className="delete-topic-button" onClick={handleDeleteTopic}>
                         Delete Topic
                     </button>
