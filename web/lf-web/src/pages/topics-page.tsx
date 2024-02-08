@@ -12,7 +12,7 @@ import { Topic } from "../models/topic";
 
 export const TopicsPage: React.FC = () => {
     const [topics, setTopics] = useState<Topic[]>([]);
-    const [newTopic, setNewTopic] = useState({ title: ''});
+    const [newTopic, setNewTopic] = useState({ title: '' });
     const { user, getAccessTokenSilently } = useAuth0();
     const navigate = useNavigate();
 

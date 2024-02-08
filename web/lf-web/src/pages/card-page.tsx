@@ -73,7 +73,7 @@ export const CardPage: React.FC = () => {
     }, [topicId, getAccessTokenSilently]);
 
     // Update time every second
-    useEffect(() => { 
+    useEffect(() => {
         const interval = setInterval(() => {
             setTime(Math.floor(Date.now() / 1000));
 
@@ -111,8 +111,8 @@ export const CardPage: React.FC = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [showAnswer]); 
-    
+    }, [showAnswer]);
+
 
     // Debug flashcards
     useEffect(() => {
@@ -188,7 +188,7 @@ export const CardPage: React.FC = () => {
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
-    
+
 
     const handleEdit = (cardIndex: number) => {
         setIsEditing(true);
@@ -197,7 +197,7 @@ export const CardPage: React.FC = () => {
 
     const handleSave = (updatedCard: Flashcard) => {
         // Update the current session flashcards
-        const updatedFlashcards = flashcards.map((card, index) => 
+        const updatedFlashcards = flashcards.map((card, index) =>
             index === currentCardIndex ? updatedCard : card
         );
 
@@ -213,36 +213,36 @@ export const CardPage: React.FC = () => {
 
 
     // Add the handleDelete function in your component
-const handleDelete = async (cardId: number) => {
-    const cardToDelete = flashcards.find(card => card.id === cardId);
-    if (!cardToDelete) {
-        console.error('Card not found');
-        return;
-    }
-    const confirmDelete = window.confirm("Are you sure you want to delete the card?");
-    if (confirmDelete) {
-        // Optimistically remove the card from local state
-        setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
-        setFlashcards(flashcards.filter(card => card.id !== cardId));
-        try {
-            // Make the API request to delete the card
-            const token = await getAccessTokenSilently();
-            await deleteFlashCard(token, cardId);
-        } catch (error) {
-            // If the request fails, revert the change in local state and inform the user
-            console.error(error);
-            setMasterFlashcards([...masterFlashcards, cardToDelete]);
-            setFlashcards([...flashcards, cardToDelete]);
-            alert('Failed to delete the card. Please try again.');
+    const handleDelete = async (cardId: number) => {
+        const cardToDelete = flashcards.find(card => card.id === cardId);
+        if (!cardToDelete) {
+            console.error('Card not found');
+            return;
         }
-        setShowAnswer(false);
-    }
-};
+        const confirmDelete = window.confirm("Are you sure you want to delete the card?");
+        if (confirmDelete) {
+            // Optimistically remove the card from local state
+            setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
+            setFlashcards(flashcards.filter(card => card.id !== cardId));
+            try {
+                // Make the API request to delete the card
+                const token = await getAccessTokenSilently();
+                await deleteFlashCard(token, cardId);
+            } catch (error) {
+                // If the request fails, revert the change in local state and inform the user
+                console.error(error);
+                setMasterFlashcards([...masterFlashcards, cardToDelete]);
+                setFlashcards([...flashcards, cardToDelete]);
+                alert('Failed to delete the card. Please try again.');
+            }
+            setShowAnswer(false);
+        }
+    };
 
     return (
         <PageLayout>
             <div className="content-layout">
-                <div className="content__body"> 
+                <div className="content__body">
                     <button className="back-to-topics-button" onClick={handleBack}>
                         {"<< Learn"}
                     </button>
@@ -250,46 +250,46 @@ const handleDelete = async (cardId: number) => {
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
                     {currentCardIndex < flashcards.length ? (
-                    isEditing ? (
-                        <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
-                    ) : (
-                    <div className="card-container">
-                        <p className="card-question">{flashcards[currentCardIndex].question}</p>
-                        {showAnswer && (
-                            <>
-                                <div className="answer-separator"></div>
-                                <div className="answer-container">
-                                    <p>{flashcards[currentCardIndex].answer}</p>
-                                </div>
-                            </>
-                        )}
-                        
-                        {!showAnswer && <button className="show-answer-button" onClick={() => setShowAnswer(true)}>
-                                            Show Answer
+                        isEditing ? (
+                            <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
+                        ) : (
+                            <div className="card-container">
+                                <p className="card-question">{flashcards[currentCardIndex].question}</p>
+                                {showAnswer && (
+                                    <>
+                                        <div className="answer-separator"></div>
+                                        <div className="answer-container">
+                                            <p>{flashcards[currentCardIndex].answer}</p>
+                                        </div>
+                                    </>
+                                )}
+
+                                {!showAnswer && <button className="show-answer-button" onClick={() => setShowAnswer(true)}>
+                                    Show Answer
+                                </button>
+                                }
+                                {showAnswer && (
+                                    <div className="button-container">
+                                        <button className="correct-button" onClick={handleCorrect}>
+                                            Correct
                                         </button>
-                        }
-                        {showAnswer && (
-                            <div className="button-container">
-                                <button className="correct-button" onClick={handleCorrect}>
-                                    Correct
-                                </button>
-                                <button className="incorrect-button" onClick={handleIncorrect}>
-                                    Incorrect
-                                </button>
-                                <button className="edit-card-button" onClick={() => handleEdit(currentCardIndex)}>
-                                    Edit
-                                </button>
-                                <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
-                                    Delete
-                                </button>
+                                        <button className="incorrect-button" onClick={handleIncorrect}>
+                                            Incorrect
+                                        </button>
+                                        <button className="edit-card-button" onClick={() => handleEdit(currentCardIndex)}>
+                                            Edit
+                                        </button>
+                                        <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                    )
+                        )
                     ) : (
-                    <h4 className="learn__title">
-                        No more flashcards
-                    </h4>
+                        <h4 className="learn__title">
+                            No more flashcards
+                        </h4>
                     )}
                     {/* Upcoming flashcards */}
                     <div>
@@ -301,7 +301,7 @@ const handleDelete = async (cardId: number) => {
                         <h2>Upcoming Flashcards</h2>
                         {flashcards.slice(currentCardIndex + 1).map((card, index) => (
                             <div key={index}>
-                                <p>Order in queue: {index + 1}</p>  
+                                <p>Order in queue: {index + 1}</p>
                                 <p>Question: {card.question}</p>
                                 <p>Answer: {card.answer}</p>
                                 <p>Due date: {card.due_date}</p>
@@ -311,7 +311,7 @@ const handleDelete = async (cardId: number) => {
                         ))}
                     </div>
                 </div>
-            </div>   
+            </div>
         </PageLayout>
     );
 };

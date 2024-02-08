@@ -28,21 +28,21 @@ export const LearnPage: React.FC = () => {
 
     useEffect(() => {
         const fetchTopic = async () => {
-          if (!topicId) return;
-          const accessToken = await getAccessTokenSilently();
-          const { data } = await getTopic(accessToken, topicId); // Replace with your actual API call
-          if (data) {
-            setTitle(data.title);
-          }
+            if (!topicId) return;
+            const accessToken = await getAccessTokenSilently();
+            const { data } = await getTopic(accessToken, topicId); // Replace with your actual API call
+            if (data) {
+                setTitle(data.title);
+            }
         };
-    
+
         if (state && state.title) {
-          setTitle(state.title);
+            setTitle(state.title);
         } else {
-          fetchTopic();
+            fetchTopic();
         }
-      }, [topicId, state]);
-    
+    }, [topicId, state]);
+
     useEffect(() => {
         const fetchDocuments = async () => {
             if (!topicId) return;
@@ -50,7 +50,7 @@ export const LearnPage: React.FC = () => {
             const { data } = await getTopicDocuments(accessToken, topicId);
             setDocuments(data);
         };
-        
+
         const fetchFlashcards = async () => {
             if (!topicId) return;
             const accessToken = await getAccessTokenSilently();
@@ -63,7 +63,7 @@ export const LearnPage: React.FC = () => {
         fetchDocuments();
         fetchFlashcards();
     }, [topicId]);
-    
+
     useEffect(() => {
         const endOfDay = new Date();
         endOfDay.setHours(23, 59, 59, 999);
@@ -72,14 +72,14 @@ export const LearnPage: React.FC = () => {
         setDueFlashcards(dueFlashcards);
     }, [flashcards]);
 
-    
+
     const navigateToRapid = (topicId: string) => {
         navigate(`/rapid/${topicId}`, { state: { flashcards, title } });
-    };  
+    };
 
     const navigateToFlashcards = (topicId: string) => {
         navigate(`/cards/${topicId}`, { state: { flashcards, title } });
-    };  
+    };
 
     const generatePDF = (flashcards: Flashcard[]) => {
         const doc = new jsPDF();
@@ -89,15 +89,15 @@ export const LearnPage: React.FC = () => {
         });
         doc.save(title + "-flashcards.pdf");
     };
-    
+
     const handleGeneratePDF = () => {
         generatePDF(flashcards);
-    };  
+    };
 
     const toggleInfo = () => {
         setInfoOpen(!isInfoOpen);
     };
-    
+
     // Create more flashcards
     const handleCreateMoreCards = async () => {
         if (!topicId) return;
@@ -112,7 +112,7 @@ export const LearnPage: React.FC = () => {
             <div className="content-layout">
                 <div className="content__body">
                     <button className="back-to-topics-button" onClick={() => navigate('/topics')}>
-                            {"<< Topics"}
+                        {"<< Topics"}
                     </button>
                     <button className="delete-topic-button" onClick={handleDeleteTopic}>
                         Delete Topic
@@ -120,7 +120,7 @@ export const LearnPage: React.FC = () => {
 
                     <div className="learn-grid">
                         <h1 className="learn__title">
-                                {title || "Loading..."}
+                            {title || "Loading..."}
                         </h1>
                         <div className="learn-item" onClick={() => topicId && navigateToRapid(topicId)}>
                             <h4 className="content__title">Rapid</h4>
@@ -134,13 +134,13 @@ export const LearnPage: React.FC = () => {
 
                         <div className={`drop-down-container ${isInfoOpen ? 'open' : ''}`}>
                             <p onClick={toggleInfo}>
-                                {isInfoOpen ? <GoTriangleDown/> : <GoTriangleRight/>} Learn more about Rapid, Gradual and Cheat Sheet
+                                {isInfoOpen ? <GoTriangleDown /> : <GoTriangleRight />} Learn more about Rapid, Gradual and Cheat Sheet
                             </p>
                             {isInfoOpen && (
                                 <ul>
                                     <li>Rapid: Get up to speed fast by studying cards in sessions of 10</li>
-                                    <li>Gradual: Learn cards as they become due over with <a 
-                                    href="https://en.wikipedia.org/wiki/Spaced_repetition" target="_blank" rel="noopener noreferrer">spaced repition</a> over days and weeks</li>
+                                    <li>Gradual: Learn cards as they become due over with <a
+                                        href="https://en.wikipedia.org/wiki/Spaced_repetition" target="_blank" rel="noopener noreferrer">spaced repition</a> over days and weeks</li>
                                     <li>Cheat Sheet: Make and AI-generated pdf which focuses on cards you're struggling with to take with you when you're not using LearnFast</li>
                                 </ul>
                             )}
@@ -165,14 +165,14 @@ export const LearnPage: React.FC = () => {
                                 Resources
                             </h1>
                             <ul className="resources-list">
-                            {documents.filter(doc => !doc.document.includes("combined_file")).map((doc, index) => (
+                                {documents.filter(doc => !doc.document.includes("combined_file")).map((doc, index) => (
                                     <li key={index}>{doc.document.split("/").pop()}</li>
                                 ))}
                             </ul>
                         </div>
                     </div>
                 </div>
-            </div>   
+            </div>
         </PageLayout>
     );
 };

@@ -45,32 +45,32 @@ export const RapidPage: React.FC = () => {
         if (sessionGroups.length > 0 && currentSessionIndex < sessionGroups.length) {
             const start = Date.now();
             setSessionStartTime(start);
-        
+
             const timer = setInterval(() => {
                 // Update elapsed time only if the session hasn't ended
                 if (!sessionEnded) {
                     setElapsedTime(prevTime => Math.floor((Date.now() - start) / 1000));
                 }
             }, 1000);
-        
+
             // Cleanup on component unmount or when the session ends
             return () => clearInterval(timer);
         }
         // Return a no-op function when the condition is not met
-        return () => {};
+        return () => { };
     }, [currentSessionIndex, sessionEnded, sessionGroups]); // Rerun the effect when starting a new session or ending one
-    
-/*     useEffect(() => {
-        const start = Date.now();
-        setSessionStartTime(start);
-    
-        const timer = setInterval(() => {
-            setElapsedTime(Math.floor((Date.now() - start) / 1000));
-        }, 1000);
-    
-        return () => clearInterval(timer);
-    }, []); // Empty dependency array means this effect runs once when the component mounts
- */    
+
+    /*     useEffect(() => {
+            const start = Date.now();
+            setSessionStartTime(start);
+        
+            const timer = setInterval(() => {
+                setElapsedTime(Math.floor((Date.now() - start) / 1000));
+            }, 1000);
+        
+            return () => clearInterval(timer);
+        }, []); // Empty dependency array means this effect runs once when the component mounts
+     */
 
     // Fetch topic title
     useEffect(() => {
@@ -116,7 +116,7 @@ export const RapidPage: React.FC = () => {
 
             if (isMounted && data && Array.isArray(data)) {
                 setMasterFlashcards(data);
-                const flashcardGroups = groupFlashcards(data, group_size); 
+                const flashcardGroups = groupFlashcards(data, group_size);
                 setSessionGroups(flashcardGroups);
                 setFlashcards(flashcardGroups[0] || []);
             }
@@ -130,7 +130,7 @@ export const RapidPage: React.FC = () => {
     }, [topicId, getAccessTokenSilently]);
 
     // Update time every second
-    useEffect(() => { 
+    useEffect(() => {
         const interval = setInterval(() => {
             setTime(Math.floor(Date.now() / 1000));
 
@@ -168,16 +168,16 @@ export const RapidPage: React.FC = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [showAnswer]); 
-    
+    }, [showAnswer]);
 
-/*     // Debug flashcards
-    useEffect(() => {
-        console.log("Flashcards update:", flashcards);
-        console.log("Master flashcards update:", masterFlashcards);
-    }, [flashcards, masterFlashcards]);
- */
-    
+
+    /*     // Debug flashcards
+        useEffect(() => {
+            console.log("Flashcards update:", flashcards);
+            console.log("Master flashcards update:", masterFlashcards);
+        }, [flashcards, masterFlashcards]);
+     */
+
     // Handle back button
     const handleBack = async () => {
         if (!topicId) return;
@@ -198,7 +198,7 @@ export const RapidPage: React.FC = () => {
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct += 1;
         updatedFlashcards[currentCardIndex] = updatedCard;
-        const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);        
+        const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);
 
         // Check if a card has been filtered out and increment filteredCardsCount
         if (dueFlashcards.length < updatedFlashcards.length) {
@@ -209,7 +209,7 @@ export const RapidPage: React.FC = () => {
         setFlashcards(dueFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
-        
+
         // Check if there are no more flashcards
         if (dueFlashcards.length === 0) {
             setSessionEnded(true);
@@ -220,7 +220,7 @@ export const RapidPage: React.FC = () => {
             // Add elapsed time to the list
             setSessionElapsedTimes(prevTimes => [...prevTimes, elapsedTime]);
             // Reset elapsed time for the next session
-            setElapsedTime(0);            
+            setElapsedTime(0);
         }
     };
 
@@ -239,7 +239,7 @@ export const RapidPage: React.FC = () => {
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
-    
+
     const handleNextSession = () => {
         const nextSessionIndex = currentSessionIndex + 1;
         if (nextSessionIndex < sessionGroups.length) {
@@ -258,7 +258,7 @@ export const RapidPage: React.FC = () => {
             // Handle the case where there are no more sessions
             console.log("No more sessions");
         }
-    };    
+    };
 
 
     const handleEdit = (cardIndex: number) => {
@@ -268,7 +268,7 @@ export const RapidPage: React.FC = () => {
 
     const handleSave = (updatedCard: Flashcard) => {
         // Update the current session flashcards
-        const updatedFlashcards = flashcards.map((card, index) => 
+        const updatedFlashcards = flashcards.map((card, index) =>
             index === currentCardIndex ? updatedCard : card
         );
 
@@ -329,19 +329,19 @@ export const RapidPage: React.FC = () => {
     return (
         <PageLayout>
             <div className="content-layout">
-                <div className="content__body"> 
+                <div className="content__body">
                     <button className="back-to-topics-button" onClick={handleBack}>
                         {"<< Learn"}
                     </button>
-                     <h1 className="learn__title">
+                    <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
                     <h3 className="learn__title">
                         Session {currentSessionIndex + 1} of {sessionGroups.length}
                     </h3>
                     <div className="stopwatch">
-                        {elapsedTime < 3600 ? 
-                            `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` : 
+                        {elapsedTime < 3600 ?
+                            `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
                             "> 1hr"
                         }
                     </div>
@@ -350,91 +350,91 @@ export const RapidPage: React.FC = () => {
                     </div>
 
                     {currentCardIndex < flashcards.length ? (
-                    isEditing ? (
-                        <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
-                    ) : (
-                    <div className="card-container">
-                        <p className="card-question">{flashcards[currentCardIndex].question}</p>
-                        {showAnswer && (
-                            <>
-                                <div className="answer-separator"></div>
-                                <div className="answer-container">
-                                    <p>{flashcards[currentCardIndex].answer}</p>
-                                </div>
-                            </>
-                        )}
-                        
-                        {!showAnswer && <button className="show-answer-button" onClick={() => setShowAnswer(true)}>
-                                            Show Answer
+                        isEditing ? (
+                            <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
+                        ) : (
+                            <div className="card-container">
+                                <p className="card-question">{flashcards[currentCardIndex].question}</p>
+                                {showAnswer && (
+                                    <>
+                                        <div className="answer-separator"></div>
+                                        <div className="answer-container">
+                                            <p>{flashcards[currentCardIndex].answer}</p>
+                                        </div>
+                                    </>
+                                )}
+
+                                {!showAnswer && <button className="show-answer-button" onClick={() => setShowAnswer(true)}>
+                                    Show Answer
+                                </button>
+                                }
+                                {showAnswer && (
+                                    <div className="button-container">
+                                        <button className="correct-button" onClick={handleCorrect}>
+                                            Correct
                                         </button>
-                        }
-                        {showAnswer && (
-                            <div className="button-container">
-                                <button className="correct-button" onClick={handleCorrect}>
-                                    Correct
-                                </button>
-                                <button className="incorrect-button" onClick={handleIncorrect}>
-                                    Incorrect
-                                </button>
-                                <button className="edit-card-button" onClick={() => handleEdit(currentCardIndex)}>
-                                    Edit
-                                </button>
-                                <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
-                                    Delete
-                                </button>
+                                        <button className="incorrect-button" onClick={handleIncorrect}>
+                                            Incorrect
+                                        </button>
+                                        <button className="edit-card-button" onClick={() => handleEdit(currentCardIndex)}>
+                                            Edit
+                                        </button>
+                                        <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
+                                            Delete
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
-                    )
+                        )
                     ) : (
-                    <>
-                        <h4 className="learn__title">
-                            No more flashcards
-                        </h4>
-                        <h4 className="learn__title">
-                            {/*Print elapsed time and hit rate*/}
-                            {sessionElapsedTimes.length > 0 && sessionHitRates.length > 0 && (
-                                <p>Session Hit Rate: {sessionHitRates[currentSessionIndex].toFixed(2)}%</p>
+                        <>
+                            <h4 className="learn__title">
+                                No more flashcards
+                            </h4>
+                            <h4 className="learn__title">
+                                {/*Print elapsed time and hit rate*/}
+                                {sessionElapsedTimes.length > 0 && sessionHitRates.length > 0 && (
+                                    <p>Session Hit Rate: {sessionHitRates[currentSessionIndex].toFixed(2)}%</p>
+                                )}
+                                {sessionElapsedTimes.length > 0 && (
+                                    <p>Session Time: {sessionElapsedTimes[currentSessionIndex] < 3600 ?
+                                        `${String(Math.floor(sessionElapsedTimes[currentSessionIndex] / 60)).padStart(2, '0')}:${String(sessionElapsedTimes[currentSessionIndex] % 60).padStart(2, '0')}` :
+                                        "> 1hr"
+                                    }</p>
+                                )}
+                            </h4>
+                            {sessionGroups.length > currentSessionIndex + 1 && (
+                                <button className="next-session-button" onClick={handleNextSession}>
+                                    Next Session
+                                </button>
                             )}
-                            {sessionElapsedTimes.length > 0 && (
-                                <p>Session Time: {sessionElapsedTimes[currentSessionIndex] < 3600 ? 
-                                    `${String(Math.floor(sessionElapsedTimes[currentSessionIndex] / 60)).padStart(2, '0')}:${String(sessionElapsedTimes[currentSessionIndex] % 60).padStart(2, '0')}` : 
-                                    "> 1hr"
-                                }</p>
-                            )}
-                        </h4>
-                        {sessionGroups.length > currentSessionIndex + 1 && (
-                            <button className="next-session-button" onClick={handleNextSession}>
-                                Next Session
-                            </button>
-                        )}
-                    </>
+                        </>
                     )}
                     {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
                         <div className="session-stats">
                             {sessionElapsedTimes.map((time, index) => (
-                                <p key={index}>Session {index + 1} Time: {time < 3600 ? 
-                                    `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` : 
+                                <p key={index}>Session {index + 1} Time: {time < 3600 ?
+                                    `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` :
                                     "> 1hr"
                                 }</p>
                             ))}
-                        {sessionHitRates.map((hitRate, index) => (
+                            {sessionHitRates.map((hitRate, index) => (
                                 <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
-                            ))}  
+                            ))}
                         </div>
                     )}
                     {/* YOU ARE HERE NEED TO ADD NEXT SESSION KEYBOARD SHORTCUT */}
                     <div className={`drop-down-container-keys ${isInfoOpen ? 'open' : ''}`}>
-                            <p onClick={toggleInfo}>
-                                {isInfoOpen ? <GoTriangleDown/> : <GoTriangleRight/>} Keyboard shortcuts
-                            </p>
-                            {isInfoOpen && (
-                                <ul>
-                                    <li>'j': Show answer and Correct</li>
-                                    <li>'l': Incorrect</li>
-                                </ul>
-                            )}
+                        <p onClick={toggleInfo}>
+                            {isInfoOpen ? <GoTriangleDown /> : <GoTriangleRight />} Keyboard shortcuts
+                        </p>
+                        {isInfoOpen && (
+                            <ul>
+                                <li>'j' for Show answer, Correct and Next Session</li>
+                                <li>'l' for Incorrect</li>
+                            </ul>
+                        )}
                     </div>
 
                     {/* Upcoming flashcards */}
@@ -455,7 +455,7 @@ export const RapidPage: React.FC = () => {
                         ))}
                     </div> */}
                 </div>
-            </div>   
+            </div>
         </PageLayout>
     );
 };
