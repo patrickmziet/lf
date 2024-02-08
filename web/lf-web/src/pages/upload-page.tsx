@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ColorRing } from 'react-loader-spinner';
 import { uploadDocuments } from "../services/document.service";
 import { PageLayout } from 'src/components/page-layout';
 import { ColorRingSpinner } from '../components/ColorRingSpinner';
