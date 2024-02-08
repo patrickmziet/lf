@@ -322,18 +322,16 @@
   transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
+.delete-card-loading {
+  text-align: center;
+  /* margin: 0 5px; */
+}
+
 .next-session-button {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   justify-content: center;
-  /* Center button wherever it is */
-  /*   align-self: center; */
-  /* Center button vertically */
-  /* justify-content: center; */
-  /* Center button horizontally */
-  /* display: flex; */
-  /* Add other styles such as width or max-width if necessary */
 }
 
 .remove-button-container {

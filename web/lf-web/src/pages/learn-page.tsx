@@ -1,6 +1,5 @@
 // Page which serves as the HQ for a topic, containts links to flashcards, chat, 
 // and test pages. It also has a button to add more documents.
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 import { PageLayout } from "../components/page-layout";
+import { EditFlashcard } from '../components/edit-flashcard';
+import { ColorRingSpinner } from '../components/ColorRingSpinner';
 import { getTopicFlashCards, updateFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
-import { useAuth0 } from "@auth0/auth0-react";
-import { EditFlashcard } from '../components/edit-flashcard';
 
 export const CardPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
@@ -28,6 +29,7 @@ export const CardPage: React.FC = () => {
     const [sessionEnded, setSessionEnded] = useState(false);
     const [totalCardsDue, setTotalCardsDue] = useState(0);
     const [filteredCardsCount, setFilteredCardsCount] = useState(0);
+    const [isLoading, setIsLoading] = useState(false);
 
     // Start timer
     useEffect(() => {
@@ -244,6 +246,7 @@ export const CardPage: React.FC = () => {
         }
         const confirmDelete = window.confirm("Are you sure you want to delete the card?");
         if (confirmDelete) {
+            setIsLoading(true);
             // Optimistically remove the card from local state
             setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
             setFlashcards(flashcards.filter(card => card.id !== cardId));
@@ -257,6 +260,8 @@ export const CardPage: React.FC = () => {
                 setMasterFlashcards([...masterFlashcards, cardToDelete]);
                 setFlashcards([...flashcards, cardToDelete]);
                 alert('Failed to delete the card. Please try again.');
+            } finally {
+                setIsLoading(false);
             }
             setShowAnswer(false);
         }
@@ -332,9 +337,15 @@ export const CardPage: React.FC = () => {
                                         <button className="edit-card-button" onClick={() => handleEdit(currentCardIndex)}>
                                             Edit
                                         </button>
-                                        <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
-                                            Delete
-                                        </button>
+                                        {isLoading ? (
+                                            <div className="delete-card-loading">
+                                                <ColorRingSpinner height='25' width='25' />
+                                            </div>
+                                        ) : (
+                                            <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
+                                                Delete
+                                            </button>
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -365,6 +376,6 @@ export const CardPage: React.FC = () => {
                     </div>
  */}                </div>
             </div>
-        </PageLayout>
+        </PageLayout >
     );
 };
