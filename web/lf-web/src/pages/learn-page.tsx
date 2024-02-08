@@ -129,7 +129,7 @@ export const LearnPage: React.FC = () => {
                 doc.text(line, margins.left + padding, textYPos);
                 textYPos += lineHeight;
             });
-            textYPos -= lineHeight;
+            textYPos -= lineHeight; // Remove the last line's height
 
             // Draw separating line
             textYPos += lineHeight / 2; // Space before the line
@@ -146,7 +146,9 @@ export const LearnPage: React.FC = () => {
             yPos += cardHeight + padding; // Space between cards
         });
 
-        // Save the PDF
+        const pdfBlob = doc.output('blob');
+        const pdfUrl = URL.createObjectURL(pdfBlob);
+        window.open(pdfUrl);
         doc.save(`${title}-cheatsheet.pdf`);
     };
 
