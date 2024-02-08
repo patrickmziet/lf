@@ -83,11 +83,15 @@ export const LearnPage: React.FC = () => {
 
     const generatePDF = (flashcards: Flashcard[]) => {
         const doc = new jsPDF();
+        doc.setFont("Space Grotesk");
+        doc.setFontSize(24);
+        doc.text(title + " Cheat Sheet", 10, 10, { align: "center" });
+        doc.setFontSize(12);
         flashcards.forEach((card, index) => {
             doc.text(index + 1 + ". " + "Question: " + card.question, 10, 20 + index * 20);
             doc.text("Answer: " + card.answer, 10, 30 + index * 20);
         });
-        doc.save(title + "-flashcards.pdf");
+        doc.save(title + "-cheatsheet.pdf");
     };
 
     const handleGeneratePDF = () => {
