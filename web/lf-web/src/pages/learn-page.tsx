@@ -9,6 +9,7 @@ import { GoTriangleRight, GoTriangleDown } from "react-icons/go";
 import { getTopicDocuments } from "../services/document.service";
 import { getTopicFlashCards, getTopic, createMoreFlashCards } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
+import { ColorRingSpinner } from '../components/ColorRingSpinner';
 import { Document } from "../models/document";
 import { Flashcard } from "../models/flashcard";
 import { useDeleteTopic } from "../hooks/useDeleteTopic";
@@ -24,6 +25,7 @@ export const LearnPage: React.FC = () => {
     const location = useLocation();
     const state = location.state as { title: string };
     const [title, setTitle] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
     const handleDeleteTopic = useDeleteTopic(topicId || "");
 
     useEffect(() => {
@@ -164,10 +166,19 @@ export const LearnPage: React.FC = () => {
     const handleCreateMoreCards = async () => {
         if (!topicId) return;
         const accessToken = await getAccessTokenSilently();
-        const { data } = await createMoreFlashCards(accessToken, topicId, flashcards);
-        if (data && Array.isArray(data)) {
-            setFlashcards(data);
+        setIsLoading(true);
+        try {
+            const { data } = await createMoreFlashCards(accessToken, topicId, flashcards);
+            if (data && Array.isArray(data)) {
+                setFlashcards(data);
+            }
+        } catch (error) {
+            console.error("Error creating more flashcards:", error);
+            alert("An error occurred during the creation. Please try again.");
+        } finally {
+            setIsLoading(false);
         }
+
     };
     return (
         <PageLayout>
@@ -179,9 +190,15 @@ export const LearnPage: React.FC = () => {
                     <button className="delete-topic-button" onClick={handleDeleteTopic}>
                         Delete Topic
                     </button>
-                    <button className="create-more-cards-button" onClick={handleCreateMoreCards}>
-                        Create More Cards
-                    </button>
+                    {isLoading ? (
+                        <div className="create-more-cards-loading">
+                            <ColorRingSpinner height='25' width='25' />
+                        </div>
+                    ) : (
+                        <button className={`create-more-cards-button ${isLoading ? '-loading' : ''}`} onClick={handleCreateMoreCards}>
+                            Create More Cards
+                        </button>
+                    )}
                 </div>
                 <div className="content__body">
                     <div className="learn-grid">

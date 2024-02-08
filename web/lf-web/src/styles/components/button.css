@@ -252,8 +252,26 @@
   transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
+.create-more-cards-button-loading {
+  background-color: var(--dark-aluminium);
+  cursor: not-allowed;
+}
+
 .create-more-cards-button:hover {
   background-color: var(--dark-aluminium);
+}
+
+.create-more-cards-button-loading:hover {
+  background-color: var(--dark-aluminium);
+}
+
+.create-more-cards-loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  /* Adjust as needed for spacing from the top right corner */
+  margin-top: 50px;
 }
 
 .button-container {
@@ -281,13 +299,14 @@
   /* Add other styles such as padding or margin if necessary */
 
 }
+
 .correct-button,
 .incorrect-button,
 .edit-card-button,
 .delete-card-button,
 .save-button,
 .upload-button,
-.remove-button, 
+.remove-button,
 .next-session-button {
   font-family: var(--font-secondary);
   font-weight: 600;
@@ -309,7 +328,7 @@
   align-items: center;
   justify-content: center;
   /* Center button wherever it is */
-/*   align-self: center; */
+  /*   align-self: center; */
   /* Center button vertically */
   /* justify-content: center; */
   /* Center button horizontally */
