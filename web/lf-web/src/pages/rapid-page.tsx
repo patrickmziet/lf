@@ -431,28 +431,19 @@ export const RapidPage: React.FC = () => {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {sessionElapsedTimes.map((time, index) => (
-                                        <tr key={index}>
-                                            <td>{index + 1}</td>
-                                            <td>{time < 3600 ? `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` : "> 1hr"}</td>
-                                            <td>{sessionHitRates[index].toFixed(2)}%</td>
-                                        </tr>
-                                    ))}
+                                    {[...sessionElapsedTimes].reverse().map((time, index) => {
+                                        const reverseIndex = sessionElapsedTimes.length - 1 - index;
+                                        return (
+                                            <tr key={reverseIndex}>
+                                                <td>{reverseIndex + 1}</td>
+                                                <td>{time < 3600 ? `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` : "> 1hr"}</td>
+                                                <td>{sessionHitRates[reverseIndex].toFixed(0)}%</td>
+                                            </tr>
+                                        );
+                                    })}
                                 </tbody>
                             </table>
                         </div>
-
-                        /*                         <div className="session-stats">
-                                                    {sessionElapsedTimes.map((time, index) => (
-                                                        <p key={index}>Session {index + 1} Time: {time < 3600 ?
-                                                            `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` :
-                                                            "> 1hr"
-                                                        }</p>
-                                                    ))}
-                                                    {sessionHitRates.map((hitRate, index) => (
-                                                        <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
-                                                    ))}
-                                                </div> */
                     )}
                     <div className={`drop-down-container-keys ${isInfoOpen ? 'open' : ''}`}>
                         <p onClick={toggleInfo}>
