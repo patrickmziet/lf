@@ -228,7 +228,7 @@ export const LearnPage: React.FC = () => {
                                 </ul>
                             )}
                         </div>
-                        <div>
+{/*                         <div>
                             <h1 className="learn__title">
                                 Statistics
                             </h1>
@@ -240,7 +240,7 @@ export const LearnPage: React.FC = () => {
                                 Gradual
                             </h4>
                         </div>
-                        <div className="resources-container">
+ */}                        <div className="resources-container">
                             <h1 className="learn__title">
                                 Resources
                             </h1>
