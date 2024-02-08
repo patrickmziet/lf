@@ -112,9 +112,8 @@
   .session-stats-table td:last-child {
     border-right: none;
   }
+
   
-
-
 /* Responsive design for smaller screens */
 @media (max-width: 850px) {
     .card-container {
