@@ -1,32 +1,45 @@
 .card-container {
     border: 1px solid var(--dark-aluminium);
-    border-radius: 20px; /* More rounded corners */
+    border-radius: 20px;
+    /* More rounded corners */
     padding: 20px;
-    background: transparent; /* Assuming a white background */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds shadow for depth */
-    margin-bottom: 1rem; /* Space below the card */
-    height: 280px; /* Fixed height */
-    width: 800px; /* Fixed width */
+    background: transparent;
+    /* Assuming a white background */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* Optional: adds shadow for depth */
+    margin-bottom: 1rem;
+    /* Space below the card */
+    height: 280px;
+    /* Fixed height */
+    width: 800px;
+    /* Fixed width */
     /* Ensure the container doesn't exceed the viewport width */
     max-width: 100%;
-    box-sizing: border-box; /* Include padding and border in the width and height */
+    box-sizing: border-box;
+    /* Include padding and border in the width and height */
     position: relative;
+    font-size: 1.6rem;
 }
 
 .card-question {
-    font-size: 1.6rem; /* Adjust font size as needed */
-    margin-bottom: 2rem; /* Space below the question */
+    margin-bottom: 2rem;
+    /* Space below the question */
 }
 
 .answer-separator {
-    border-bottom: 1px solid var(--dark-aluminium); /* Thin line */
-    width: 99%; /* Almost the full length of the card container */
-    margin: 0 auto; /* Center the line horizontally */
-    display: block; /* Ensure it's displayed as a block-level element */
+    border-bottom: 1px solid var(--dark-aluminium);
+    /* Thin line */
+    width: 99%;
+    /* Almost the full length of the card container */
+    margin: 0 auto;
+    /* Center the line horizontally */
+    display: block;
+    /* Ensure it's displayed as a block-level element */
 }
 
 .answer-container {
-    padding-top: 2rem; /* Space above the answer */
+    padding-top: 2rem;
+    /* Space above the answer */
 }
 
 .edit-input {
@@ -35,26 +48,103 @@
     border-radius: 4px;
     padding: 10px;
     width: 100%;
-    box-sizing: border-box; /* To include padding in the width */
-    margin-bottom: 10px; /* Spacing between the input and the save button */
+    box-sizing: border-box;
+    /* To include padding in the width */
+    margin-bottom: 10px;
+    /* Spacing between the input and the save button */
 }
+
+.progress-bar-container {
+    width: 100%;
+    background-color: var(--orange);
+    height: 20px;
+    border-radius: 10px;
+    margin-bottom: 20px;
+}
+
+.progress-bar {
+    height: 100%;
+    background-color: var(--green);
+    border-radius: 10px;
+    transition: width 0.3s ease-in-out;
+}
+
+.stopwatch {
+    font-size: 20px;
+    margin-bottom: 5px;
+    margin-top: 10px;
+    /* Center the stopwatch */
+    display: flex;
+    justify-content: center;
+}
+
+.card-count__title {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.session-stats {
+    margin-top: 20px;
+}
+
+/* Add this CSS to your stylesheet or inside a <style> tag in your React component */
+
+.session-stats-table table {
+    width: 100%; /* Adjust width as needed */
+    border-collapse: collapse; /* Collapse borders */
+    border: 1px solid black; /* Border around the entire table */
+    background-color: transparent; /* Transparent background */
+  }
+  
+  .session-stats-table th,
+  .session-stats-table td {
+    border-left: 1px solid black; /* Lines between columns */
+    border-right: 1px solid black; /* Lines between columns */
+    text-align: center; /* Center text */
+    padding: 8px; /* Adjust padding as needed */
+  }
+  
+  .session-stats-table th {
+    border-bottom: 1px solid black; /* Line below the column headers */
+  }
+  
+  /* Remove left border from the first cell and right border from the last cell */
+  .session-stats-table th:first-child,
+  .session-stats-table td:first-child {
+    border-left: none;
+  }
+  
+  .session-stats-table th:last-child,
+  .session-stats-table td:last-child {
+    border-right: none;
+  }
+
 
 /* Responsive design for smaller screens */
 @media (max-width: 850px) {
     .card-container {
-        width: 90%; /* Take up most of the screen width */
-        height: auto; /* Height can adjust based on content */
-        padding: 10px; /* Smaller padding */
+        width: 300px;
+        /* Take up most of the screen width */
+        height: 280px;
+        /* Height can adjust based on content */
+        padding: 10px;
+        /* Smaller padding */
+        font-size: 1.4rem;
+    }
+
+    .progress-bar, .progress-bar-container {
+        width: 100%;
     }
 }
 
 @media (max-width: 500px) {
     .card-container {
-        flex-direction: column; /* Stack elements vertically if using flexbox */
-        padding: 10px; /* Adjust padding for smaller screens */
-    }
-
-    .card-question {
-        font-size: 1.4rem; /* Adjust font size for smaller screens */
+        width: 280px;
+        flex-direction: column;
+        /* Stack elements vertically if using flexbox */
+        padding: 10px;
+        /* Adjust padding for smaller screens */
+        font-size: 1.2rem;
     }
 }

@@ -13,6 +13,15 @@
   padding: 48px;
   position: relative;
 }
+/* Container for buttons above the content */
+.content__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 50px;
+  font-size: 1.6rem;
+}
 
 .content__title {
   margin-top: 0;

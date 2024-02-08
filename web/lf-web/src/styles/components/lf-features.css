@@ -5,7 +5,7 @@
 }
 
 .lf-features__title {
-  color: var(--white);
+  color: var(--black);
   font-weight: 600;
   text-align: center;
 
@@ -32,6 +32,8 @@
   display: block;
 
   background-color: var(--white);
+
+  border: 2px solid var(--dark-aluminium);
 
   color: var(--black);
 

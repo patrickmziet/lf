@@ -129,6 +129,7 @@
 }
 
 @media only screen and (min-width: 641px) {
+
   .button__login,
   .button__logout,
   .button__sign-up {
@@ -140,14 +141,17 @@
 }
 
 .create-topic-button {
-  border-radius: 15px; /* Adjust as needed */
+  border-radius: 15px;
+  /* Adjust as needed */
   background-color: transparent;
   border: 2px solid var(--dark-aluminium);
-  transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+  transition: background-color 0.3s ease;
+  /* Smooth transition for hover effect */
   cursor: pointer;
   font-family: var(--font-secondary);
   font-weight: 600;
   margin-top: 10px;
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .create-topic-button:hover {
@@ -159,7 +163,8 @@
   position: absolute;
   top: 0;
   left: 0;
-  margin: 20px; /* Adjust as needed for spacing from the top left corner */
+  margin: 20px;
+  /* Adjust as needed for spacing from the top left corner */
 
   /* Other styles */
   font-family: var(--font-secondary);
@@ -169,6 +174,7 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .back-to-topics-button:hover {
@@ -180,7 +186,8 @@
   position: absolute;
   top: 0;
   right: 0;
-  margin: 20px; /* Adjust as needed for spacing from the top right corner */
+  margin: 20px;
+  /* Adjust as needed for spacing from the top right corner */
 
   /* Other styles */
   font-family: var(--font-secondary);
@@ -190,6 +197,7 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .delete-topic-button:hover {
@@ -199,10 +207,14 @@
 
 .show-answer-button {
   /* Button in the card container which is centered and at the bottom of the card container */
-  position: absolute; /* Position the button absolutely within its relative parent */
-  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
-  left: 50%; /* Start at 50% from the left of the container */
-  transform: translateX(-50%); /* Offset the button by half its width to center it */
+  position: absolute;
+  /* Position the button absolutely within its relative parent */
+  bottom: 20px;
+  /* Adjust as needed for spacing from the bottom of the card container */
+  left: 50%;
+  /* Start at 50% from the left of the container */
+  transform: translateX(-50%);
+  /* Offset the button by half its width to center it */
   font-family: var(--font-secondary);
   font-weight: 600;
   cursor: pointer;
@@ -210,8 +222,10 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
-  text-align: center; /* Ensure text is centered */
+  text-align: center;
+  /* Ensure text is centered */
   /* Add other styles such as width or max-width if necessary */
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .show-answer-button:hover {
@@ -223,7 +237,9 @@
   position: absolute;
   top: 0;
   right: 0;
-  margin: 20px; /* Adjust as needed for spacing from the top right corner */
+  margin: 20px;
+  /* Adjust as needed for spacing from the top right corner */
+  margin-top: 50px;
 
   /* Other styles */
   font-family: var(--font-secondary);
@@ -233,23 +249,65 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
+  transition: background 0.3s ease-out, color 0.3s ease-out;
+}
+
+.create-more-cards-button-loading {
+  background-color: var(--dark-aluminium);
+  cursor: not-allowed;
 }
 
 .create-more-cards-button:hover {
   background-color: var(--dark-aluminium);
 }
 
+.create-more-cards-button-loading:hover {
+  background-color: var(--dark-aluminium);
+}
+
+.create-more-cards-loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
+  /* Adjust as needed for spacing from the top right corner */
+  margin-top: 50px;
+}
+
 .button-container {
-  display: flex; /* Use Flexbox for layout */
-  justify-content: center; /* Center children horizontally */
-  position: absolute; /* Position the container absolutely within its relative parent */
-  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
-  left: 0; /* Start at the left edge of the container */
-  right: 0; /* Extend to the right edge of the container */
+  display: flex;
+  /* Use Flexbox for layout */
+  justify-content: center;
+  /* Center children horizontally */
+  position: absolute;
+  /* Position the container absolutely within its relative parent */
+  bottom: 20px;
+  /* Adjust as needed for spacing from the bottom of the card container */
+  left: 0;
+  /* Start at the left edge of the container */
+  right: 0;
+  /* Extend to the right edge of the container */
   /* Add other styles such as padding or margin if necessary */
 }
 
-.correct-button, .incorrect-button, .edit-card-button, .delete-card-button, .save-button, .upload-button, .remove-button {
+.next-session-button-container {
+  display: flex;
+  /* Use Flexbox for layout */
+  justify-content: center;
+  /* Center children horizontally */
+  position: relative;
+  /* Add other styles such as padding or margin if necessary */
+
+}
+
+.correct-button,
+.incorrect-button,
+.edit-card-button,
+.delete-card-button,
+.save-button,
+.upload-button,
+.remove-button,
+.next-session-button {
   font-family: var(--font-secondary);
   font-weight: 600;
   cursor: pointer;
@@ -257,8 +315,23 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
-  text-align: center; /* Ensure text is centered */
-  margin: 0 5px; /* Adjust as needed for spacing between buttons */
+  text-align: center;
+  /* Ensure text is centered */
+  margin: 0 5px;
+  /* Adjust as needed for spacing between buttons */
+  transition: background 0.3s ease-out, color 0.3s ease-out;
+}
+
+.delete-card-loading {
+  text-align: center;
+  /* margin: 0 5px; */
+}
+
+.next-session-button {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .remove-button-container {
@@ -282,32 +355,69 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
-  text-align: center; /* Ensure text is centered */
-  margin: 0 5px; /* Adjust as needed for spacing between buttons */
+  text-align: center;
+  /* Ensure text is centered */
+  margin: 0 5px;
+  /* Adjust as needed for spacing between buttons */
   /* make button text smaller */
 
 }
 
-.correct-button:hover, .incorrect-button:hover {
+.correct-button:hover,
+.incorrect-button:hover {
   background-color: var(--green);
   /* Other hover effects */
 }
 
-.incorrect-button:hover, .delete-card-button:hover, .remove-button:hover {
+.incorrect-button:hover,
+.delete-card-button:hover,
+.remove-button:hover {
   background-color: var(--orange);
 }
 
-.edit-card-button:hover, .save-button:hover, .upload-button:hover {
+.edit-card-button:hover,
+.save-button:hover,
+.upload-button:hover,
+.next-session-button:hover {
   background-color: var(--dark-aluminium);
 }
 
 .save-button-container {
-  display: flex; /* Use Flexbox for layout */
-  justify-content: center; /* Center children horizontally */
-  position: relative; /* Position the container absolutely within its relative parent */
-  margin-top: 20px; /* Adjust as needed for spacing from the bottom of the card container */
-  bottom: 20px; /* Adjust as needed for spacing from the bottom of the card container */
-  left: 0; /* Start at the left edge of the container */
-  right: 0; /* Extend to the right edge of the container */
+  display: flex;
+  /* Use Flexbox for layout */
+  justify-content: center;
+  /* Center children horizontally */
+  position: relative;
+  /* Position the container absolutely within its relative parent */
+  margin-top: 20px;
+  /* Adjust as needed for spacing from the bottom of the card container */
+  bottom: 20px;
+  /* Adjust as needed for spacing from the bottom of the card container */
+  left: 0;
+  /* Start at the left edge of the container */
+  right: 0;
+  /* Extend to the right edge of the container */
   /* Add other styles such as padding or margin if necessary */
+}
+
+.cancel-topic-button {
+  position: absolute;
+  /* bottom: 0; /* Push to the bottom of the container */
+  /*   left: 0; */
+  margin-top: 10px;
+  margin-left: 5px;
+
+  /* Other styles */
+  font-family: var(--font-secondary);
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: var(--mandarine);
+  border: 0px solid var(--mandarine);
+  color: var(--white);
+}
+
+.cancel-topic-button:hover {
+  background-color: var(--orange);
+  /* Other hover effects */
 }

@@ -4,12 +4,16 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { useParams, useNavigate } from "react-router-dom";
 import { uploadDocuments } from "../services/document.service";
 import { PageLayout } from 'src/components/page-layout';
+import { ColorRingSpinner } from '../components/ColorRingSpinner';
+import { useDeleteTopic } from '../hooks/useDeleteTopic';
 
 export const UploadPage: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
     const { getAccessTokenSilently } = useAuth0();
     const { topicId } = useParams<{ topicId: string }>();
     const navigate = useNavigate();
+    const handleDeleteTopic = useDeleteTopic(topicId || "");
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files) {
@@ -23,9 +27,31 @@ export const UploadPage: React.FC = () => {
             return;
         }
         e.preventDefault();
+
+        // Check for unique file names
+        const fileNames = selectedFiles.map(file => file.name);
+        console.log("Filenames: ", fileNames);
+        const uniqueFileNames = new Set(fileNames);
+
+        if (uniqueFileNames.size !== selectedFiles.length) {
+            alert("Please remove duplicate files. File names must be unique. Extensions are included in file names, so 'file.pdf' and 'file.docx' are considered unique.");
+            return;
+        }
+
+        setIsLoading(true);
         const accessToken = await getAccessTokenSilently();
-        await uploadDocuments(accessToken, topicId, selectedFiles);
-        navigate(`/learn/${topicId}`);
+
+        try {
+            await uploadDocuments(accessToken, topicId, selectedFiles);
+            navigate(`/learn/${topicId}`);
+        } catch (error) {
+            console.error("Error uploading documents:", error);
+            alert("An error occurred during the upload. Please try again.");
+        } finally {
+            setIsLoading(false);
+        }
+        
+        
     };
 
     const removeFile = (index: number) => {
@@ -42,15 +68,12 @@ export const UploadPage: React.FC = () => {
                 <div className="content__body">
                     <p id="page-description">
                         <span>
-                            Upload documents to be used for this topic.
+                            Upload any .pdf or .docx files.
                         </span>
                     </p>
+                    
                     <form onSubmit={handleUpload}>
                     <input type="file" multiple onChange={handleFileChange} />
-                    <button className="upload-button" type="submit">
-                        Upload
-                    </button>
-                    </form>
                     <div>
                         <h3>Selected Files:</h3>
                         {selectedFiles.length === 0 ? (
@@ -70,6 +93,21 @@ export const UploadPage: React.FC = () => {
                             </ul>
                             )}
                     </div>
+                    {selectedFiles.length > 0 && (
+                        isLoading ? (
+                            <ColorRingSpinner />
+                        ) : (
+                            <button className="upload-button" type="submit">
+                                Upload {selectedFiles.length} file{selectedFiles.length > 1 ? "s" : ""}
+                            </button>
+                        )
+                    )}
+                    </form>
+                    {!isLoading && (
+                            <button className="cancel-topic-button" onClick={handleDeleteTopic}>
+                                Delete Topic
+                            </button>                       
+                    )}
                 </div>
             </div>
         </PageLayout>

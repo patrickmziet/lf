@@ -1,4 +1,5 @@
 import React from "react";
+import { MdMenu, MdClose } from "react-icons/md";
 
 interface MobileMenuToggleButtonProps {
   icon: string;
@@ -15,7 +16,7 @@ export const MobileMenuToggleButton: React.FC<MobileMenuToggleButtonProps> = ({
       id="mobile-menu-toggle-button"
       onClick={handleClick}
     >
-      {icon}
+      {icon === 'menu' ? <MdMenu /> : <MdClose />}
     </span>
   );
 };

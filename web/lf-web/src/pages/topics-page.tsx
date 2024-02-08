@@ -5,14 +5,14 @@
 
 import React, { useEffect, useState, FormEvent } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { PageLayout } from "../components/page-layout";
-import { getUserTopics, createTopic, deleteTopic } from "../services/message.service";
+import { getUserTopics, createTopic } from "../services/message.service";
 import { Topic } from "../models/topic";
 
 export const TopicsPage: React.FC = () => {
     const [topics, setTopics] = useState<Topic[]>([]);
-    const [newTopic, setNewTopic] = useState({ title: ''});
+    const [newTopic, setNewTopic] = useState({ title: '' });
     const { user, getAccessTokenSilently } = useAuth0();
     const navigate = useNavigate();
 
@@ -45,6 +45,14 @@ export const TopicsPage: React.FC = () => {
 
     const handleCreateTopic = async (e: FormEvent) => {
         e.preventDefault();
+        if (newTopic.title.trim() === '') {
+            alert('Topic title cannot be empty');
+            return;
+        }
+        if (topics.some(topic => topic.title === newTopic.title)) {
+            alert('Topic title already exists');
+            return;
+        }
         const accessToken = await getAccessTokenSilently();
         const { data } = await createTopic(accessToken, newTopic);
 

@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useAuth0 } from "@auth0/auth0-react";
+import { GoTriangleRight, GoTriangleDown } from "react-icons/go";
 import { PageLayout } from "../components/page-layout";
-import { EditFlashcard } from '../components/edit-flashcard';
-import { ColorRingSpinner } from '../components/ColorRingSpinner';
 import { getTopicFlashCards, updateFlashCards, deleteFlashCard, getTopic } from "../services/message.service";
 import { Flashcard } from "../models/flashcard";
+import { useAuth0 } from "@auth0/auth0-react";
+import { EditFlashcard } from '../components/edit-flashcard';
 
-export const CardPage: React.FC = () => {
+export const RapidPage: React.FC = () => {
     const { topicId } = useParams<{ topicId: string }>();
     const [masterFlashcards, setMasterFlashcards] = useState<Flashcard[]>([]);
     const [flashcards, setFlashcards] = useState<Flashcard[]>([]);
@@ -24,20 +24,41 @@ export const CardPage: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const titleFromState = location.state?.title;
     const [title, setTitle] = useState<string | null>(titleFromState);
+    const [sessionGroups, setSessionGroups] = useState<Flashcard[][]>([]);
+    const [currentSessionIndex, setCurrentSessionIndex] = useState(0);
+    const group_size = 5; // Group size
+    const consec_limit = 3; // Consecutive correct limit
+    const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
-    const [sessionElapsedTime, setSessionElapsedTime] = useState(0);
+    const [sessionElapsedTimes, setSessionElapsedTimes] = useState<number[]>([]);
     const [sessionEnded, setSessionEnded] = useState(false);
-    const [totalCardsDue, setTotalCardsDue] = useState(0);
+    const [totalAttempts, setTotalAttempts] = useState(0);
+    const [correctAttempts, setCorrectAttempts] = useState(0);
+    const [sessionHitRates, setSessionHitRates] = useState<number[]>([]);
     const [filteredCardsCount, setFilteredCardsCount] = useState(0);
-    const [isLoading, setIsLoading] = useState(false);
+    const [isInfoOpen, setInfoOpen] = useState<boolean>(false);
 
-    // Start timer
+
+    // Start session timer
     useEffect(() => {
-        const interval = setInterval(() => {
-            setElapsedTime(prevElapsedTime => prevElapsedTime + 1);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
+        // Only start the timer if there's a session active
+        if (sessionGroups.length > 0 && currentSessionIndex < sessionGroups.length) {
+            const start = Date.now();
+            setSessionStartTime(start);
+
+            const timer = setInterval(() => {
+                // Update elapsed time only if the session hasn't ended
+                if (!sessionEnded) {
+                    setElapsedTime(prevTime => Math.floor((Date.now() - start) / 1000));
+                }
+            }, 1000);
+
+            // Cleanup on component unmount or when the session ends
+            return () => clearInterval(timer);
+        }
+        // Return a no-op function when the condition is not met
+        return () => { };
+    }, [currentSessionIndex, sessionEnded, sessionGroups]); // Rerun the effect when starting a new session or ending one
 
     // Fetch topic title
     useEffect(() => {
@@ -55,6 +76,15 @@ export const CardPage: React.FC = () => {
         }
     }, [topicId, getAccessTokenSilently, titleFromState]);
 
+    // Group flashcards
+    const groupFlashcards = (flashcards: Flashcard[], groupSize: number): Flashcard[][] => {
+        const groups: Flashcard[][] = [];
+        for (let i = 0; i < flashcards.length; i += groupSize) {
+            groups.push(flashcards.slice(i, i + groupSize));
+        }
+        return groups;
+    };
+
     // Fetch flashcards
     useEffect(() => {
         let isMounted = true;
@@ -64,20 +94,19 @@ export const CardPage: React.FC = () => {
             const token = await getAccessTokenSilently();
             let data;
             if (flashcardsFromPreviousPage) {
-                console.log("Flashcards from previous page");
+                /* console.log("Flashcards from previous page"); */
                 data = flashcardsFromPreviousPage;
             } else {
-                console.log("Flashcards from API");
+                /* console.log("Flashcards from API"); */
                 const response = await getTopicFlashCards(token, topicId);
                 data = response.data;
             }
 
             if (isMounted && data && Array.isArray(data)) {
                 setMasterFlashcards(data);
-                const dueFlashcards = data.filter(card => card.due_date < endOfDayInSeconds);
-                dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-                setFlashcards(dueFlashcards);
-                setTotalCardsDue(dueFlashcards.length);
+                const flashcardGroups = groupFlashcards(data, group_size);
+                setSessionGroups(flashcardGroups);
+                setFlashcards(flashcardGroups[0] || []);
             }
         };
 
@@ -106,10 +135,19 @@ export const CardPage: React.FC = () => {
         const handleKeyDown = (event: KeyboardEvent) => {
             switch (event.key) {
                 case 'j':
-                    if (!showAnswer) {
-                        setShowAnswer(true);
+                    // Are Cards finished 
+                    if (currentCardIndex >= flashcards.length) {
+                        // Are there more sessions?
+                        if (sessionGroups.length > currentSessionIndex + 1) {
+                            handleNextSession();
+                        }
                     } else {
-                        handleCorrect();
+                        // Still cards to show
+                        if (!showAnswer) {
+                            setShowAnswer(true);
+                        } else {
+                            handleCorrect();
+                        }
                     }
                     break;
                 case 'l':
@@ -127,93 +165,90 @@ export const CardPage: React.FC = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [showAnswer]);
-
-
-    // Debug flashcards
-    useEffect(() => {
-        console.log("Flashcards update:", flashcards);
-        console.log("Master flashcards update:", masterFlashcards);
-    }, [flashcards, masterFlashcards]);
+    }, [showAnswer, flashcards]);
 
 
     // Handle back button
     const handleBack = async () => {
         if (!topicId) return;
         const token = await getAccessTokenSilently();
-        console.log("Master flashcards:", masterFlashcards);
+        /*         console.log("Master flashcards:", masterFlashcards); */
         const response = await updateFlashCards(token, masterFlashcards);
-        console.log("Response:", response);
+        /*         console.log("Response:", response); */
         navigate(`/learn/${topicId}`);
     };
 
     const handleCorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
+        setTotalAttempts(prevTotalAttempts => prevTotalAttempts + 1);
+        setCorrectAttempts(prevCorrectAttempts => prevCorrectAttempts + 1);
 
-
-        const updatedMasterFlashcards = [...masterFlashcards];
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
-        updatedCard.record += "1";
-        updatedCard.repetitions += 1;
-
-        if (updatedCard.repetitions === 1) {
-            updatedCard.interval = 300;
-        } else if (updatedCard.repetitions === 2) {
-            updatedCard.interval = 600;
-        } else if (updatedCard.repetitions === 3) {
-            updatedCard.interval = 24 * 60 * 60;
-        } else if (updatedCard.repetitions === 4) {
-            updatedCard.interval = 3 * 24 * 60 * 60;
-        } else if (updatedCard.repetitions >= 5) {
-            updatedCard.interval = Math.round(updatedCard.interval * updatedCard.easiness);
-        }
-
-        updatedCard.due_date = time + updatedCard.interval;
-        updatedCard.updated_at = time;
-
+        updatedCard.consecutive_correct += 1;
         updatedFlashcards[currentCardIndex] = updatedCard;
-        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
+        const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);
 
-        const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
+        // Check if a card has been filtered out and increment filteredCardsCount
         if (dueFlashcards.length < updatedFlashcards.length) {
             setFilteredCardsCount(prevCount => prevCount + 1);
         }
 
         dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
         setFlashcards(dueFlashcards);
-        setMasterFlashcards(updatedMasterFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
 
+        // Check if there are no more flashcards
         if (dueFlashcards.length === 0) {
-            setSessionElapsedTime(elapsedTime);
             setSessionEnded(true);
+            // Calculate hit rate for the session
+            const hitRate = (correctAttempts / totalAttempts) * 100;
+            // Add hit rate to the list
+            setSessionHitRates(prevHitRates => [...prevHitRates, hitRate]);
+            // Add elapsed time to the list
+            setSessionElapsedTimes(prevTimes => [...prevTimes, elapsedTime]);
+            // Reset elapsed time for the next session
+            setElapsedTime(0);
         }
     };
 
     const handleIncorrect = () => {
         if (currentCardIndex >= flashcards.length) return;
 
-        const updatedMasterFlashcards = [...masterFlashcards];
+        setTotalAttempts(prevTotalAttempts => prevTotalAttempts + 1);
+
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
-        updatedCard.record += "0";
-        updatedCard.repetitions = 0;
-        updatedCard.interval = 60;
-        updatedCard.due_date = time + updatedCard.interval;
-        updatedCard.updated_at = time;
+        updatedCard.consecutive_correct = 0;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
-        updatedMasterFlashcards[updatedMasterFlashcards.findIndex(card => card.id === updatedCard.id)] = updatedCard;
-
-        const dueFlashcards = updatedFlashcards.filter(card => card.due_date < endOfDayInSeconds);
-        dueFlashcards.sort(() => Math.random() - 0.5); // Randomize order
-        setFlashcards(dueFlashcards);
-        setMasterFlashcards(updatedMasterFlashcards);
+        updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
+        setFlashcards(updatedFlashcards);
         setCurrentCardIndex(currentCardIndex);
         setShowAnswer(false);
     };
+
+    const handleNextSession = () => {
+        const nextSessionIndex = currentSessionIndex + 1;
+        if (nextSessionIndex < sessionGroups.length) {
+            setSessionEnded(false);
+            // Reset session start time to now
+            setSessionStartTime(Date.now());
+            // Set all cards consecutive_correct to 0
+            const updatedMasterFlashcards = masterFlashcards.map(card => ({ ...card, consecutive_correct: 0 }));
+            setMasterFlashcards(updatedMasterFlashcards);
+            setCurrentSessionIndex(nextSessionIndex);
+            setFlashcards(sessionGroups[nextSessionIndex]);
+            setTotalAttempts(0);
+            setCorrectAttempts(0);
+            setFilteredCardsCount(0);
+        } else {
+            // Handle the case where there are no more sessions
+            console.log("No more sessions");
+        }
+    };
+
 
     const handleEdit = (cardIndex: number) => {
         setIsEditing(true);
@@ -231,6 +266,7 @@ export const CardPage: React.FC = () => {
             card.id === updatedCard.id ? updatedCard : card
         );
 
+        // Update state to reflect changes in both flashcards and masterFlashcards
         setFlashcards(updatedFlashcards);
         setMasterFlashcards(updatedMasterFlashcards);
         setIsEditing(false);
@@ -246,7 +282,6 @@ export const CardPage: React.FC = () => {
         }
         const confirmDelete = window.confirm("Are you sure you want to delete the card?");
         if (confirmDelete) {
-            setIsLoading(true);
             // Optimistically remove the card from local state
             setMasterFlashcards(masterFlashcards.filter(card => card.id !== cardId));
             setFlashcards(flashcards.filter(card => card.id !== cardId));
@@ -260,15 +295,20 @@ export const CardPage: React.FC = () => {
                 setMasterFlashcards([...masterFlashcards, cardToDelete]);
                 setFlashcards([...flashcards, cardToDelete]);
                 alert('Failed to delete the card. Please try again.');
-            } finally {
-                setIsLoading(false);
             }
             setShowAnswer(false);
         }
     };
 
+    // Calculate progress
     const calculateProgress = () => {
-        return (filteredCardsCount / totalCardsDue) * 100;
+        const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
+        const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0) + filteredCardsCount * consec_limit;
+        return (sumOfCorrects / totalPossibleCorrects) * 100;
+    };
+
+    const toggleInfo = () => {
+        setInfoOpen(!isInfoOpen);
     };
 
     return (
@@ -283,6 +323,9 @@ export const CardPage: React.FC = () => {
                     <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
+                    <h3 className="learn__title">
+                        Session {currentSessionIndex + 1} of {sessionGroups.length} {currentCardIndex >= flashcards.length ? "completed" : ""}
+                    </h3>
                     {currentCardIndex < flashcards.length && (
                         <div className="stopwatch">
                             <h3 className="learn__title">
@@ -293,21 +336,11 @@ export const CardPage: React.FC = () => {
                             </h3>
                         </div>
                     )}
-                    {sessionEnded && (
-                        <h3 className="learn__title">
-                            {sessionElapsedTime < 3600 ?
-                                `${String(Math.floor(sessionElapsedTime / 60)).padStart(2, '0')}:${String(sessionElapsedTime % 60).padStart(2, '0')}` :
-                                "> 1hr"
-                            }
-                        </h3>
-                    )}
-                    <h3 className="card-count__title">
-                        {filteredCardsCount} out of {totalCardsDue}
-                    </h3>
                     <div className="progress-bar-container">
                         <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>
                     </div>
-                    {currentCardIndex < flashcards.length ? (
+
+                    {currentCardIndex < flashcards.length && (
                         isEditing ? (
                             <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
                         ) : (
@@ -337,26 +370,61 @@ export const CardPage: React.FC = () => {
                                         <button className="edit-card-button" onClick={() => handleEdit(currentCardIndex)}>
                                             Edit
                                         </button>
-                                        {isLoading ? (
-                                            <div className="delete-card-loading">
-                                                <ColorRingSpinner height='25' width='25' />
-                                            </div>
-                                        ) : (
-                                            <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
-                                                Delete
-                                            </button>
-                                        )}
+                                        <button className="delete-card-button" onClick={() => handleDelete(flashcards[currentCardIndex].id)}>
+                                            Delete
+                                        </button>
                                     </div>
                                 )}
                             </div>
                         )
-                    ) : (
-                        <h4 className="learn__title">
-                            No more flashcards due today
-                        </h4>
                     )}
+                    {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
+                    {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
+                        <div className="session-stats-table">
+                            {sessionGroups.length > currentSessionIndex + 1 && (
+                                <div className="next-session-button-container">
+                                    <button className="next-session-button" onClick={handleNextSession}>
+                                        Next Session
+                                    </button>
+                                </div>
+                            )}
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Session</th>
+                                        <th>Time</th>
+                                        <th>Hit Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {[...sessionElapsedTimes].reverse().map((time, index) => {
+                                        const reverseIndex = sessionElapsedTimes.length - 1 - index;
+                                        return (
+                                            <tr key={reverseIndex}>
+                                                <td>{reverseIndex + 1}</td>
+                                                <td>{time < 3600 ? `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` : "> 1hr"}</td>
+                                                <td>{sessionHitRates[reverseIndex].toFixed(0)}%</td>
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    )}
+                    <div className={`drop-down-container-keys ${isInfoOpen ? 'open' : ''}`}>
+                        <p onClick={toggleInfo}>
+                            {isInfoOpen ? <GoTriangleDown /> : <GoTriangleRight />} Keyboard shortcuts
+                        </p>
+                        {isInfoOpen && (
+                            <ul>
+                                <li>'j' for Show answer, Correct and Next Session</li>
+                                <li>'l' for Incorrect</li>
+                            </ul>
+                        )}
+                    </div>
+
                     {/* Upcoming flashcards */}
-                    {/*                     <div>
+                    {/* <div>
                         {showAnswer && <p>Due date: {flashcards[currentCardIndex].due_date}</p>}
                         {showAnswer && <p>Interval: {flashcards[currentCardIndex].interval}</p>}
                         {showAnswer && <p>Record: {flashcards[currentCardIndex].record}</p>}
@@ -365,17 +433,15 @@ export const CardPage: React.FC = () => {
                         <h2>Upcoming Flashcards</h2>
                         {flashcards.slice(currentCardIndex + 1).map((card, index) => (
                             <div key={index}>
-                                <p>Order in queue: {index + 1}</p>
+                                <p>Order in queue: {index + 1}</p>  
                                 <p>Question: {card.question}</p>
                                 <p>Answer: {card.answer}</p>
-                                <p>Due date: {card.due_date}</p>
-                                <p>Interval: {card.interval}</p>
-                                <p>Record: {card.record}</p>
+                                <p>Consecutive: {card.consecutive_correct}</p>
                             </div>
                         ))}
-                    </div>
- */}                </div>
+                    </div> */}
+                </div>
             </div>
-        </PageLayout >
+        </PageLayout>
     );
 };
