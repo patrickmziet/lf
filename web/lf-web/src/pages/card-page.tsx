@@ -339,7 +339,7 @@ export const CardPage: React.FC = () => {
                         )
                     ) : (
                         <h4 className="learn__title">
-                            No more flashcards
+                            No more flashcards due today
                         </h4>
                     )}
                     {/* Upcoming flashcards */}
