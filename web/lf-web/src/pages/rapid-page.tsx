@@ -152,7 +152,7 @@ export const RapidPage: React.FC = () => {
                         // Are there more sessions?
                         if (sessionGroups.length > currentSessionIndex + 1) {
                             handleNextSession();
-                        } 
+                        }
                     } else {
                         // Still cards to show
                         if (!showAnswer) {
@@ -191,9 +191,9 @@ export const RapidPage: React.FC = () => {
     const handleBack = async () => {
         if (!topicId) return;
         const token = await getAccessTokenSilently();
-/*         console.log("Master flashcards:", masterFlashcards); */
+        /*         console.log("Master flashcards:", masterFlashcards); */
         const response = await updateFlashCards(token, masterFlashcards);
-/*         console.log("Response:", response); */
+        /*         console.log("Response:", response); */
         navigate(`/learn/${topicId}`);
     };
 
@@ -323,11 +323,11 @@ export const RapidPage: React.FC = () => {
     // Calculate progress
     const calculateProgress = () => {
         const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
-/*         console.log("Flashcards length:", flashcards.length);
-        console.log("Filtered cards count:", filteredCardsCount);
-        console.log("Total possible corrects:", totalPossibleCorrects); */
+        /*         console.log("Flashcards length:", flashcards.length);
+                console.log("Filtered cards count:", filteredCardsCount);
+                console.log("Total possible corrects:", totalPossibleCorrects); */
         const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0) + filteredCardsCount * consec_limit;
-/*         console.log("Sum of corrects:", sumOfCorrects); */
+        /*         console.log("Sum of corrects:", sumOfCorrects); */
         return (sumOfCorrects / totalPossibleCorrects) * 100;
     };
 
@@ -421,19 +421,39 @@ export const RapidPage: React.FC = () => {
                     )}
                     {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
-                        <div className="session-stats">
-                            {sessionElapsedTimes.map((time, index) => (
-                                <p key={index}>Session {index + 1} Time: {time < 3600 ?
-                                    `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` :
-                                    "> 1hr"
-                                }</p>
-                            ))}
-                            {sessionHitRates.map((hitRate, index) => (
-                                <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
-                            ))}
+                        <div className="session-stats-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Session</th>
+                                        <th>Time</th>
+                                        <th>Hit Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {sessionElapsedTimes.map((time, index) => (
+                                        <tr key={index}>
+                                            <td>{index + 1}</td>
+                                            <td>{time < 3600 ? `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` : "> 1hr"}</td>
+                                            <td>{sessionHitRates[index].toFixed(2)}%</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
+
+                        /*                         <div className="session-stats">
+                                                    {sessionElapsedTimes.map((time, index) => (
+                                                        <p key={index}>Session {index + 1} Time: {time < 3600 ?
+                                                            `${String(Math.floor(time / 60)).padStart(2, '0')}:${String(time % 60).padStart(2, '0')}` :
+                                                            "> 1hr"
+                                                        }</p>
+                                                    ))}
+                                                    {sessionHitRates.map((hitRate, index) => (
+                                                        <p key={index}>Session {index + 1} Hit Rate: {hitRate.toFixed(2)}%</p>
+                                                    ))}
+                                                </div> */
                     )}
-                    {/* YOU ARE HERE NEED TO ADD NEXT SESSION KEYBOARD SHORTCUT */}
                     <div className={`drop-down-container-keys ${isInfoOpen ? 'open' : ''}`}>
                         <p onClick={toggleInfo}>
                             {isInfoOpen ? <GoTriangleDown /> : <GoTriangleRight />} Keyboard shortcuts

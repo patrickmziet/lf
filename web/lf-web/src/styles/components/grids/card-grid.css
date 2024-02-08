@@ -82,6 +82,39 @@
     margin-top: 20px;
 }
 
+/* Add this CSS to your stylesheet or inside a <style> tag in your React component */
+
+.session-stats-table table {
+    width: 100%; /* Adjust width as needed */
+    border-collapse: collapse; /* Collapse borders */
+    border: 1px solid black; /* Border around the entire table */
+    background-color: transparent; /* Transparent background */
+  }
+  
+  .session-stats-table th,
+  .session-stats-table td {
+    border-left: 1px solid black; /* Lines between columns */
+    border-right: 1px solid black; /* Lines between columns */
+    text-align: center; /* Center text */
+    padding: 8px; /* Adjust padding as needed */
+  }
+  
+  .session-stats-table th {
+    border-bottom: 1px solid black; /* Line below the column headers */
+  }
+  
+  /* Remove left border from the first cell and right border from the last cell */
+  .session-stats-table th:first-child,
+  .session-stats-table td:first-child {
+    border-left: none;
+  }
+  
+  .session-stats-table th:last-child,
+  .session-stats-table td:last-child {
+    border-right: none;
+  }
+  
+
 
 /* Responsive design for smaller screens */
 @media (max-width: 850px) {
