@@ -292,7 +292,7 @@ export const CardPage: React.FC = () => {
                         </h4>
                     )}
                     {/* Upcoming flashcards */}
-                    <div>
+                    {/*                     <div>
                         {showAnswer && <p>Due date: {flashcards[currentCardIndex].due_date}</p>}
                         {showAnswer && <p>Interval: {flashcards[currentCardIndex].interval}</p>}
                         {showAnswer && <p>Record: {flashcards[currentCardIndex].record}</p>}
@@ -310,7 +310,7 @@ export const CardPage: React.FC = () => {
                             </div>
                         ))}
                     </div>
-                </div>
+ */}                </div>
             </div>
         </PageLayout>
     );

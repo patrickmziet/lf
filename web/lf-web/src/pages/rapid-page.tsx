@@ -60,18 +60,6 @@ export const RapidPage: React.FC = () => {
         return () => { };
     }, [currentSessionIndex, sessionEnded, sessionGroups]); // Rerun the effect when starting a new session or ending one
 
-    /*     useEffect(() => {
-            const start = Date.now();
-            setSessionStartTime(start);
-        
-            const timer = setInterval(() => {
-                setElapsedTime(Math.floor((Date.now() - start) / 1000));
-            }, 1000);
-        
-            return () => clearInterval(timer);
-        }, []); // Empty dependency array means this effect runs once when the component mounts
-     */
-
     // Fetch topic title
     useEffect(() => {
         const fetchTopic = async () => {
@@ -179,13 +167,6 @@ export const RapidPage: React.FC = () => {
         };
     }, [showAnswer, flashcards]);
 
-
-    /*     // Debug flashcards
-        useEffect(() => {
-            console.log("Flashcards update:", flashcards);
-            console.log("Master flashcards update:", masterFlashcards);
-        }, [flashcards, masterFlashcards]);
-     */
 
     // Handle back button
     const handleBack = async () => {
