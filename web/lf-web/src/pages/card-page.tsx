@@ -23,6 +23,15 @@ export const CardPage: React.FC = () => {
     const [isEditing, setIsEditing] = useState<boolean>(false);
     const titleFromState = location.state?.title;
     const [title, setTitle] = useState<string | null>(titleFromState);
+    const [elapsedTime, setElapsedTime] = useState(0);
+
+    // Start timer
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setElapsedTime(prevElapsedTime => prevElapsedTime + 1);
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     // Fetch topic title
     useEffect(() => {
@@ -189,7 +198,6 @@ export const CardPage: React.FC = () => {
         setShowAnswer(false);
     };
 
-
     const handleEdit = (cardIndex: number) => {
         setIsEditing(true);
         setCurrentCardIndex(cardIndex);
@@ -249,6 +257,14 @@ export const CardPage: React.FC = () => {
                     <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
+                    {currentCardIndex < flashcards.length && (
+                        <div className="stopwatch">
+                            {elapsedTime < 3600 ?
+                                `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
+                                "> 1hr"
+                            }
+                        </div>
+                    )}
                     {currentCardIndex < flashcards.length ? (
                         isEditing ? (
                             <EditFlashcard card={flashcards[currentCardIndex]} onSave={handleSave} />
