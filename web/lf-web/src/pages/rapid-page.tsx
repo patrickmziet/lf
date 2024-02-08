@@ -400,28 +400,19 @@ export const RapidPage: React.FC = () => {
                             <h4 className="learn__title">
                                 No more flashcards
                             </h4>
-                            <h4 className="learn__title">
-                                {/*Print elapsed time and hit rate*/}
-                                {sessionElapsedTimes.length > 0 && sessionHitRates.length > 0 && (
-                                    <p>Session Hit Rate: {sessionHitRates[currentSessionIndex].toFixed(2)}%</p>
-                                )}
-                                {sessionElapsedTimes.length > 0 && (
-                                    <p>Session Time: {sessionElapsedTimes[currentSessionIndex] < 3600 ?
-                                        `${String(Math.floor(sessionElapsedTimes[currentSessionIndex] / 60)).padStart(2, '0')}:${String(sessionElapsedTimes[currentSessionIndex] % 60).padStart(2, '0')}` :
-                                        "> 1hr"
-                                    }</p>
-                                )}
-                            </h4>
-                            {sessionGroups.length > currentSessionIndex + 1 && (
-                                <button className="next-session-button" onClick={handleNextSession}>
-                                    Next Session
-                                </button>
-                            )}
+
                         </>
                     )}
                     {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
                         <div className="session-stats-table">
+                            {sessionGroups.length > currentSessionIndex + 1 && (
+                                <div className="next-session-button-container">
+                                    <button className="next-session-button" onClick={handleNextSession}>
+                                        Next Session
+                                    </button>
+                                </div>
+                            )}
                             <table>
                                 <thead>
                                     <tr>

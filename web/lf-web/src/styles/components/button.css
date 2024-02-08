@@ -151,6 +151,7 @@
   font-family: var(--font-secondary);
   font-weight: 600;
   margin-top: 10px;
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .create-topic-button:hover {
@@ -173,6 +174,7 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .back-to-topics-button:hover {
@@ -195,6 +197,7 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .delete-topic-button:hover {
@@ -222,6 +225,7 @@
   text-align: center;
   /* Ensure text is centered */
   /* Add other styles such as width or max-width if necessary */
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .show-answer-button:hover {
@@ -245,6 +249,7 @@
   background-color: var(--mandarine);
   border: 0px solid var(--mandarine);
   color: var(--white);
+  transition: background 0.3s ease-out, color 0.3s ease-out;
 }
 
 .create-more-cards-button:hover {
@@ -267,13 +272,23 @@
   /* Add other styles such as padding or margin if necessary */
 }
 
+.next-session-button-container {
+  display: flex;
+  /* Use Flexbox for layout */
+  justify-content: center;
+  /* Center children horizontally */
+  position: relative;
+  /* Add other styles such as padding or margin if necessary */
+
+}
 .correct-button,
 .incorrect-button,
 .edit-card-button,
 .delete-card-button,
 .save-button,
 .upload-button,
-.remove-button {
+.remove-button, 
+.next-session-button {
   font-family: var(--font-secondary);
   font-weight: 600;
   cursor: pointer;
@@ -285,6 +300,21 @@
   /* Ensure text is centered */
   margin: 0 5px;
   /* Adjust as needed for spacing between buttons */
+  transition: background 0.3s ease-out, color 0.3s ease-out;
+}
+
+.next-session-button {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* Center button wherever it is */
+/*   align-self: center; */
+  /* Center button vertically */
+  /* justify-content: center; */
+  /* Center button horizontally */
+  /* display: flex; */
+  /* Add other styles such as width or max-width if necessary */
 }
 
 .remove-button-container {
@@ -330,7 +360,8 @@
 
 .edit-card-button:hover,
 .save-button:hover,
-.upload-button:hover {
+.upload-button:hover,
+.next-session-button:hover {
   background-color: var(--dark-aluminium);
 }
 
