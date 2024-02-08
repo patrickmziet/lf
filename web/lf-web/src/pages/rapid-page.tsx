@@ -348,12 +348,14 @@ export const RapidPage: React.FC = () => {
                     <h3 className="learn__title">
                         Session {currentSessionIndex + 1} of {sessionGroups.length}
                     </h3>
-                    <div className="stopwatch">
-                        {elapsedTime < 3600 ?
-                            `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
-                            "> 1hr"
-                        }
-                    </div>
+                    {currentCardIndex < flashcards.length && (
+                        <div className="stopwatch">
+                            {elapsedTime < 3600 ?
+                                `${String(Math.floor(elapsedTime / 60)).padStart(2, '0')}:${String(elapsedTime % 60).padStart(2, '0')}` :
+                                "> 1hr"
+                            }
+                        </div>
+                    )}
                     <div className="progress-bar-container">
                         <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>
                     </div>
@@ -398,7 +400,7 @@ export const RapidPage: React.FC = () => {
                     ) : (
                         <>
                             <h4 className="learn__title">
-                                No more flashcards
+                                Session completed
                             </h4>
 
                         </>
