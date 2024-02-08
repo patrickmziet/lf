@@ -83,14 +83,54 @@ export const LearnPage: React.FC = () => {
 
     const generatePDF = (flashcards: Flashcard[]) => {
         const doc = new jsPDF();
-        doc.setFont("Space Grotesk");
-        doc.setFontSize(24);
-        doc.text(title + " Cheat Sheet", 10, 10, { align: "center" });
-        doc.setFontSize(12);
-        flashcards.forEach((card, index) => {
-            doc.text(index + 1 + ". " + "Question: " + card.question, 10, 20 + index * 20);
-            doc.text("Answer: " + card.answer, 10, 30 + index * 20);
+        console.log("Font list:", doc.getFontList());
+        // Set margins (left, top, right, bottom) in mm
+        const margins = { left: 30, top: 20, right: 30, bottom: 20 };
+        // Title settings
+        const ttl = title + " Cheat Sheet";
+        const titleFont = "Helvetica";
+        const titleSize = 16; // Title font size in pt
+        const titleMarginBottom = 10; // Margin below the title
+
+        // Calculate the center for the title
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const titleWidth = doc.getStringUnitWidth(ttl) * titleSize / doc.internal.scaleFactor;
+        const titleX = (pageWidth - titleWidth) / 2;
+
+        // Add title at the top and center it
+        doc.setFont(titleFont);
+        doc.setFontSize(titleSize);
+        doc.text(ttl, titleX, margins.top);
+
+        // Initial Y position after title
+        let yPos = margins.top + titleMarginBottom;
+
+        // Loop through flashcards
+        doc.setFont("Times");
+        flashcards.forEach(card => {
+            const cardHeight = 20; // Adjust based on content
+            const lineHeight = 7;
+            const padding = 5;
+
+            // Check if we need to add a new page
+            if (yPos + cardHeight > doc.internal.pageSize.getHeight() - margins.bottom) {
+                doc.addPage();
+                yPos = margins.top; // Reset Y position for new page
+            }
+
+            // Draw rectangle with rounded borders for flashcard
+            doc.roundedRect(margins.left, yPos, pageWidth - margins.left - margins.right, cardHeight, 3, 3, "S");
+
+            // Add question and answer inside the rectangle
+            doc.setFontSize(12);
+            doc.text(card.question, margins.left + padding, yPos + padding + lineHeight);
+            doc.line(margins.left, yPos + padding + lineHeight * 1.5, pageWidth - margins.right, yPos + padding + lineHeight * 1.5); // Line separating question and answer
+            doc.text(card.answer, margins.left + padding, yPos + padding + lineHeight * 2.5);
+
+            // Update Y position for the next flashcard
+            yPos += cardHeight + padding;
         });
+
         doc.save(title + "-cheatsheet.pdf");
     };
 
