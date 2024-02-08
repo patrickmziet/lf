@@ -106,10 +106,10 @@ export const RapidPage: React.FC = () => {
             const token = await getAccessTokenSilently();
             let data;
             if (flashcardsFromPreviousPage) {
-                console.log("Flashcards from previous page");
+                /* console.log("Flashcards from previous page"); */
                 data = flashcardsFromPreviousPage;
             } else {
-                console.log("Flashcards from API");
+                /* console.log("Flashcards from API"); */
                 const response = await getTopicFlashCards(token, topicId);
                 data = response.data;
             }
@@ -147,10 +147,19 @@ export const RapidPage: React.FC = () => {
         const handleKeyDown = (event: KeyboardEvent) => {
             switch (event.key) {
                 case 'j':
-                    if (!showAnswer) {
-                        setShowAnswer(true);
+                    // Are Cards finished 
+                    if (currentCardIndex >= flashcards.length) {
+                        // Are there more sessions?
+                        if (sessionGroups.length > currentSessionIndex + 1) {
+                            handleNextSession();
+                        } 
                     } else {
-                        handleCorrect();
+                        // Still cards to show
+                        if (!showAnswer) {
+                            setShowAnswer(true);
+                        } else {
+                            handleCorrect();
+                        }
                     }
                     break;
                 case 'l':
@@ -168,7 +177,7 @@ export const RapidPage: React.FC = () => {
         return () => {
             window.removeEventListener('keydown', handleKeyDown);
         };
-    }, [showAnswer]);
+    }, [showAnswer, flashcards]);
 
 
     /*     // Debug flashcards
@@ -182,9 +191,9 @@ export const RapidPage: React.FC = () => {
     const handleBack = async () => {
         if (!topicId) return;
         const token = await getAccessTokenSilently();
-        console.log("Master flashcards:", masterFlashcards);
+/*         console.log("Master flashcards:", masterFlashcards); */
         const response = await updateFlashCards(token, masterFlashcards);
-        console.log("Response:", response);
+/*         console.log("Response:", response); */
         navigate(`/learn/${topicId}`);
     };
 
@@ -314,11 +323,11 @@ export const RapidPage: React.FC = () => {
     // Calculate progress
     const calculateProgress = () => {
         const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
-        console.log("Flashcards length:", flashcards.length);
+/*         console.log("Flashcards length:", flashcards.length);
         console.log("Filtered cards count:", filteredCardsCount);
-        console.log("Total possible corrects:", totalPossibleCorrects);
+        console.log("Total possible corrects:", totalPossibleCorrects); */
         const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0) + filteredCardsCount * consec_limit;
-        console.log("Sum of corrects:", sumOfCorrects);
+/*         console.log("Sum of corrects:", sumOfCorrects); */
         return (sumOfCorrects / totalPossibleCorrects) * 100;
     };
 
