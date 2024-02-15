@@ -10,7 +10,12 @@ from .models import Flashcard
 
 def generate_flashcards(msg_chn, topic_id):   
     model = ModelFactory.get_model("gpt-3.5-turbo-0125", api_key=os.environ.get("OPENAI_API_KEY"))
-    response = model.make_call(msg_chn)
+    # Try to make a call to the model
+    try:
+        response = model.make_call(msg_chn)
+    except Exception as e:
+        print(e)
+        return
     parsed_flashcards = parse_json_string(response.choices[0].message.content)
     for card_number, card in parsed_flashcards.items():
         Flashcard.objects.create(
