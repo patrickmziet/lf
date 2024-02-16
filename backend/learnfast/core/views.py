@@ -72,12 +72,9 @@ class IsAuthenticatedUserView(APIView):
 
 class CreateUserIfNotExistView(IsAuthenticatedUserView):
     def post(self, request):
-        print("Entered CreateUserIfNotExistView")
         serializer = UserSerializer(data=request.data)
-        print(f"Serializer: {serializer}")
 
         if not serializer.is_valid():
-            print("Serializer is not valid")
             print(f"Serializer errors: {serializer.errors}")
         
         user_data = request.data
