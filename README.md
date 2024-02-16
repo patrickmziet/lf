@@ -140,7 +140,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
  - [Arxiv: "Direct Preference Optimization: Your Language Model is Secretly a Reward Model"](https://arxiv.org/abs/2305.18290) and [Andrew Ng praise: "This beautiful paper proposes a much simpler alternative to RLHF (reinforcement learning from human feedback) for aligning language models to human preferences."](https://x.com/AndrewYNg/status/1745516258697863259?s=20)
  - [Iterative DPO on LLama 2 70B yields a model that beats Mistral Medium, Claude 2, Gemini Pro, GPT-4 0613 on Alpaca v2 benchmark.](https://x.com/gblazex/status/1748181621872705792?s=20)
  - [Karpathy: Prompt engineering (or rather "Flow engineering") intensifies for code generation. Great reading and a reminder of how much alpha there is (pass@5 19% to 44%) in moving from a naive prompt:answer paradigm to a "flow" paradigm, where the answer is constructed iteratively.](https://x.com/karpathy/status/1748043513156272416?s=20)
- - [1 hr CUDA tutorial by Jeremy Howard](https://x.com/jeremyphoward/status/1749153507096322239?s=20)
+ - [1 hr CUDA tutorial by Jeremy Howard](https://x.com/jeremyphoward/status/1749153507096322239?s=20) and [going further](https://x.com/jeremyphoward/status/1757145521507180546?s=20).
  - [Implementation of the training framework proposed in Self-Rewarding Language Model, from MetaAI](https://github.com/lucidrains/self-rewarding-lm-pytorch) and his [github](https://github.com/lucidrains) with many other implementations.
 - [Presents CogVLM, a powerful open-source visual language foundation model that achieves SotA perf on 10 classic cross-modal benchmarks](https://x.com/arankomatsuzaki/status/1721719130720530489?s=20)
 - [Databricks model training](https://x.com/code_star/status/1721282072147575274?s=20)
@@ -154,7 +154,8 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [H2O-Danube-1.8B, small model with long context window](https://x.com/abacaj/status/1752515535462420526?s=20)
 - [The case for co-designing model architectures with Hardware](https://x.com/QuentinAnthon15/status/1752393989813375119?s=20)
 - [Built a GPU rig](https://x.com/G413N/status/1752545362592878619?s=20)
-
+- [Open-sources 7B models capable of processing long text documents and videos of over 1M tokens](https://x.com/TheSeaMouse/status/1757597874240565371?s=20)
+- [Finetune on YT with one line of code](https://x.com/replicate/status/1755677578462216667?s=20)
 
 ### Tech stack
 - [Perhaps a good tech stack for a web app](https://x.com/tair/status/1726631560752115840?s=20)
@@ -164,6 +165,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [one person/customer - one sqlite model.](https://x.com/sriramk/status/1746598735885254785?s=20)
 - [Favicon generator](https://favicon.io/favicon-converter/)
 - [Deploy a custom model with replicate](https://replicate.com/docs/guides/deploy-a-custom-model)
+- [A Full Hardware Guide to Deep Learning](https://timdettmers.com/2018/12/16/deep-learning-hardware-guide/#PCIe_Lanes_and_Multi-GPU_Parallelism)
 
 
 ### Legal
@@ -171,6 +173,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - Look at other legal disclaimers..
 - [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
 - On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
+- [How Lisa Wehden got her O1 visa](https://x.com/lisawehden/status/1757825759648059433?s=20)
 
 
 ### AI Economics and Doom

@@ -1,0 +1,17 @@
+{
+    "description": "Original flow with JSON output now",
+    "messages": [
+        {
+            "role": "system",
+            "content": "\nYou are a helpful study assistant. I want you to create flash cards to be used for studying. The cards should obey these axioms:\n\n        - Most flash cards should be atomic, i.e. they focus on a single piece of information.\n        - Make sure that that some of the flash cards are trivial so that users are able to build up key context on the topic.\n        - Avoid isolated flash cards which are not connected to other flash cards, that is ensure that the flash cards are connected to each other in such a way that when taken together they build up understanding.\n        - Do not, under any circumstances, make flash cards containing information which is not found in the provived text.\n        - The flash cards should be less than 8 words long.\n        \n        and have this JSON format:\n\n        \"{ \"X\":{\"Question\":Y, \"Answer\":Z}, ...}\"\n\n        Where X is the number of the flash card, Y is the question and Z is the answer.\n"
+        },
+        {
+            "role": "user",
+            "content": "\n                          \nMadam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  \n\nLast year COVID-19 kept us apart. This year we are finally together again. \n\nTonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. \n\nWith a duty to one another to the American people to the Constitution. \n\nAnd with an unwavering resolve that freedom will always triumph over tyranny. \n\nSix days ago, Russia\u2019s Vladimir Putin sought to shake the foundations of the free world thinking he could make it bend to his menacing ways. But he badly miscalculated. \n\nHe thought he could roll into Ukraine and the world would roll over. Instead he met a wall of strength he never imagined.  \n\n                          \n                          Make 5 flashcards from the text above.\n                          "
+        },
+        {
+            "role": "assistant",
+            "content": "\n{\"1\":{\"Question\":\"How many members are in the NATO Alliance?\", \"Answer\":\"30\"}, \"2\":{\"Question\":\"What is the name of the Ukrainian President?\", \"Answer\":\"Volodymyr Zelensky\"}, \"3\":{\"Question\":\"Who did the speaker of this speech greet first?\", \"Answer\":\"Madam Speaker\"}, \"4\":{\"Question\":\"Why was, according to the speaker, was NATO created?\", \"Answer\":\"To secure peace in Europe after WW2.\"}, \"5\":{\"Question\":\"Who from Russia is repsonsible for the invasion?\", \"Answer\":\"Vladimir Putin\"}} \n"
+        }
+    ]
+}

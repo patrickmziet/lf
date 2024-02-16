@@ -10,12 +10,10 @@ from django.core.files.base import ContentFile, File
 from PyPDF2 import PdfReader
 from docx import Document as DocxDoc
 from io import BytesIO
-# OpenAI/AI API imports
-from openai import OpenAI
 # General imports
-import os
 import math
 import re
+import numpy as np
 # Local imports
 from .models import User, Topic, Document, Flashcard
 from .serializers import (
@@ -24,129 +22,24 @@ from .serializers import (
     DocumentSerializer, 
     FlashcardSerializer
     )
+from .LLMs import generate_flashcards
+from pana import PromptFlow
+from pana.texts import (
+    json_system_message,
+    json_card_format,
+    card_axioms,
+    supply_example_text,
+    nato_text_short,
+    json_nato_flashcards,
+    ask_for_flashcards,
+    ask_for_more,
+)
 
 # Global variables
 NUM_CARDS = 8
 NUM_CARDS_MORE = 4
+MIN_POOR_FLASHCARDS = 3
 
-# Prompt templates
-card_axioms = """
-- Most flash cards should be atomic, i.e. they focus on a single piece of information.
-- Make sure that that some of the flash cards are trivial so that users are able to build up key context on the topic.
-- Avoid isolated flash cards which are not connected to other flash cards, that is ensure that the flash cards are connected to each other in such a way that when taken together they build up understanding.
-- Do not, under any circumstances, make flash cards containing information which is not found in the provived text.
-- The flash cards should be less than 8 words long.
-"""
-
-card_format = """
-- Flash card X:
--- Question: Y
--- Answer: Z
-
-Where X is the number of the flash card, Y is the question and Z is the answer. 
-"""
-
-system_message = """
-You are a helpful study assistant. I want you to create flash cards to be used for studying. The cards should obey these axioms:
-
-{card_axioms}
-
-and have this format:
-
-{card_format}
-
-where X is the number of the flash card, Y is the question and Z is the answer.
-"""
-
-supply_example_text = """
-
-Here is an example text:
-
-"{example_text}"
-
-Make 6 flash cards from this text.
-"""
-
-example_text = """
-Madam Speaker, Madam Vice President, our First Lady and Second Gentleman. Members of Congress and the Cabinet. Justices of the Supreme Court. My fellow Americans.  
-
-Last year COVID-19 kept us apart. This year we are finally together again. 
-
-Tonight, we meet as Democrats Republicans and Independents. But most importantly as Americans. 
-
-With a duty to one another to the American people to the Constitution. 
-
-And with an unwavering resolve that freedom will always triumph over tyranny. 
-
-Six days ago, Russia’s Vladimir Putin sought to shake the foundations of the free world thinking he could make it bend to his menacing ways. But he badly miscalculated. 
-
-He thought he could roll into Ukraine and the world would roll over. Instead he met a wall of strength he never imagined. 
-
-He met the Ukrainian people. 
-
-From President Zelenskyy to every Ukrainian, their fearlessness, their courage, their determination, inspires the world. 
-
-Groups of citizens blocking tanks with their bodies. Everyone from students to retirees teachers turned soldiers defending their homeland. 
-
-In this struggle as President Zelenskyy said in his speech to the European Parliament “Light will win over darkness.” The Ukrainian Ambassador to the United States is here tonight. 
-
-Let each of us here tonight in this Chamber send an unmistakable signal to Ukraine and to the world. 
-
-Please rise if you are able and show that, Yes, we the United States of America stand with the Ukrainian people. 
-
-Throughout our history we’ve learned this lesson when dictators do not pay a price for their aggression they cause more chaos.   
-
-They keep moving.   
-
-And the costs and the threats to America and the world keep rising.   
-
-That’s why the NATO Alliance was created to secure peace and stability in Europe after World War 2. 
-
-The United States is a member along with 29 other nations. 
-"""
-
-example_flashcards = """
-- Flash card 1:
--- Question: How many members are in the NATO Alliance?
--- Answer: 30
-- Flash card 2:
--- Question: What is the name of the Ukrainian President?
--- Answer: Volodymyr Zelenskyy
-- Flash card 3:
--- Question: Who did the speaker of this speech greet first?
--- Answer: Madam Speaker
-- Flash card 4:
--- Question: Why was, according to the speaker, was NATO created?
--- Answer: To secure peace in Europe after WW2.
-- Flash card 5:
--- Question: Who from Russia is repsonsible for the invasion?
--- Answer: Vladimir Putin
-- Flash card 6:
--- Question: How many days before the speech did the invasion happen?
--- Answer: 6 days
-"""
-
-ask_for_flashcards = """
-
-Here is the text I want you to create flash cards from:
-
-"{sample_text}"
-
-Now provide {num_cards} flash cards on the above information. 
-
-"""
-
-ask_for_more = """
-Now provide {num_cards} more unique flash cards with card format:
-
-{card_format}
-
-and card axioms:
-
-{card_axioms}
-
-However, note the score on the already listed flashcards. This is the percentage of times the user has answered the flashcard correctly. Focus on generating flashcards which will help the user better understand topics with lower scores (< 80%).
-"""
 
 # Helper functions
 def generate_list(x, max_num):
@@ -160,42 +53,6 @@ def extract_text_between_markers(input_string):
     x = [match.group(1).strip() for match in matches]
     return x[0]
 
-def parse_flashcards(text):
-    flashcards = {}
-    # Split text into lines
-    lines = text.split('\n')
-    # Find the flash card lines
-    for i, line in enumerate(lines):
-        if line.startswith('- Flash card'):
-            card_number = int(line.split()[3].rstrip(':'))
-            question_line = lines[i+1].strip()
-            answer_line = lines[i+2].strip()
-
-            question_text = question_line.split(': ', 1)[1]
-            answer_text = answer_line.split(': ', 1)[1]
-            
-            flashcards[card_number] = {'Question': question_text, 'Answer': answer_text}
-    
-    return flashcards
-
-def generate_flashcards(msg_chn, topic_id):
-    # Generate initial batch of flashcards
-    # This is a very naive implementation
-    client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=msg_chn    
-    )
-    
-    parsed_flashcards = parse_flashcards(response.choices[0].message.content)
-    for card_number, card in parsed_flashcards.items():
-        Flashcard.objects.create(
-            topic_id=topic_id,
-            question=card['Question'],
-            answer=card['Answer'],
-        )
-
 def api_exception_handler(exc, context=None):
     response = exception_handler(exc, context=context)
     if response and isinstance(response.data, dict):
@@ -204,7 +61,7 @@ def api_exception_handler(exc, context=None):
         response.data = {'message': 'API Error'}
     return response
 
-# Views
+
 class IsAuthenticatedUserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -215,12 +72,9 @@ class IsAuthenticatedUserView(APIView):
 
 class CreateUserIfNotExistView(IsAuthenticatedUserView):
     def post(self, request):
-        print("Entered CreateUserIfNotExistView")
         serializer = UserSerializer(data=request.data)
-        print(f"Serializer: {serializer}")
 
         if not serializer.is_valid():
-            print("Serializer is not valid")
             print(f"Serializer errors: {serializer.errors}")
         
         user_data = request.data
@@ -299,14 +153,20 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         return content
 
     def initialize_flashcards(self, content, topic_id):
-        msg_chn = [
-            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
-            {"role": "user", "content": supply_example_text.format(example_text=example_text)},
-            {"role": "assistant", "content": example_flashcards},
-            {"role": "user", "content": ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS)},
-        ]
+        msg_chn = PromptFlow("json_flow", "Basic flow with JSON output")
+        msg_chn.add_system_message(json_system_message.format(card_axioms=card_axioms, json_card_format=json_card_format))
+        msg_chn.add_interaction("user", supply_example_text.format(example_text=nato_text_short))
+        msg_chn.add_interaction("assistant", json_nato_flashcards)
+        msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS))
+        msg_chn.save_to_file()
+#        msg_chn = [
+#            {"role": "system", "content": json_system_message},
+#            {"role": "user", "content": supply_example_text.format(example_text=nato_text_short)},
+#            {"role": "assistant", "content": json_nato_flashcards},
+#            {"role": "user", "content": ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS)},
+#        ]
 
-        generate_flashcards(msg_chn, topic_id)
+        generate_flashcards(msg_chn.flow, topic_id)
 
 
 class FlashcardListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
@@ -358,29 +218,47 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
 
         # fetch flashcards
         flashcards = Flashcard.objects.filter(topic=topic)
-        flashcard_strings = []
-        for flashcard in flashcards:
-            record_array = [int(i) for i in flashcard.record]
-            score = round(sum(record_array) / len(record_array) * 100, 2) if record_array else 0
-            flashcard_string = f"""
-                - Flash card {flashcard.id}:
-                -- Question: {flashcard.question}
-                -- Answer: {flashcard.answer}
-                -- Score: {score}%
-                """
-            flashcard_strings.append(flashcard_string)
-        flashcards_string = "\n".join(flashcard_strings)        
+        #flashcard_strings = []
+        flashcards_json = {i+1: f.to_json_card() for i, f in enumerate(flashcards)}
+        calculate_score = lambda record: round(sum([int(i) for i in record]) / len(record) * 100, 2) if record else 0
+        score_array = np.array([calculate_score(f.record) for f in flashcards])
+        pctl = np.percentile(score_array, 25)
+        poor_flashcards_indices = np.where(score_array <= pctl)[0]
+        if len(poor_flashcards_indices) >= MIN_POOR_FLASHCARDS:
+            poor_flashcards = {k+1: flashcards_json[k+1] for k in poor_flashcards_indices}
+        else:
+            poor_flashcards = flashcards_json
+        
+        msg_chn = PromptFlow.load_from_file("json_flow")
+        msg_chn.add_interaction("assistant", f"{flashcards_json}")
+        msg_chn.add_interaction("user", ask_for_more.format(num_cards=NUM_CARDS_MORE, 
+                                                            focus_cards=poor_flashcards,
+                                                            card_format=json_card_format, 
+                                                            card_axioms=card_axioms))
+        
+#        for flashcard in flashcards:
+#            record_array = [int(i) for i in flashcard.record]
+#            score = round(sum(record_array) / len(record_array) * 100, 2) if record_array else 0
+            
+#            flashcard_string = f"""
+#                - Flash card {flashcard.id}:
+#                -- Question: {flashcard.question}
+#                -- Answer: {flashcard.answer}
+#                -- Score: {score}%
+#               """
+#            flashcard_strings.append(flashcard_string)
+#        flashcards_string = "\n".join(flashcard_strings)        
         # Reconstruct the msg_chn
-        msg_chn = [
-            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
-            {"role": "user", "content": supply_example_text.format(example_text=combined_file)},
-            {"role": "assistant", "content": flashcards_string},
-            {"role": "user", "content": ask_for_flashcards.format(sample_text=combined_file, num_cards=NUM_CARDS)},
-            {"role": "assistant", "content": flashcards_string},
-            {"role": "user", "content": ask_for_more.format(num_cards=NUM_CARDS_MORE, card_format=card_format, card_axioms=card_axioms)},
-        ]
+#        msg_chn = [
+#            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
+#            {"role": "user", "content": supply_example_text.format(example_text=combined_file)},
+#            {"role": "assistant", "content": flashcards_string},
+#            {"role": "user", "content": ask_for_flashcards.format(sample_text=combined_file, num_cards=NUM_CARDS)},
+#            {"role": "assistant", "content": flashcards_string},
+#            {"role": "user", "content": ask_for_more.format(num_cards=NUM_CARDS_MORE, card_format=card_format, card_axioms=card_axioms)},
+#        ]
 
-        generate_flashcards(msg_chn, topic_id)        
+        generate_flashcards(msg_chn.flow, topic_id)        
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)
 
@@ -400,6 +278,3 @@ class FlashcardDestroyAPIView(IsAuthenticatedUserView, generics.DestroyAPIView):
 
     def perform_destroy(self, instance):
         instance.delete()
-
-
-# class CheetSheetCreateAPIView(IsAuthenticatedUserView, generics.CreateAPIView):

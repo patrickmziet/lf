@@ -186,7 +186,7 @@ export const LearnPage: React.FC = () => {
                     <button className="back-to-topics-button" onClick={() => navigate('/topics')}>
                         {"<< Topics"}
                     </button>
-                    
+
                     <button className="delete-topic-button" onClick={handleDeleteTopic}>
                         Delete Topic
                     </button>
@@ -228,7 +228,7 @@ export const LearnPage: React.FC = () => {
                                 </ul>
                             )}
                         </div>
-{/*                         <div>
+                        {/*                         <div>
                             <h1 className="learn__title">
                                 Statistics
                             </h1>

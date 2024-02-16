@@ -109,6 +109,12 @@ class Flashcard(models.Model):
             "created_at": self.created_at,
             "updated_at": self.updated_at
         }
+    
+    def to_json_card(self):
+        return {
+            "Question": self.question,
+            "Answer": self.answer
+        }
 
 
 class Chat(models.Model):
