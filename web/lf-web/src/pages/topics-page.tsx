@@ -58,8 +58,9 @@ export const TopicsPage: React.FC = () => {
 
         if (data) {
             setTopics([...topics, data]); // Add the new topic to the local state to update the list
+            const topicTitle = newTopic.title;
             setNewTopic({ title: '' }); // Reset the input after successful creation
-            navigate(`/upload/${data.id}`);
+            navigate(`/upload/${data.id}`, { state: { title: topicTitle } });
         }
     };
 

@@ -42,5 +42,3 @@ def parse_flashcards(text):
             flashcards[card_number] = {'Question': question_text, 'Answer': answer_text}
     
     return flashcards
-
-

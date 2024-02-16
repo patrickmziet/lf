@@ -41,12 +41,6 @@ NUM_CARDS_MORE = 5
 MIN_POOR_FLASHCARDS = 3
 
 
-# Helper functions
-def generate_list(x, max_num):
-    quotient = math.floor(x / max_num)
-    remainder = x % max_num
-    return [max_num] * quotient + ([remainder] if remainder != 0 else [])
-
 def extract_text_between_markers(input_string):
     pattern = r'(?<=BEGIN)(.*?)(?=END)'
     matches = re.finditer(pattern, input_string, re.DOTALL)
