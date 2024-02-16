@@ -13,6 +13,7 @@ from io import BytesIO
 # General imports
 import math
 import re
+import numpy as np
 # Local imports
 from .models import User, Topic, Document, Flashcard
 from .serializers import (
@@ -22,13 +23,14 @@ from .serializers import (
     FlashcardSerializer
     )
 from .LLMs import generate_flashcards
-from .texts import (
-    system_message,
-    supply_example_text,
-    example_text,
-    example_flashcards,
+from pana import PromptFlow
+from pana.texts import (
+    json_system_message,
+    json_card_format,
     card_axioms,
-    card_format,
+    supply_example_text,
+    nato_text_short,
+    json_nato_flashcards,
     ask_for_flashcards,
     ask_for_more,
 )
@@ -36,6 +38,7 @@ from .texts import (
 # Global variables
 NUM_CARDS = 8
 NUM_CARDS_MORE = 4
+MIN_POOR_FLASHCARDS = 3
 
 
 # Helper functions
@@ -58,7 +61,7 @@ def api_exception_handler(exc, context=None):
         response.data = {'message': 'API Error'}
     return response
 
-# Views
+
 class IsAuthenticatedUserView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -153,14 +156,20 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         return content
 
     def initialize_flashcards(self, content, topic_id):
-        msg_chn = [
-            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
-            {"role": "user", "content": supply_example_text.format(example_text=example_text)},
-            {"role": "assistant", "content": example_flashcards},
-            {"role": "user", "content": ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS)},
-        ]
+        msg_chn = PromptFlow("json_flow", "Basic flow with JSON output")
+        msg_chn.add_system_message(json_system_message.format(card_axioms=card_axioms, json_card_format=json_card_format))
+        msg_chn.add_interaction("user", supply_example_text.format(example_text=nato_text_short))
+        msg_chn.add_interaction("assistant", json_nato_flashcards)
+        msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS))
+        msg_chn.save_to_file()
+#        msg_chn = [
+#            {"role": "system", "content": json_system_message},
+#            {"role": "user", "content": supply_example_text.format(example_text=nato_text_short)},
+#            {"role": "assistant", "content": json_nato_flashcards},
+#            {"role": "user", "content": ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS)},
+#        ]
 
-        generate_flashcards(msg_chn, topic_id)
+        generate_flashcards(msg_chn.flow, topic_id)
 
 
 class FlashcardListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
@@ -212,29 +221,47 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
 
         # fetch flashcards
         flashcards = Flashcard.objects.filter(topic=topic)
-        flashcard_strings = []
-        for flashcard in flashcards:
-            record_array = [int(i) for i in flashcard.record]
-            score = round(sum(record_array) / len(record_array) * 100, 2) if record_array else 0
-            flashcard_string = f"""
-                - Flash card {flashcard.id}:
-                -- Question: {flashcard.question}
-                -- Answer: {flashcard.answer}
-                -- Score: {score}%
-                """
-            flashcard_strings.append(flashcard_string)
-        flashcards_string = "\n".join(flashcard_strings)        
+        #flashcard_strings = []
+        flashcards_json = {i+1: f.to_json_card() for i, f in enumerate(flashcards)}
+        calculate_score = lambda record: round(sum([int(i) for i in record]) / len(record) * 100, 2) if record else 0
+        score_array = np.array([calculate_score(f.record) for f in flashcards])
+        pctl = np.percentile(score_array, 25)
+        poor_flashcards_indices = np.where(score_array <= pctl)[0]
+        if len(poor_flashcards_indices) >= MIN_POOR_FLASHCARDS:
+            poor_flashcards = {k+1: flashcards_json[k+1] for k in poor_flashcards_indices}
+        else:
+            poor_flashcards = flashcards_json
+        
+        msg_chn = PromptFlow.load_from_file("json_flow")
+        msg_chn.add_interaction("assistant", f"{flashcards_json}")
+        msg_chn.add_interaction("user", ask_for_more.format(num_cards=NUM_CARDS_MORE, 
+                                                            focus_cards=poor_flashcards,
+                                                            card_format=json_card_format, 
+                                                            card_axioms=card_axioms))
+        
+#        for flashcard in flashcards:
+#            record_array = [int(i) for i in flashcard.record]
+#            score = round(sum(record_array) / len(record_array) * 100, 2) if record_array else 0
+            
+#            flashcard_string = f"""
+#                - Flash card {flashcard.id}:
+#                -- Question: {flashcard.question}
+#                -- Answer: {flashcard.answer}
+#                -- Score: {score}%
+#               """
+#            flashcard_strings.append(flashcard_string)
+#        flashcards_string = "\n".join(flashcard_strings)        
         # Reconstruct the msg_chn
-        msg_chn = [
-            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
-            {"role": "user", "content": supply_example_text.format(example_text=combined_file)},
-            {"role": "assistant", "content": flashcards_string},
-            {"role": "user", "content": ask_for_flashcards.format(sample_text=combined_file, num_cards=NUM_CARDS)},
-            {"role": "assistant", "content": flashcards_string},
-            {"role": "user", "content": ask_for_more.format(num_cards=NUM_CARDS_MORE, card_format=card_format, card_axioms=card_axioms)},
-        ]
+#        msg_chn = [
+#            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
+#            {"role": "user", "content": supply_example_text.format(example_text=combined_file)},
+#            {"role": "assistant", "content": flashcards_string},
+#            {"role": "user", "content": ask_for_flashcards.format(sample_text=combined_file, num_cards=NUM_CARDS)},
+#            {"role": "assistant", "content": flashcards_string},
+#            {"role": "user", "content": ask_for_more.format(num_cards=NUM_CARDS_MORE, card_format=card_format, card_axioms=card_axioms)},
+#        ]
 
-        generate_flashcards(msg_chn, topic_id)        
+        generate_flashcards(msg_chn.flow, topic_id)        
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)
 

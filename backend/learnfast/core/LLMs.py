@@ -2,7 +2,7 @@
 from openai import OpenAI
 import os
 # LLM management package
-from pana.models import ModelFactory
+from pana import ModelFactory
 from pana.lparse import parse_json_string
 # Local imports
 from .models import Flashcard
@@ -10,7 +10,6 @@ from .models import Flashcard
 
 def generate_flashcards(msg_chn, topic_id):   
     model = ModelFactory.get_model("gpt-3.5-turbo-0125", api_key=os.environ.get("OPENAI_API_KEY"))
-    # Try to make a call to the model
     try:
         response = model.make_call(msg_chn)
     except Exception as e:
@@ -23,26 +22,8 @@ def generate_flashcards(msg_chn, topic_id):
             question=card['Question'],
             answer=card['Answer'],
         )
-    # YOU ARE HERE, NEED TO ADJUST HOW MSG_CHN IS MADE, DO JSON VERSION
-    
-    # Generate initial batch of flashcards
-    # This is a very naive implementation
-"""     client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
 
-    response = client.chat.completions.create(
-        model="gpt-3.5-turbo",
-        messages=msg_chn    
-    )
-    
-    parsed_flashcards = parse_flashcards(response.choices[0].message.content)
-    for card_number, card in parsed_flashcards.items():
-        Flashcard.objects.create(
-            topic_id=topic_id,
-            question=card['Question'],
-            answer=card['Answer'],
-        )
- """
- 
+
 def parse_flashcards(text):
     flashcards = {}
     # Split text into lines
