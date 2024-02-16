@@ -37,7 +37,7 @@ from pana.texts import (
 
 # Global variables
 NUM_CARDS = 8
-NUM_CARDS_MORE = 4
+NUM_CARDS_MORE = 5
 MIN_POOR_FLASHCARDS = 3
 
 
@@ -154,17 +154,13 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
 
     def initialize_flashcards(self, content, topic_id):
         msg_chn = PromptFlow("json_flow", "Basic flow with JSON output")
-        msg_chn.add_system_message(json_system_message.format(card_axioms=card_axioms, json_card_format=json_card_format))
+        msg_chn.add_system_message(json_system_message.format(card_axioms=card_axioms, 
+                                                              json_card_format=json_card_format))
         msg_chn.add_interaction("user", supply_example_text.format(example_text=nato_text_short))
         msg_chn.add_interaction("assistant", json_nato_flashcards)
-        msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS))
+        msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=content, 
+                                                                  num_cards=NUM_CARDS))
         msg_chn.save_to_file()
-#        msg_chn = [
-#            {"role": "system", "content": json_system_message},
-#            {"role": "user", "content": supply_example_text.format(example_text=nato_text_short)},
-#            {"role": "assistant", "content": json_nato_flashcards},
-#            {"role": "user", "content": ask_for_flashcards.format(sample_text=content, num_cards=NUM_CARDS)},
-#        ]
 
         generate_flashcards(msg_chn.flow, topic_id)
 
@@ -236,28 +232,6 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
                                                             card_format=json_card_format, 
                                                             card_axioms=card_axioms))
         
-#        for flashcard in flashcards:
-#            record_array = [int(i) for i in flashcard.record]
-#            score = round(sum(record_array) / len(record_array) * 100, 2) if record_array else 0
-            
-#            flashcard_string = f"""
-#                - Flash card {flashcard.id}:
-#                -- Question: {flashcard.question}
-#                -- Answer: {flashcard.answer}
-#                -- Score: {score}%
-#               """
-#            flashcard_strings.append(flashcard_string)
-#        flashcards_string = "\n".join(flashcard_strings)        
-        # Reconstruct the msg_chn
-#        msg_chn = [
-#            {"role": "system", "content": system_message.format(card_axioms=card_axioms, card_format=card_format)},
-#            {"role": "user", "content": supply_example_text.format(example_text=combined_file)},
-#            {"role": "assistant", "content": flashcards_string},
-#            {"role": "user", "content": ask_for_flashcards.format(sample_text=combined_file, num_cards=NUM_CARDS)},
-#            {"role": "assistant", "content": flashcards_string},
-#            {"role": "user", "content": ask_for_more.format(num_cards=NUM_CARDS_MORE, card_format=card_format, card_axioms=card_axioms)},
-#        ]
-
         generate_flashcards(msg_chn.flow, topic_id)        
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)

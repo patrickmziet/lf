@@ -9,7 +9,8 @@ from .models import Flashcard
 
 
 def generate_flashcards(msg_chn, topic_id):   
-    model = ModelFactory.get_model("gpt-3.5-turbo-0125", api_key=os.environ.get("OPENAI_API_KEY"))
+    model = ModelFactory.get_model("gpt-3.5-turbo-0125", 
+                                   api_key=os.environ.get("OPENAI_API_KEY"))
     try:
         response = model.make_call(msg_chn)
     except Exception as e:
