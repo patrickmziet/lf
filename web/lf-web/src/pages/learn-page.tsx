@@ -222,7 +222,7 @@ export const LearnPage: React.FC = () => {
                             {isInfoOpen && (
                                 <ul>
                                     <li>Rapid: Get up to speed fast by studying cards in sessions of 10</li>
-                                    <li>Gradual: Learn cards as they become due over with <a
+                                    <li>Gradual: Learn cards as they become due with <a
                                         href="https://en.wikipedia.org/wiki/Spaced_repetition" target="_blank" rel="noopener noreferrer">spaced repition</a> over days and weeks</li>
                                     <li>Cheat Sheet: Make and AI-generated pdf which focuses on cards you're struggling with to take with you when you're not using LearnFast</li>
                                 </ul>
