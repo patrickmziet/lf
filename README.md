@@ -166,6 +166,7 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Favicon generator](https://favicon.io/favicon-converter/)
 - [Deploy a custom model with replicate](https://replicate.com/docs/guides/deploy-a-custom-model)
 - [A Full Hardware Guide to Deep Learning](https://timdettmers.com/2018/12/16/deep-learning-hardware-guide/#PCIe_Lanes_and_Multi-GPU_Parallelism)
+- [Groq chips for inference](https://wow.groq.com/why-groq/)
 
 
 ### Legal
