@@ -9,7 +9,7 @@ interface Props {
 }
 
 export const PageLayout: React.FC<Props> = ({ children }) => {
-  const faviconUrl = process.env.PUBLIC_URL + '/favicon.ico'; 
+  const faviconUrl = process.env.PUBLIC_URL + '/favicon.ico';
   return (
     <div className="page-layout">
       <Helmet>
@@ -19,7 +19,6 @@ export const PageLayout: React.FC<Props> = ({ children }) => {
       <NavBar />
       <MobileNavBar />
       <div className="page-layout__content">{children}</div>
-      <PageFooter />
     </div>
   );
 };

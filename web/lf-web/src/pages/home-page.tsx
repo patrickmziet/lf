@@ -1,13 +1,13 @@
 import React from "react";
 import { LFFeatures } from "src/components/lf-features";
 import { HeroBanner } from "src/components/hero-banner";
-import { PageLayout } from "../components/page-layout";
+import { PageLayoutHome } from "../components/page-layout-home";
 
 export const HomePage: React.FC = () => (
-  <PageLayout>
+  <PageLayoutHome>
     <>
       <HeroBanner />
       <LFFeatures />
     </>
-  </PageLayout>
+  </PageLayoutHome>
 );
