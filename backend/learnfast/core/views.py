@@ -14,6 +14,7 @@ from io import BytesIO
 import math
 import re
 import numpy as np
+import tiktoken
 # Local imports
 from .models import User, Topic, Document, Flashcard
 from .serializers import (
@@ -39,6 +40,31 @@ from pana.texts import (
 NUM_CARDS = 8
 NUM_CARDS_MORE = 5
 MIN_POOR_FLASHCARDS = 3
+TOKENS_PER_PAGE = 600
+GPT35_TURBO_CONTEXT = 16385 - 500 # For saftey to avoid 16k token limit
+PAGE_TO_CARDS = {
+    (1, 2): 15,
+    (3, 5): 30,
+    (6, 10): 50,
+    (11, 15): 65,
+    (16, 30): 75,
+    (31, 40): 90,
+    (41, 50): 100
+}
+
+def get_rec_cards(num_pages):
+    # Make sure num_pages > 1 and throw error if not
+    if num_pages < 1:
+        return "Pages must be at least 1."
+    
+    if num_pages > 50:
+        return max(100, num_pages)
+    
+    for page_range, cards in PAGE_TO_CARDS.items():
+        if page_range[0] <= num_pages <= page_range[1]:
+            return cards
+    return "Invalid number of pages"  # In case the number is below 1
+
 
 
 def extract_text_between_markers(input_string):
@@ -152,11 +178,31 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
                                                               json_card_format=json_card_format))
         msg_chn.add_interaction("user", supply_example_text.format(example_text=nato_text_short))
         msg_chn.add_interaction("assistant", json_nato_flashcards)
-        msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=content, 
-                                                                  num_cards=NUM_CARDS))
         msg_chn.save_to_file()
-
-        generate_flashcards(msg_chn.flow, topic_id)
+        # Compute number of tokens in the content
+        encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
+        tokens_preamble = encoding.encode(msg_chn.flow)
+        tokens_content = encoding.encode(content)
+        working_context = GPT35_TURBO_CONTEXT - len(tokens_preamble)
+        
+        num_batches = max(round(len(tokens_content) / working_context), 1)
+        num_pages = working_context / TOKENS_PER_PAGE
+        total_rec_cards = get_rec_cards(num_pages)
+        cards_per_batch = math.floor(total_rec_cards / num_batches)
+        remaining_cards = total_rec_cards % num_batches
+        cards_in_first_batch = cards_per_batch + remaining_cards
+        # Verify if the total number of cards is correct
+        total_cards = cards_in_first_batch + (cards_per_batch * (num_batches - 1))
+        if total_cards != total_rec_cards:
+            raise ValueError("Mismatch in the total number of flashcards calculated.")
+        
+        for i in range(num_batches):
+            start = i * working_context
+            end = (i + 1) * working_context
+            batch_content = encoding.decode(tokens_content[start:end])
+            msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
+                                                                      num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
+            generate_flashcards(msg_chn.flow, topic_id)
 
 
 class FlashcardListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
