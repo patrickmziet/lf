@@ -24,8 +24,19 @@ from .serializers import (
     FlashcardSerializer
     )
 from .LLMs import generate_flashcards
-from pana import PromptFlow
-from pana.texts import (
+#from pana import PromptFlow
+#from pana.texts import (
+#    json_system_message,
+#    json_card_format,
+#    card_axioms,
+#    supply_example_text,
+#    nato_text_short,
+#    json_nato_flashcards,
+#    ask_for_flashcards,
+#    ask_for_more,
+#)
+from pana_local.pflow import PromptFlow
+from pana_local.texts import (
     json_system_message,
     json_card_format,
     card_axioms,
