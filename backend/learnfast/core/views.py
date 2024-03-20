@@ -78,7 +78,6 @@ def get_rec_cards(num_pages):
     return "Invalid number of pages"  # In case the number is below 1
 
 
-
 def extract_text_between_markers(input_string):
     pattern = r'(?<=BEGIN)(.*?)(?=END)'
     matches = re.finditer(pattern, input_string, re.DOTALL)

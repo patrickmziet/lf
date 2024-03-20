@@ -186,6 +186,9 @@ export const RapidPage: React.FC = () => {
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct += 1;
+        updatedCard.rapid_attempts += 1;
+        updatedCard.rapid_correct += 1;
+
         updatedFlashcards[currentCardIndex] = updatedCard;
         const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);
 
@@ -221,6 +224,7 @@ export const RapidPage: React.FC = () => {
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct = 0;
+        updatedCard.rapid_attempts += 1;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
@@ -381,7 +385,6 @@ export const RapidPage: React.FC = () => {
                             </div>
                         )
                     )}
-                    {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
                         <div className="session-stats-table">
                             {(sessionGroups.length > currentSessionIndex + 1 && flashcards.length == 0) && (
