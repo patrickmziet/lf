@@ -56,12 +56,12 @@ GPT35_TURBO_CONTEXT = 16385 - 500 # For saftey to avoid 16k token limit
 TOKENS_PER_CARD = 40 # +- 30 tokens with extra 10 for a buffer
 PAGE_TO_CARDS = {
     (1, 2): 15,
-    (3, 5): 30,
-    (6, 10): 50,
-    (11, 15): 65,
-    (16, 30): 75,
-    (31, 40): 90,
-    (41, 50): 100
+    (2, 5): 30,
+    (5, 10): 50,
+    (10, 15): 65,
+    (15, 30): 75,
+    (30, 40): 90,
+    (40, 50): 100
 }
 
 def get_rec_cards(num_pages):
@@ -69,11 +69,11 @@ def get_rec_cards(num_pages):
     if num_pages < 1:
         return "Pages must be at least 1."
     
-    if num_pages > 50:
+    if num_pages >= 50:
         return max(100, num_pages)
     
     for page_range, cards in PAGE_TO_CARDS.items():
-        if page_range[0] <= num_pages <= page_range[1]:
+        if page_range[0] <= num_pages < page_range[1]:
             return cards
     return "Invalid number of pages"  # In case the number is below 1
 
