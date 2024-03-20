@@ -384,7 +384,7 @@ export const RapidPage: React.FC = () => {
                     {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
                         <div className="session-stats-table">
-                            {sessionGroups.length > currentSessionIndex + 1 && (
+                            {(sessionGroups.length > currentSessionIndex + 1 && flashcards.length == 0) && (
                                 <div className="next-session-button-container">
                                     <button className="next-session-button" onClick={handleNextSession}>
                                         Next Session
