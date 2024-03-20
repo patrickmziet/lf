@@ -302,7 +302,7 @@ export const CardPage: React.FC = () => {
                         </h3>
                     )}
                     <h3 className="card-count__title">
-                        {filteredCardsCount} out of {totalCardsDue}
+                        {filteredCardsCount}/{totalCardsDue} cards
                     </h3>
                     <div className="progress-bar-container">
                         <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>

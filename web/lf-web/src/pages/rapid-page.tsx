@@ -323,9 +323,6 @@ export const RapidPage: React.FC = () => {
                     <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
-                    <h3 className="learn__title">
-                        Session {currentSessionIndex + 1} of {sessionGroups.length} {currentCardIndex >= flashcards.length ? "completed" : ""}
-                    </h3>
                     {currentCardIndex < flashcards.length && (
                         <div className="stopwatch">
                             <h3 className="learn__title">
@@ -336,6 +333,12 @@ export const RapidPage: React.FC = () => {
                             </h3>
                         </div>
                     )}
+                    <h3 className="learn__title">
+                        Session {currentSessionIndex + 1} of {sessionGroups.length} {currentCardIndex >= flashcards.length ? "completed" : ""}
+                    </h3>
+                    <h3 className="card-count__title">
+                        {filteredCardsCount}/{flashcards.length + filteredCardsCount} cards
+                    </h3>
                     <div className="progress-bar-container">
                         <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>
                     </div>
