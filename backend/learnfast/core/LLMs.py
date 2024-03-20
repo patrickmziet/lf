@@ -8,7 +8,7 @@ from pana.lparse import parse_json_string
 from .models import Flashcard
 
 
-def generate_flashcards(msg_chn, topic_id):   
+def generate_flashcards(msg_chn, topic_id, start, end):   
     model = ModelFactory.get_model("gpt-3.5-turbo-0125", 
                                    api_key=os.environ.get("OPENAI_API_KEY"))
     try:
@@ -22,6 +22,7 @@ def generate_flashcards(msg_chn, topic_id):
             topic_id=topic_id,
             question=card['Question'],
             answer=card['Answer'],
+            start_end=f"{start}-{end}"
         )
 
 

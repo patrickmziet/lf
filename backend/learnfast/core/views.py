@@ -49,7 +49,7 @@ from .pana_local.texts import (
 
 # Global variables
 NUM_CARDS = 8
-NUM_CARDS_MORE = 10
+NUM_CARDS_MORE = 12
 MIN_POOR_FLASHCARDS = 3
 TOKENS_PER_PAGE = 600
 GPT35_TURBO_CONTEXT = 16385 - 500 # For saftey to avoid 16k token limit
@@ -226,7 +226,7 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
             msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
                                                                       num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
             print("Message flow:", msg_chn.flow)
-            generate_flashcards(msg_chn.flow, topic_id)
+            generate_flashcards(msg_chn.flow, topic_id, start, end)
 
 
 class FlashcardListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
@@ -247,7 +247,7 @@ class FlashcardUpdateAPIView(IsAuthenticatedUserView):
         for updated_flashcard in updated_flashcards:
             try:
                 flashcard = Flashcard.objects.get(id=updated_flashcard['id'])
-                for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'record', 'due_date', 'updated_at']:
+                for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'rapid_attempts', 'rapid_correct', 'record', 'due_date', 'updated_at']:
                     if key in updated_flashcard:
                         setattr(flashcard, key, updated_flashcard[key])
                 flashcard.save()
@@ -265,7 +265,7 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         for updated_flashcard in updated_flashcards:
             try:
                 flashcard = Flashcard.objects.get(id=updated_flashcard['id'])
-                for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'record', 'due_date', 'updated_at']:
+                for key in ['question', 'answer', 'easiness', 'interval', 'repetitions', 'rapid_attempts', 'rapid_correct', 'record', 'due_date', 'updated_at']:
                     if key in updated_flashcard:
                         setattr(flashcard, key, updated_flashcard[key])
                 flashcard.save()
@@ -279,33 +279,66 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         # fetch flashcards
         flashcards = Flashcard.objects.filter(topic=topic)
         flashcards_json = {i+1: f.to_json_card() for i, f in enumerate(flashcards)}
-        calculate_score = lambda record: round(sum([int(i) for i in record]) / len(record) * 100, 2) if record else 0
-        score_array = np.array([calculate_score(f.record) for f in flashcards])
+        
+        #calculate_score = lambda record: round(sum([int(i) for i in record]) / len(record) * 100, 2) if record else 0
+        #score_array = np.array([calculate_score(f.record) for f in flashcards])
+        correct_array = np.array([f.rapid_correct for f in flashcards])
+        print("Correct array:", correct_array)
+        attempts_array = np.array([f.rapid_attempts for f in flashcards])
+        print("Attempts array:", attempts_array)
+        score_array = np.array([f.rapid_correct/f.rapid_attempts for f in flashcards])
+        print("Score array:", score_array)
         pctl = np.percentile(score_array, 25)
+        print("Percentile:", pctl)
         poor_flashcards_indices = np.where(score_array <= pctl)[0]
+        print("Poor flashcards indices:", poor_flashcards_indices)
         if len(poor_flashcards_indices) >= MIN_POOR_FLASHCARDS:
             poor_flashcards = {k+1: flashcards_json[k+1] for k in poor_flashcards_indices}
         else:
             poor_flashcards = flashcards_json
         
+        print("Poor flashcards:", poor_flashcards)
         msg_chn = PromptFlow.load_from_file("json_flow")
         encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
         tokens_preamble = encoding.encode(''.join(msg['content'] for msg in msg_chn.flow))
         tokens_content = encoding.encode(combined_file)
         working_context = GPT35_TURBO_CONTEXT - len(tokens_preamble)
         
-        num_batches = max(round(len(tokens_content) / working_context), 1)
-        
-        for i in range(num_batches):
-            start = i * working_context
-            end = (i + 1) * working_context
+        # Get locations to go to
+        #start_end_arr = [f['start_end'] for f in poor_flashcards]
+        start_end_arr = [flashcards[int(i)].start_end for i in poor_flashcards_indices]
+        print("Start end:", start_end_arr)
+        start_end_arr_set = list(set(start_end_arr))
+        print("Unique start end:", start_end_arr_set)
+        # Divide "More cards" per start end location with a minimum of 1 per location
+        num_unique_locations = len(start_end_arr_set)
+        cards_per_location = math.floor(NUM_CARDS_MORE / num_unique_locations)
+        print("Cards per location:", cards_per_location)
+        remaining_cards = NUM_CARDS_MORE % num_unique_locations
+        cards_in_first_location = cards_per_location + remaining_cards
+        # Verify if the total number of cards is correct
+        total_cards = cards_in_first_location + (cards_per_location * (num_unique_locations - 1))
+        if total_cards != NUM_CARDS_MORE:
+            raise ValueError("Mismatch in the total number of flashcards calculated.")
+
+        for i in range(num_unique_locations):
+            se = list(start_end_arr_set)[i].split('-')
+            print("Start end:", se)
+            start = int(se[0])
+            end = int(se[1])
+            print("Start:", start)
+            print("End:", end)
             batch_content = encoding.decode(tokens_content[start:end])
-            msg_chn.add_interaction("user", ask_for_more.format(num_cards=NUM_CARDS_MORE, 
-                                                            focus_cards=poor_flashcards,
+            print("Batch content:", batch_content)
+            focus_cards = {j+1: flashcards[int(k)].to_json_card() for j, k in enumerate(poor_flashcards_indices) if flashcards[int(k)].start_end == start_end_arr_set[i]}
+            print("Focus cards:", focus_cards)
+            msg_chn.add_interaction("user", ask_for_more.format(num_cards= cards_in_first_location if i == 0 else cards_per_location, 
+                                                            focus_cards=focus_cards,
                                                             card_format=json_card_format, 
                                                             card_axioms=card_axioms,
                                                             text=batch_content))
-            generate_flashcards(msg_chn.flow, topic_id)
+            print("Message flow:", msg_chn.flow)
+            generate_flashcards(msg_chn.flow, topic_id, start, end)
             
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)
