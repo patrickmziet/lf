@@ -159,6 +159,10 @@ with card format:
 and card axioms:
 
 {card_axioms}
+
+based on this text:
+
+{text}
 """
 
 sample_text = """
@@ -172,5 +176,7 @@ The precise start and end of the Industrial Revolution is still debated among hi
 
 An economic recession occurred from the late 1830s to the early 1840s when the adoption of the Industrial Revolution's early innovations, such as mechanized spinning and weaving, slowed and their markets matured. Innovations developed late in the period, such as the increasing adoption of locomotives, steamboats and steamships, and hot blast iron smelting. New technologies such as the electrical telegraph, widely introduced in the 1840s and 1850s, were not powerful enough to drive high rates of growth. Rapid economic growth began to occur after 1870, springing from a new group of innovations in what has been called the Second Industrial Revolution. These innovations included new steel making processes, mass production, assembly lines, electrical grid systems, the large-scale manufacture of machine tools, and the use of increasingly advanced machinery in steam-powered factories.
 """
+
+
 
 
