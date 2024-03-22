@@ -94,16 +94,16 @@ export const UploadPage: React.FC = () => {
                                     ))}
                                 </ul>
                             )}
+                            {selectedFiles.length > 0 && (
+                                isLoading ? (
+                                    <ColorRingSpinner />
+                                ) : (
+                                    <button className="upload-button" type="submit">
+                                        Upload {selectedFiles.length} file{selectedFiles.length > 1 ? "s" : ""}
+                                    </button>
+                                )
+                            )}
                         </div>
-                        {selectedFiles.length > 0 && (
-                            isLoading ? (
-                                <ColorRingSpinner />
-                            ) : (
-                                <button className="upload-button" type="submit">
-                                    Upload {selectedFiles.length} file{selectedFiles.length > 1 ? "s" : ""}
-                                </button>
-                            )
-                        )}
                     </form>
                     {!isLoading && (
                         <button className="cancel-topic-button" onClick={handleDeleteTopic}>

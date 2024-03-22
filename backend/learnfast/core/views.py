@@ -24,7 +24,7 @@ from .serializers import (
     DocumentSerializer, 
     FlashcardSerializer
     )
-from .LLMs import generate_flashcards
+from .LLMs import generate_flashcards, gen_flashcards
 #from pana import PromptFlow
 #from pana.texts import (
 #    json_system_message,
@@ -238,7 +238,8 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
                                                                       num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
             #print("Message flow:", msg_chn.flow)
             st = time.time()
-            generate_flashcards(msg_chn.flow, topic_id, start, end)
+            #generate_flashcards(msg_chn.flow, topic_id, start, end)
+            gen_flashcards(msg_chn.flow, topic_id, start, end)
             et = time.time() - st
             print(f"Flashcards for batch {i} generated in {et}s.")
 

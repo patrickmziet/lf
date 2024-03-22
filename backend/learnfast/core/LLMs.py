@@ -1,4 +1,5 @@
 # OpenAI/AI API imports
+import openai
 from openai import OpenAI
 import os
 # LLM management package
@@ -8,6 +9,36 @@ from pana.lparse import parse_json_string
 from .models import Flashcard
 
 
+
+def gen_flashcards(msg_chn, topic_id, start, end):
+    try:
+        client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        print("Established connection with OpenAI")
+        response = client.chat.completions.create(
+            model="gpt-3.5-turbo-0125",
+            response_format={"type": "json_object"},
+            messages=msg_chn,
+        )
+    except openai.APIConnectionError as e:
+        print("The server could not be reached")
+        print(e.__cause__)  # an underlying Exception, likely raised within httpx.
+    except openai.RateLimitError as e:
+        print("A 429 status code was received; we should back off a bit.")
+    except openai.APIStatusError as e:
+        print("Another non-200-range status code was received")
+        print(e.status_code)
+        print(e.response)    
+    print(response.choices[0].message.content)
+    parsed_flashcards = parse_json_string(response.choices[0].message.content)
+    for card_number, card in parsed_flashcards.items():
+        Flashcard.objects.create(
+            topic_id=topic_id,
+            question=card['Question'],
+            answer=card['Answer'],
+            start_end=f"{start}-{end}"
+        )
+        
+                
 def generate_flashcards(msg_chn, topic_id, start, end):   
     model = ModelFactory.get_model("gpt-3.5-turbo-0125", 
                                    api_key=os.environ.get("OPENAI_API_KEY"))
