@@ -2,6 +2,7 @@ export interface Flashcard {
     id: number;           // Unique identifier for the flashcard
     question: string;     // Flashcard question
     answer: string;       // Flashcard answer
+    start_end: string;    // Start and end token positions of the content for the flashcard
     easiness: number;     // Easiness level of flashcard
     interval: number;     // Time between views
     repetitions: number;  // Total times correct in a row
