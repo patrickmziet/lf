@@ -16,6 +16,7 @@ def generate_flashcards(msg_chn, topic_id, start, end):
     except Exception as e:
         print(e)
         return
+    print(response.choices[0].message.content)
     parsed_flashcards = parse_json_string(response.choices[0].message.content)
     for card_number, card in parsed_flashcards.items():
         Flashcard.objects.create(
