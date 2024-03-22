@@ -26,7 +26,7 @@ export const RapidPage: React.FC = () => {
     const [title, setTitle] = useState<string | null>(titleFromState);
     const [sessionGroups, setSessionGroups] = useState<Flashcard[][]>([]);
     const [currentSessionIndex, setCurrentSessionIndex] = useState(0);
-    const group_size = 5; // Group size
+    const group_size = 10; // Group size
     const consec_limit = 3; // Consecutive correct limit
     const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
