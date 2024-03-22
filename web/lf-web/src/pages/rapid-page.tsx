@@ -26,7 +26,7 @@ export const RapidPage: React.FC = () => {
     const [title, setTitle] = useState<string | null>(titleFromState);
     const [sessionGroups, setSessionGroups] = useState<Flashcard[][]>([]);
     const [currentSessionIndex, setCurrentSessionIndex] = useState(0);
-    const group_size = 5; // Group size
+    const group_size = 10; // Group size
     const consec_limit = 3; // Consecutive correct limit
     const [sessionStartTime, setSessionStartTime] = useState<number | null>(null);
     const [elapsedTime, setElapsedTime] = useState(0);
@@ -186,6 +186,15 @@ export const RapidPage: React.FC = () => {
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct += 1;
+        // Find and update rapid attempts and correct in the Master flashcards
+        const updatedMasterFlashcards = masterFlashcards.map(card =>
+            card.id === updatedCard.id ? { ...card, rapid_attempts: card.rapid_attempts + 1, rapid_correct: card.rapid_correct + 1 } : card
+        );
+        setMasterFlashcards(updatedMasterFlashcards);
+
+        //updatedCard.rapid_attempts += 1;
+        //updatedCard.rapid_correct += 1;
+
         updatedFlashcards[currentCardIndex] = updatedCard;
         const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);
 
@@ -221,6 +230,13 @@ export const RapidPage: React.FC = () => {
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct = 0;
+
+        // Find and update rapid attempts in the Master flashcards
+        const updatedMasterFlashcards = masterFlashcards.map(card =>
+            card.id === updatedCard.id ? { ...card, rapid_attempts: card.rapid_attempts + 1 } : card
+        );
+        setMasterFlashcards(updatedMasterFlashcards);
+        //updatedCard.rapid_attempts += 1;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
@@ -302,9 +318,7 @@ export const RapidPage: React.FC = () => {
 
     // Calculate progress
     const calculateProgress = () => {
-        const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
-        const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0) + filteredCardsCount * consec_limit;
-        return (sumOfCorrects / totalPossibleCorrects) * 100;
+        return (filteredCardsCount / (flashcards.length + filteredCardsCount)) * 100;
     };
 
     const toggleInfo = () => {
@@ -323,9 +337,6 @@ export const RapidPage: React.FC = () => {
                     <h1 className="learn__title">
                         {title || "Flashcards for topic {topicId}"}
                     </h1>
-                    <h3 className="learn__title">
-                        Session {currentSessionIndex + 1} of {sessionGroups.length} {currentCardIndex >= flashcards.length ? "completed" : ""}
-                    </h3>
                     {currentCardIndex < flashcards.length && (
                         <div className="stopwatch">
                             <h3 className="learn__title">
@@ -336,6 +347,12 @@ export const RapidPage: React.FC = () => {
                             </h3>
                         </div>
                     )}
+                    <h3 className="learn__title">
+                        Session {currentSessionIndex + 1} of {sessionGroups.length} {currentCardIndex >= flashcards.length ? "completed" : ""}
+                    </h3>
+                    <h3 className="card-count__title">
+                        {filteredCardsCount}/{flashcards.length + filteredCardsCount} cards
+                    </h3>
                     <div className="progress-bar-container">
                         <div className="progress-bar" style={{ width: `${calculateProgress()}%` }}></div>
                     </div>
@@ -378,10 +395,9 @@ export const RapidPage: React.FC = () => {
                             </div>
                         )
                     )}
-                    {/* YOU ARE HERE IMPLEMENTING THE SESSION STATISTICS */}
                     {(sessionElapsedTimes.length > 0 && sessionHitRates.length > 0) && (
                         <div className="session-stats-table">
-                            {sessionGroups.length > currentSessionIndex + 1 && (
+                            {(sessionGroups.length > currentSessionIndex + 1 && flashcards.length == 0) && (
                                 <div className="next-session-button-container">
                                     <button className="next-session-button" onClick={handleNextSession}>
                                         Next Session

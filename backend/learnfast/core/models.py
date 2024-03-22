@@ -77,10 +77,13 @@ class Flashcard(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name='flashcards')
     question = models.TextField()
     answer = models.TextField()
+    start_end = models.TextField(default="") # "position_of_start_token-position_of_end_token" to determine where card was taken from.
     easiness = models.FloatField(default=2.4)
     interval = models.IntegerField(default=1)
     repetitions = models.IntegerField(default=0)
     consecutive_correct = models.IntegerField(default=0) # for use in rapid study mode
+    rapid_attempts = models.IntegerField(default=0) # for use in rapid study mode
+    rapid_correct = models.IntegerField(default=0) # for use in rapid study mode
     record = models.TextField(default="")
     due_date = models.FloatField(default=time.time() - 1 * 60)
     created_at = models.DateField(auto_now_add=True)
@@ -100,10 +103,13 @@ class Flashcard(models.Model):
             "topic": self.topic.id,
             "question": self.question,
             "answer": self.answer,
+            "start_end": self.start_end, 
             "easiness": self.easiness,
             "interval": self.interval,
             "repetitions": self.repetitions,
             "consecutive_correct": self.consecutive_correct,
+            "rapid_attempts": self.rapid_attempts,
+            "rapid_correct": self.rapid_correct,
             "record": self.record,
             "due_date": self.due_date_str(),
             "created_at": self.created_at,
