@@ -186,8 +186,14 @@ export const RapidPage: React.FC = () => {
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct += 1;
-        updatedCard.rapid_attempts += 1;
-        updatedCard.rapid_correct += 1;
+        // Find and update rapid attempts and correct in the Master flashcards
+        const updatedMasterFlashcards = masterFlashcards.map(card =>
+            card.id === updatedCard.id ? { ...card, rapid_attempts: card.rapid_attempts + 1, rapid_correct: card.rapid_correct + 1 } : card
+        );
+        setMasterFlashcards(updatedMasterFlashcards);
+
+        //updatedCard.rapid_attempts += 1;
+        //updatedCard.rapid_correct += 1;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         const dueFlashcards = updatedFlashcards.filter(card => card.consecutive_correct < consec_limit);
@@ -224,7 +230,13 @@ export const RapidPage: React.FC = () => {
         const updatedFlashcards = [...flashcards];
         const updatedCard = { ...updatedFlashcards[currentCardIndex] };
         updatedCard.consecutive_correct = 0;
-        updatedCard.rapid_attempts += 1;
+
+        // Find and update rapid attempts in the Master flashcards
+        const updatedMasterFlashcards = masterFlashcards.map(card =>
+            card.id === updatedCard.id ? { ...card, rapid_attempts: card.rapid_attempts + 1 } : card
+        );
+        setMasterFlashcards(updatedMasterFlashcards);
+        //updatedCard.rapid_attempts += 1;
 
         updatedFlashcards[currentCardIndex] = updatedCard;
         updatedFlashcards.sort(() => Math.random() - 0.5); // Randomize order
