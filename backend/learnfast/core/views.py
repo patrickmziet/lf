@@ -16,6 +16,7 @@ import re
 import numpy as np
 import tiktoken
 import time
+import json
 # Local imports
 from .models import User, Topic, Document, Flashcard
 from .serializers import (
@@ -150,6 +151,16 @@ class TopicRetrieveAPIView(IsAuthenticatedUserView, generics.RetrieveAPIView):
         return self.queryset.filter(user=self.get_user())
 
 
+def parse_json_string(json_string):
+    try:
+        flashcards = json.loads(json_string)
+        flashcards = {int(k): v for k, v in flashcards.items()}
+        return flashcards
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+        return {}
+
+
 class DocumentUploadView(IsAuthenticatedUserView, APIView):
     parser_classes = [MultiPartParser]
 
@@ -158,33 +169,23 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         topic = Topic.objects.get(id=topic_id)
         combined_content = ""
         file_cnt = 0
-        for file in request.FILES.getlist('documents'):
-            if not file.name.endswith(('.txt', '.pdf', '.docx')):
-                return Response({"error": f"Unsupported file format: {file.name}. Only .txt, .pdf, and .docx are supported."}, status=400)
-            Document.objects.create(topic=topic, document=file)
-            file.seek(0)
-            file_cnt += 1
-            combined_content += self.process_file(file, file_cnt)
-        combined_file = ContentFile(combined_content.encode('utf-8'), name='combined_file.txt')
-        Document.objects.create(topic=topic, document=File(combined_file))
-        self.initialize_flashcards(combined_content, topic_id)
-        return Response(status=204)
-
-    def process_file(self, file, file_cnt):
-        content = "START of Document " + str(file_cnt) + ": " + file.name + "\n"
-        if file.name.endswith('.txt'):
-            file_content = file.read().decode('utf-8')
-        elif file.name.endswith('.pdf'):
-            pdf = PdfReader(file)
-            file_content = "\n".join(page.extract_text() for page in pdf.pages)
-        elif file.name.endswith('.docx'):
-            doc = DocxDoc(BytesIO(file.read()))
-            file_content = "\n".join(para.text for para in doc.paragraphs)
-        content += file_content + "\n"
-        content += "END of Document " + str(file_cnt) + ": " + file.name + "\n"
-        return content
-
-    def initialize_flashcards(self, content, topic_id):
+        
+        combined_file = Document.objects.filter(topic=topic, document__endswith='combined_file.txt').first()
+        if combined_file is None:            
+            for file in request.FILES.getlist('documents'):
+                if not file.name.endswith(('.txt', '.pdf', '.docx')):
+                    return Response({"error": f"Unsupported file format: {file.name}. Only .txt, .pdf, and .docx are supported."}, status=400)
+                Document.objects.create(topic=topic, document=file)
+                file.seek(0)
+                file_cnt += 1
+                combined_content += self.process_file(file, file_cnt)
+            combined_file = ContentFile(combined_content.encode('utf-8'), name='combined_file.txt')
+            Document.objects.create(topic=topic, document=File(combined_file))
+        else:
+            print("Already made file")
+            combined_content = combined_file.document.read().decode('utf-8')
+            print(combined_content)
+        # Create msg_chn
         msg_chn = PromptFlow("json_flow", "Basic flow with JSON output")
         msg_chn.add_system_message(json_system_message.format(card_axioms=card_axioms, 
                                                               json_card_format=json_card_format))
@@ -202,7 +203,7 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         #print("Preamble tokens encoded:", tokens_preamble)
         print(f"Preamble tokens encoded: {len(tokens_preamble)} in {et}s.")
         st = time.time()
-        tokens_content = encoding.encode(content)
+        tokens_content = encoding.encode(combined_content)
         et = time.time() - st
         print(f"Length of content tokens encoded: {len(tokens_content)} in {et}s.")
         #print("Content tokens encoded:", tokens_content)
@@ -232,16 +233,36 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
             start = i * context_i
             end = (i + 1) * context_i
             batch_content = encoding.decode(tokens_content[start:end])
-            #print("Batch content:", batch_content)
+            print("Batch content:", batch_content)
             msg_chn = PromptFlow.load_from_file("json_flow")
             msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
                                                                       num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
-            #print("Message flow:", msg_chn.flow)
+            print("Message flow:", msg_chn.flow)
             st = time.time()
-            #generate_flashcards(msg_chn.flow, topic_id, start, end)
-            gen_flashcards(msg_chn.flow, topic_id, start, end)
+
+            try: 
+                print("About to try flashcards")
+                gen_flashcards(msg_chn.flow, topic_id, start, end)
+            except Exception as e:
+                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             et = time.time() - st
             print(f"Flashcards for batch {i} generated in {et}s.")
+            
+        return Response(status=204)
+
+    def process_file(self, file, file_cnt):
+        content = "START of Document " + str(file_cnt) + ": " + file.name + "\n"
+        if file.name.endswith('.txt'):
+            file_content = file.read().decode('utf-8')
+        elif file.name.endswith('.pdf'):
+            pdf = PdfReader(file)
+            file_content = "\n".join(page.extract_text() for page in pdf.pages)
+        elif file.name.endswith('.docx'):
+            doc = DocxDoc(BytesIO(file.read()))
+            file_content = "\n".join(para.text for para in doc.paragraphs)
+        content += file_content + "\n"
+        content += "END of Document " + str(file_cnt) + ": " + file.name + "\n"
+        return content
 
 
 class FlashcardListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):

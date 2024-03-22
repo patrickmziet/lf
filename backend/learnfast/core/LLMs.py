@@ -2,16 +2,27 @@
 import openai
 from openai import OpenAI
 import os
+import json
 # LLM management package
 from pana import ModelFactory
-from pana.lparse import parse_json_string
+#from pana.lparse import parse_json_string
 # Local imports
 from .models import Flashcard
 
 
+def parse_json_string(json_string):
+    try:
+        flashcards = json.loads(json_string)
+        flashcards = {int(k): v for k, v in flashcards.items()}
+        return flashcards
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}")
+        return {}
+
 
 def gen_flashcards(msg_chn, topic_id, start, end):
     try:
+        print("About to establish connection")
         client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         print("Established connection with OpenAI")
         response = client.chat.completions.create(
