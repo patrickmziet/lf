@@ -318,9 +318,7 @@ export const RapidPage: React.FC = () => {
 
     // Calculate progress
     const calculateProgress = () => {
-        const totalPossibleCorrects = (flashcards.length + filteredCardsCount) * consec_limit;
-        const sumOfCorrects = flashcards.reduce((acc, card) => acc + card.consecutive_correct, 0) + filteredCardsCount * consec_limit;
-        return (sumOfCorrects / totalPossibleCorrects) * 100;
+        return (filteredCardsCount / (flashcards.length + filteredCardsCount)) * 100;
     };
 
     const toggleInfo = () => {
