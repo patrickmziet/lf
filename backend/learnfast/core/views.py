@@ -25,7 +25,10 @@ from .serializers import (
     DocumentSerializer, 
     FlashcardSerializer
     )
-from .LLMs import generate_flashcards, gen_flashcards
+from .LLMs import (
+    generate_flashcards, 
+    gen_flashcards, 
+    )
 #from pana import PromptFlow
 #from pana.texts import (
 #    json_system_message,
@@ -55,6 +58,9 @@ NUM_CARDS_MORE = 12
 MIN_POOR_FLASHCARDS = 3
 TOKENS_PER_PAGE = 600
 GPT35_TURBO_CONTEXT = 16385 - 500 # For saftey to avoid 16k token limit
+HEADROOM_PROP = 0.25 # Scale down rate limits to HEADROOM_PROP% to avoid hitting real rate limits
+GPT35_TURBO_TPM = int(160000 * HEADROOM_PROP) # Rate limit for GPT-3.5-turbo Token Per Minute
+GPT35_TURBO_RPM = int(3500 * HEADROOM_PROP) # Rate limit for GPT-3.5-turbo Requests Per Minute
 TOKENS_PER_CARD = 40 # +- 30 tokens with extra 10 for a buffer
 PAGE_TO_CARDS = {
     (1, 2): 15,
@@ -79,12 +85,6 @@ def get_rec_cards(num_pages):
             return cards
     return "Invalid number of pages"  # In case the number is below 1
 
-
-def extract_text_between_markers(input_string):
-    pattern = r'(?<=BEGIN)(.*?)(?=END)'
-    matches = re.finditer(pattern, input_string, re.DOTALL)
-    x = [match.group(1).strip() for match in matches]
-    return x[0]
 
 def api_exception_handler(exc, context=None):
     response = exception_handler(exc, context=context)
@@ -227,22 +227,27 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         print("Initializing flashcards.")        
         for i in range(num_batches):
             print(f"Batch: {i}")
-            context_i = working_context - (cards_per_batch * TOKENS_PER_CARD) 
+            card_tokens = cards_per_batch * TOKENS_PER_CARD
             if i == 0:
-                context_i = working_context - (cards_in_first_batch * TOKENS_PER_CARD)
+                card_tokens = cards_in_first_batch * TOKENS_PER_CARD
+            context_i = working_context - card_tokens
             start = i * context_i
             end = (i + 1) * context_i
             batch_content = encoding.decode(tokens_content[start:end])
-            print("Batch content:", batch_content)
+            #print("Batch content:", batch_content)
             msg_chn = PromptFlow.load_from_file("json_flow")
             msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
                                                                       num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
-            print("Message flow:", msg_chn.flow)
+            #print("Message flow:", msg_chn.flow)
             st = time.time()
 
             try: 
                 print("About to try flashcards")
-                gen_flashcards(msg_chn.flow, topic_id, start, end)
+                print(f"Max tokens: {card_tokens * 1.25}")
+                print(f"Type of max tokens: {type(card_tokens * 1.25)}")
+                gen_flashcards(msg_chn=msg_chn.flow, topic_id=topic_id, 
+                               start=start, end=end, max_tokens=int(card_tokens * 1.25))
+                """ gen_flashcards(msg_chn.flow, topic_id, start, end) """
             except Exception as e:
                 return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
             et = time.time() - st

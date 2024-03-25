@@ -20,7 +20,7 @@ def parse_json_string(json_string):
         return {}
 
 
-def gen_flashcards(msg_chn, topic_id, start, end):
+def gen_flashcards(msg_chn, topic_id, start, end, max_tokens=1000):
     try:
         print("About to establish connection")
         client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
@@ -29,6 +29,7 @@ def gen_flashcards(msg_chn, topic_id, start, end):
             model="gpt-3.5-turbo-0125",
             response_format={"type": "json_object"},
             messages=msg_chn,
+            max_tokens=max_tokens,
         )
     except openai.APIConnectionError as e:
         print("The server could not be reached")
@@ -86,3 +87,11 @@ def parse_flashcards(text):
             flashcards[card_number] = {'Question': question_text, 'Answer': answer_text}
     
     return flashcards
+
+
+# Potentially redundant code below
+def extract_text_between_markers(input_string):
+    pattern = r'(?<=BEGIN)(.*?)(?=END)'
+    matches = re.finditer(pattern, input_string, re.DOTALL)
+    x = [match.group(1).strip() for match in matches]
+    return x[0]
