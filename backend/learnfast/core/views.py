@@ -385,26 +385,50 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         total_cards = cards_in_first_location + (cards_per_location * (num_unique_locations - 1))
         if total_cards != NUM_CARDS_MORE:
             raise ValueError("Mismatch in the total number of flashcards calculated.")
+        
+        client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        async def fetch_more_completion(messages, start, end):
+            response = await client.chat.completions.create(
+                model="gpt-3.5-turbo-0125",
+                response_format={"type": "json_object"},
+                messages=messages,
+            )
+            return (parse_json_string(response.choices[0].message.content), start, end)
 
-        for i in range(num_unique_locations):
-            se = list(start_end_arr_set)[i].split('-')
-            print("Start end:", se)
-            start = int(se[0])
-            end = int(se[1])
-            print("Start:", start)
-            print("End:", end)
-            batch_content = encoding.decode(tokens_content[start:end])
-            #print("Batch content:", batch_content)
-            focus_cards = {j+1: flashcards[int(k)].to_json_card() for j, k in enumerate(poor_flashcards_indices) if flashcards[int(k)].start_end == start_end_arr_set[i]}
-            print("Focus cards:", focus_cards)
-            msg_chn = PromptFlow.load_from_file("json_flow")
-            msg_chn.add_interaction("user", ask_for_more.format(num_cards= cards_in_first_location if i == 0 else cards_per_location, 
-                                                            focus_cards=focus_cards,
-                                                            card_format=json_card_format, 
-                                                            card_axioms=card_axioms,
-                                                            text=batch_content))
-            #print("Message flow:", msg_chn.flow)
-            generate_flashcards(msg_chn.flow, topic_id, start, end)
+        async def main_more():
+            msg_chn_batches, starts, ends = [], [], []
+            for i in range(num_unique_locations):
+                se = list(start_end_arr_set)[i].split('-')
+                start = int(se[0])
+                end = int(se[1])
+                batch_content = encoding.decode(tokens_content[start:end])
+                focus_cards = {j+1: flashcards[int(k)].to_json_card() for j, k in enumerate(poor_flashcards_indices) if flashcards[int(k)].start_end == start_end_arr_set[i]}
+                msg_chn = PromptFlow.load_from_file("json_flow")
+                msg_chn.add_interaction("user", ask_for_more.format(num_cards= cards_in_first_location if i == 0 else cards_per_location, 
+                                                                focus_cards=focus_cards,
+                                                                card_format=json_card_format, 
+                                                                card_axioms=card_axioms,
+                                                                text=batch_content))
+                msg_chn_batches.append(msg_chn.flow)
+                starts.append(start)
+                ends.append(end)
+            
+            tasks = [fetch_more_completion(messages, start, end) for messages, start, end in zip(msg_chn_batches, starts, ends)]
+            flashcard_data = await asyncio.gather(*tasks)
+
+            return flashcard_data
+        
+        flashcard_data = asyncio.run(main_more())
+        print(f"Flashcard JSONs: {flashcard_data}")
+        
+        for fj, start, end in flashcard_data:
+            for card_number, card in fj.items():
+                Flashcard.objects.create(
+                    topic_id=topic_id,
+                    question=card['Question'],
+                    answer=card['Answer'],
+                    start_end=f"{start}-{end}"
+                )
             
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)
