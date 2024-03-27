@@ -12,7 +12,6 @@ from docx import Document as DocxDoc
 from io import BytesIO
 # General imports
 import math
-import re
 import numpy as np
 import tiktoken
 import time
@@ -29,21 +28,8 @@ from .serializers import (
     FlashcardSerializer
     )
 from .LLMs import (
-    generate_flashcards, 
-    gen_flashcards, 
     parse_json_string,
     )
-#from pana import PromptFlow
-#from pana.texts import (
-#    json_system_message,
-#    json_card_format,
-#    card_axioms,
-#    supply_example_text,
-#    nato_text_short,
-#    json_nato_flashcards,
-#    ask_for_flashcards,
-#    ask_for_more,
-#)
 from .pana_local.pflow import PromptFlow
 from .pana_local.texts import (
     json_system_message,
@@ -88,6 +74,16 @@ def get_rec_cards(num_pages):
         if page_range[0] <= num_pages < page_range[1]:
             return cards
     return "Invalid number of pages"  # In case the number is below 1
+
+def create_flashcards(flashcard_data, topic_id):
+    for fj, start, end in flashcard_data:
+        for card_number, card in fj.items():
+            Flashcard.objects.create(
+                topic_id=topic_id,
+                question=card['Question'],
+                answer=card['Answer'],
+                start_end=f"{start}-{end}"
+            )
 
 
 def api_exception_handler(exc, context=None):
@@ -269,14 +265,8 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         flashcard_data = asyncio.run(main())
         print(f"Flashcard JSONs: {flashcard_data}")
 
-        for fj, start, end in flashcard_data:
-            for card_number, card in fj.items():
-                Flashcard.objects.create(
-                    topic_id=topic_id,
-                    question=card['Question'],
-                    answer=card['Answer'],
-                    start_end=f"{start}-{end}"
-                )
+        create_flashcards(flashcard_data, topic_id)
+                
         print(f"Asynchronous flashcards generated in {time.time() - st}s.")         
         
         return Response(status=204)
@@ -420,16 +410,7 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         
         flashcard_data = asyncio.run(main_more())
         print(f"Flashcard JSONs: {flashcard_data}")
-        
-        for fj, start, end in flashcard_data:
-            for card_number, card in fj.items():
-                Flashcard.objects.create(
-                    topic_id=topic_id,
-                    question=card['Question'],
-                    answer=card['Answer'],
-                    start_end=f"{start}-{end}"
-                )
-            
+        create_flashcards(flashcard_data, topic_id)            
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)
 
