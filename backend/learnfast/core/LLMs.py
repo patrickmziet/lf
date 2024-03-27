@@ -1,6 +1,6 @@
 # OpenAI/AI API imports
 import openai
-from openai import OpenAI
+from openai import OpenAI, AsyncOpenAI
 import os
 import json
 # LLM management package
@@ -19,6 +19,35 @@ def parse_json_string(json_string):
         print(f"Error decoding JSON: {e}")
         return {}
 
+
+""" async def asynch_gen_flashcards(msg_chn, topic_id, start, end, max_tokens=1000):
+    
+    try:
+        client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        print("Established connection with OpenAI")
+        async def fetch_completion(messages):
+            response = await client.chat.completions.create(
+                model="gpt-3.5-turbo-0125",
+                response_format={"type": "json_object"},
+                messages=messages,
+            )
+            return response
+        
+        msg_chn_batches = []
+        for i in range(num_batches):
+            
+
+        
+    except openai.APIConnectionError as e:
+        print("The server could not be reached")
+        print(e.__cause__)  # an underlying Exception, likely raised within httpx.
+    except openai.RateLimitError as e:
+        print("A 429 status code was received; we should back off a bit.")
+    except openai.APIStatusError as e:
+        print("Another non-200-range status code was received")
+        print(e.status_code)
+        print(e.response)    
+ """
 
 def gen_flashcards(msg_chn, topic_id, start, end, max_tokens=1000):
     try:

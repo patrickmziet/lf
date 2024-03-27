@@ -17,6 +17,9 @@ import numpy as np
 import tiktoken
 import time
 import json
+from openai import AsyncOpenAI
+import os
+import asyncio
 # Local imports
 from .models import User, Topic, Document, Flashcard
 from .serializers import (
@@ -28,6 +31,7 @@ from .serializers import (
 from .LLMs import (
     generate_flashcards, 
     gen_flashcards, 
+    parse_json_string,
     )
 #from pana import PromptFlow
 #from pana.texts import (
@@ -224,35 +228,57 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         if total_cards != total_rec_cards:
             raise ValueError("Mismatch in the total number of flashcards calculated.")
 
-        print("Initializing flashcards.")        
-        for i in range(num_batches):
-            print(f"Batch: {i}")
-            card_tokens = cards_per_batch * TOKENS_PER_CARD
-            if i == 0:
-                card_tokens = cards_in_first_batch * TOKENS_PER_CARD
-            context_i = working_context - card_tokens
-            start = i * context_i
-            end = (i + 1) * context_i
-            batch_content = encoding.decode(tokens_content[start:end])
-            #print("Batch content:", batch_content)
-            msg_chn = PromptFlow.load_from_file("json_flow")
-            msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
-                                                                      num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
-            #print("Message flow:", msg_chn.flow)
-            st = time.time()
+        # Method 1: Asynchronous
+        st = time.time()
+        client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))       
 
-            try: 
-                print("About to try flashcards")
-                print(f"Max tokens: {card_tokens * 1.25}")
-                print(f"Type of max tokens: {type(card_tokens * 1.25)}")
-                gen_flashcards(msg_chn=msg_chn.flow, topic_id=topic_id, 
-                               start=start, end=end, max_tokens=int(card_tokens * 1.25))
-                """ gen_flashcards(msg_chn.flow, topic_id, start, end) """
-            except Exception as e:
-                return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            et = time.time() - st
-            print(f"Flashcards for batch {i} generated in {et}s.")
+        async def fetch_completion(messages, start, end):
+            response = await client.chat.completions.create(
+                model="gpt-3.5-turbo-0125",
+                response_format={"type": "json_object"},
+                messages=messages,
+            )
+            return (parse_json_string(response.choices[0].message.content), start, end)
+        
+        async def main():
+            msg_chn_batches, starts, ends = [], [], []
+            for i in range(num_batches):
+                card_tokens = cards_per_batch * TOKENS_PER_CARD
+                if i == 0:
+                    card_tokens = cards_in_first_batch * TOKENS_PER_CARD
+                context_i = working_context - card_tokens
+                start = i * context_i
+                starts.append(start)
+                end = (i + 1) * context_i
+                ends.append(end)
+                batch_content = encoding.decode(tokens_content[start:end])
+                #print("Batch content:", batch_content)
+                msg_chn = PromptFlow.load_from_file("json_flow")
+                msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
+                                                                        num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
+                msg_chn_batches.append(msg_chn.flow)
+                
+            # Create tasks for concurrent execution
+            tasks = [fetch_completion(messages, start, end) for messages, start, end in zip(msg_chn_batches, starts, ends)]
             
+            # Run tasks concurrently and gather responses
+            flashcard_data = await asyncio.gather(*tasks)
+
+            return flashcard_data
+        
+        flashcard_data = asyncio.run(main())
+        print(f"Flashcard JSONs: {flashcard_data}")
+
+        for fj, start, end in flashcard_data:
+            for card_number, card in fj.items():
+                Flashcard.objects.create(
+                    topic_id=topic_id,
+                    question=card['Question'],
+                    answer=card['Answer'],
+                    start_end=f"{start}-{end}"
+                )
+        print(f"Asynchronous flashcards generated in {time.time() - st}s.")         
+        
         return Response(status=204)
 
     def process_file(self, file, file_cnt):
