@@ -30,6 +30,10 @@ from .serializers import (
 from .LLMs import (
     parse_json_string,
     )
+from .utils import (
+    check_and_update_rate_limits,
+    get_rec_cards,
+)
 from .pana_local.pflow import PromptFlow
 from .pana_local.texts import (
     json_system_message,
@@ -52,28 +56,7 @@ HEADROOM_PROP = 0.25 # Scale down rate limits to HEADROOM_PROP% to avoid hitting
 GPT35_TURBO_TPM = int(160000 * HEADROOM_PROP) # Rate limit for GPT-3.5-turbo Token Per Minute
 GPT35_TURBO_RPM = int(3500 * HEADROOM_PROP) # Rate limit for GPT-3.5-turbo Requests Per Minute
 TOKENS_PER_CARD = 40 # +- 30 tokens with extra 10 for a buffer
-PAGE_TO_CARDS = {
-    (1, 2): 15,
-    (2, 5): 30,
-    (5, 10): 50,
-    (10, 15): 65,
-    (15, 30): 75,
-    (30, 40): 90,
-    (40, 50): 100
-}
 
-def get_rec_cards(num_pages):
-    # Make sure num_pages > 1 and throw error if not
-    if num_pages < 1:
-        return "Pages must be at least 1."
-    
-    if num_pages >= 50:
-        return max(100, num_pages)
-    
-    for page_range, cards in PAGE_TO_CARDS.items():
-        if page_range[0] <= num_pages < page_range[1]:
-            return cards
-    return "Invalid number of pages"  # In case the number is below 1
 
 def create_flashcards(flashcard_data, topic_id):
     for fj, start, end in flashcard_data:
@@ -151,16 +134,6 @@ class TopicRetrieveAPIView(IsAuthenticatedUserView, generics.RetrieveAPIView):
         return self.queryset.filter(user=self.get_user())
 
 
-def parse_json_string(json_string):
-    try:
-        flashcards = json.loads(json_string)
-        flashcards = {int(k): v for k, v in flashcards.items()}
-        return flashcards
-    except json.JSONDecodeError as e:
-        print(f"Error decoding JSON: {e}")
-        return {}
-
-
 class DocumentUploadView(IsAuthenticatedUserView, APIView):
     parser_classes = [MultiPartParser]
 
@@ -215,6 +188,13 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         print("Total recommended cards:", total_rec_cards)
         num_batches = max(round((len(tokens_content) + total_rec_cards * TOKENS_PER_CARD) / working_context), 1)        
         print("Number of batches:", num_batches)
+        # Check if the request can proceed without exceeding rate limits
+        tokens_needed = len(tokens_preamble) * num_batches + len(tokens_content) + total_rec_cards * TOKENS_PER_CARD
+        print("Tokens needed:", tokens_needed)
+        if not check_and_update_rate_limits(tokens_needed):
+            print("Rate limit exceeded")
+            return Response({"error": "Rate limit exceeded"}, status=429)
+        # Compute the number of cards per batch
         cards_per_batch = math.floor(total_rec_cards / num_batches)
         print("Cards per batch:", cards_per_batch)
         remaining_cards = total_rec_cards % num_batches
@@ -251,7 +231,7 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
                 #print("Batch content:", batch_content)
                 msg_chn = PromptFlow.load_from_file("json_flow")
                 msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
-                                                                        num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
+                                                                          num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
                 msg_chn_batches.append(msg_chn.flow)
                 
             # Create tasks for concurrent execution
