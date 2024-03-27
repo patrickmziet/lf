@@ -40,8 +40,8 @@ def check_and_update_rate_limits(tokens_needed):
     # Check if adding this request would exceed the limits
     if current_requests + 1 <= GPT35_TURBO_RPM and current_tokens + tokens_needed <= GPT35_TURBO_TPM:
         # Update Redis with the new counts
-        cache.set(request_key, current_requests + 1, timeout=120)  # Expires in 2 minutes to ensure cleanup
-        cache.set(token_key, current_tokens + tokens_needed, timeout=120)
+        cache.set(request_key, current_requests + 1, timeout=75)  # Expires in 75 seconds
+        cache.set(token_key, current_tokens + tokens_needed, timeout=75)
         return True
     else:
         return False
