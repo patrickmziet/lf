@@ -47,14 +47,14 @@ export const UploadPage: React.FC = () => {
         try {
             const response = await uploadDocuments(accessToken, topicId, selectedFiles);
             if (response.error) {
-                throw new Error(JSON.stringify(response.error))
+                throw new Error(response.error.message)
             }
             navigate(`/learn/${topicId}`);
         } catch (error) {
             const err = error as Error
             //console.error("Error uploading documents:", err);
             setUploadError(err.message)
-            alert("An error occurred during the upload. Please try again.");
+            alert(err.message);
         } finally {
             setIsLoading(false);
         }
@@ -107,7 +107,7 @@ export const UploadPage: React.FC = () => {
                                     <>
                                         {uploadError ? (
                                             <>
-                                                <p>Error: {uploadError}</p>
+                                                <p>{uploadError}</p>
                                                 <button className="upload-button" onClick={handleUpload}>
                                                     Retry Upload
                                                 </button>

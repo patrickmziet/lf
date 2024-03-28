@@ -21,12 +21,23 @@ export const uploadDocuments = async (accessToken: string, topicId: string, file
         data: formData
     };
 
-    const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
+    const response = (await callExternalApi({ config })) as ApiResponse<any>;
 
-    return {
-        data,
-        error,
-    };
+    if (response.status === 429) {
+        return {
+            data: null,
+            error: {
+                message: "Our servers are currently receiving a high volume of traffic. Please try again in a few minutes."
+            },
+            status: response.status
+        };
+    }
+    return response;
+    //const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
+    //return {
+        //data,
+        //error,
+    //};    
 };
 
 
