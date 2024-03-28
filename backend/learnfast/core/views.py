@@ -192,7 +192,6 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         tokens_needed = len(tokens_preamble) * num_batches + len(tokens_content) + total_rec_cards * TOKENS_PER_CARD
         print("Tokens needed:", tokens_needed)
         if not check_and_update_rate_limits(tokens_needed):
-        #if not False:    
             print("Rate limit exceeded")
             return Response({"error": "Rate limit exceeded"}, status=429)
         # Compute the number of cards per batch

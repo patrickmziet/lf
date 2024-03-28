@@ -33,11 +33,6 @@ export const uploadDocuments = async (accessToken: string, topicId: string, file
         };
     }
     return response;
-    //const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
-    //return {
-        //data,
-        //error,
-    //};    
 };
 
 
