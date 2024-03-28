@@ -29,7 +29,8 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Pika for generating adverts](https://x.com/pika_labs?s=20)
 - [Anduril Comms strategy](https://twitter.com/piratewires/status/1750622782403301831?s=51)
 - [ASML marketing video](https://twitter.com/dylan522p/status/1752446312438505808?s=51)
-- [Lulu Cheng Meservey PR strategy "Go Direct" Comms Strategy](https://x.com/lulumeservey/status/1770111243174527264?s=20) and her company [Rostra](https://www.rostra.co/)
+- [Lulu Cheng Meservey PR strategy "Go Direct" Comms Strategy](https://x.com/lulumeservey/status/1770111243174527264?s=20) and her company [Rostra](https://www.rostra.co/) and Lulu Garry Tan [interview](https://youtu.be/Z1vqzWfC_sA?si=1M45WUnHyubWTbtR)
+- [Bryne Hobart on Duolingo](https://www.thediff.co/archive/the-duolingo-disaster-that-wasnt/?ref=the-diff-newsletter). Look at their marketing strategy.
 
 ### Strategy
 - How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature. Very difficult for them to have that in “general intelligence”. 

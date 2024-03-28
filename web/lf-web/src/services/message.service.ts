@@ -157,12 +157,20 @@ export const createMoreFlashCards = async (accessToken: string, topicId: string,
       data: flashcards,
   };
 
-  const { data, error } = (await callExternalApi({ config })) as ApiResponse<Flashcard[]>;
+  //const { data, error } = (await callExternalApi({ config })) as ApiResponse<Flashcard[]>;
+  const response  = (await callExternalApi({ config })) as ApiResponse<Flashcard[]>;
 
-  return {
-      data,
-      error,
-  };
+  if (response.status === 429) {
+    return {
+        data: null,
+        error: {
+            message: "Our servers are currently receiving a high volume of traffic. Please try again in a few minutes."
+        },
+        status: response.status
+    };
+  }
+
+  return response;
 };
 
 

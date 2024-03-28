@@ -12,10 +12,13 @@ from docx import Document as DocxDoc
 from io import BytesIO
 # General imports
 import math
-import re
 import numpy as np
 import tiktoken
 import time
+import json
+from openai import AsyncOpenAI
+import os
+import asyncio
 # Local imports
 from .models import User, Topic, Document, Flashcard
 from .serializers import (
@@ -24,18 +27,13 @@ from .serializers import (
     DocumentSerializer, 
     FlashcardSerializer
     )
-from .LLMs import generate_flashcards, gen_flashcards
-#from pana import PromptFlow
-#from pana.texts import (
-#    json_system_message,
-#    json_card_format,
-#    card_axioms,
-#    supply_example_text,
-#    nato_text_short,
-#    json_nato_flashcards,
-#    ask_for_flashcards,
-#    ask_for_more,
-#)
+from .LLMs import (
+    parse_json_string,
+    )
+from .utils import (
+    check_and_update_rate_limits,
+    get_rec_cards,
+)
 from .pana_local.pflow import PromptFlow
 from .pana_local.texts import (
     json_system_message,
@@ -54,36 +52,22 @@ NUM_CARDS_MORE = 12
 MIN_POOR_FLASHCARDS = 3
 TOKENS_PER_PAGE = 600
 GPT35_TURBO_CONTEXT = 16385 - 500 # For saftey to avoid 16k token limit
+HEADROOM_PROP = 0.25 # Scale down rate limits to HEADROOM_PROP% to avoid hitting real rate limits
+GPT35_TURBO_TPM = int(160000 * HEADROOM_PROP) # Rate limit for GPT-3.5-turbo Token Per Minute
+GPT35_TURBO_RPM = int(3500 * HEADROOM_PROP) # Rate limit for GPT-3.5-turbo Requests Per Minute
 TOKENS_PER_CARD = 40 # +- 30 tokens with extra 10 for a buffer
-PAGE_TO_CARDS = {
-    (1, 2): 15,
-    (2, 5): 30,
-    (5, 10): 50,
-    (10, 15): 65,
-    (15, 30): 75,
-    (30, 40): 90,
-    (40, 50): 100
-}
-
-def get_rec_cards(num_pages):
-    # Make sure num_pages > 1 and throw error if not
-    if num_pages < 1:
-        return "Pages must be at least 1."
-    
-    if num_pages >= 50:
-        return max(100, num_pages)
-    
-    for page_range, cards in PAGE_TO_CARDS.items():
-        if page_range[0] <= num_pages < page_range[1]:
-            return cards
-    return "Invalid number of pages"  # In case the number is below 1
 
 
-def extract_text_between_markers(input_string):
-    pattern = r'(?<=BEGIN)(.*?)(?=END)'
-    matches = re.finditer(pattern, input_string, re.DOTALL)
-    x = [match.group(1).strip() for match in matches]
-    return x[0]
+def create_flashcards(flashcard_data, topic_id):
+    for fj, start, end in flashcard_data:
+        for card_number, card in fj.items():
+            Flashcard.objects.create(
+                topic_id=topic_id,
+                question=card['Question'],
+                answer=card['Answer'],
+                start_end=f"{start}-{end}"
+            )
+
 
 def api_exception_handler(exc, context=None):
     response = exception_handler(exc, context=context)
@@ -158,33 +142,23 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         topic = Topic.objects.get(id=topic_id)
         combined_content = ""
         file_cnt = 0
-        for file in request.FILES.getlist('documents'):
-            if not file.name.endswith(('.txt', '.pdf', '.docx')):
-                return Response({"error": f"Unsupported file format: {file.name}. Only .txt, .pdf, and .docx are supported."}, status=400)
-            Document.objects.create(topic=topic, document=file)
-            file.seek(0)
-            file_cnt += 1
-            combined_content += self.process_file(file, file_cnt)
-        combined_file = ContentFile(combined_content.encode('utf-8'), name='combined_file.txt')
-        Document.objects.create(topic=topic, document=File(combined_file))
-        self.initialize_flashcards(combined_content, topic_id)
-        return Response(status=204)
-
-    def process_file(self, file, file_cnt):
-        content = "START of Document " + str(file_cnt) + ": " + file.name + "\n"
-        if file.name.endswith('.txt'):
-            file_content = file.read().decode('utf-8')
-        elif file.name.endswith('.pdf'):
-            pdf = PdfReader(file)
-            file_content = "\n".join(page.extract_text() for page in pdf.pages)
-        elif file.name.endswith('.docx'):
-            doc = DocxDoc(BytesIO(file.read()))
-            file_content = "\n".join(para.text for para in doc.paragraphs)
-        content += file_content + "\n"
-        content += "END of Document " + str(file_cnt) + ": " + file.name + "\n"
-        return content
-
-    def initialize_flashcards(self, content, topic_id):
+        
+        combined_file = Document.objects.filter(topic=topic, document__endswith='combined_file.txt').first()
+        if combined_file is None:            
+            for file in request.FILES.getlist('documents'):
+                if not file.name.endswith(('.txt', '.pdf', '.docx')):
+                    return Response({"error": f"Unsupported file format: {file.name}. Only .txt, .pdf, and .docx are supported."}, status=400)
+                Document.objects.create(topic=topic, document=file)
+                file.seek(0)
+                file_cnt += 1
+                combined_content += self.process_file(file, file_cnt)
+            combined_file = ContentFile(combined_content.encode('utf-8'), name='combined_file.txt')
+            Document.objects.create(topic=topic, document=File(combined_file))
+        else:
+            print("Already made file")
+            combined_content = combined_file.document.read().decode('utf-8')
+            print(combined_content)
+        # Create msg_chn
         msg_chn = PromptFlow("json_flow", "Basic flow with JSON output")
         msg_chn.add_system_message(json_system_message.format(card_axioms=card_axioms, 
                                                               json_card_format=json_card_format))
@@ -202,7 +176,7 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         #print("Preamble tokens encoded:", tokens_preamble)
         print(f"Preamble tokens encoded: {len(tokens_preamble)} in {et}s.")
         st = time.time()
-        tokens_content = encoding.encode(content)
+        tokens_content = encoding.encode(combined_content)
         et = time.time() - st
         print(f"Length of content tokens encoded: {len(tokens_content)} in {et}s.")
         #print("Content tokens encoded:", tokens_content)
@@ -214,6 +188,13 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         print("Total recommended cards:", total_rec_cards)
         num_batches = max(round((len(tokens_content) + total_rec_cards * TOKENS_PER_CARD) / working_context), 1)        
         print("Number of batches:", num_batches)
+        # Check if the request can proceed without exceeding rate limits
+        tokens_needed = len(tokens_preamble) * num_batches + len(tokens_content) + total_rec_cards * TOKENS_PER_CARD
+        print("Tokens needed:", tokens_needed)
+        if not check_and_update_rate_limits(tokens_needed):
+            print("Rate limit exceeded")
+            return Response({"error": "Rate limit exceeded"}, status=429)
+        # Compute the number of cards per batch
         cards_per_batch = math.floor(total_rec_cards / num_batches)
         print("Cards per batch:", cards_per_batch)
         remaining_cards = total_rec_cards % num_batches
@@ -223,25 +204,66 @@ class DocumentUploadView(IsAuthenticatedUserView, APIView):
         if total_cards != total_rec_cards:
             raise ValueError("Mismatch in the total number of flashcards calculated.")
 
-        print("Initializing flashcards.")        
-        for i in range(num_batches):
-            print(f"Batch: {i}")
-            context_i = working_context - (cards_per_batch * TOKENS_PER_CARD) 
-            if i == 0:
-                context_i = working_context - (cards_in_first_batch * TOKENS_PER_CARD)
-            start = i * context_i
-            end = (i + 1) * context_i
-            batch_content = encoding.decode(tokens_content[start:end])
-            #print("Batch content:", batch_content)
-            msg_chn = PromptFlow.load_from_file("json_flow")
-            msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
-                                                                      num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
-            #print("Message flow:", msg_chn.flow)
-            st = time.time()
-            #generate_flashcards(msg_chn.flow, topic_id, start, end)
-            gen_flashcards(msg_chn.flow, topic_id, start, end)
-            et = time.time() - st
-            print(f"Flashcards for batch {i} generated in {et}s.")
+        # Method 1: Asynchronous
+        st = time.time()
+        client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))       
+
+        async def fetch_completion(messages, start, end):
+            response = await client.chat.completions.create(
+                model="gpt-3.5-turbo-0125",
+                response_format={"type": "json_object"},
+                messages=messages,
+            )
+            return (parse_json_string(response.choices[0].message.content), start, end)
+        
+        async def main():
+            msg_chn_batches, starts, ends = [], [], []
+            for i in range(num_batches):
+                card_tokens = cards_per_batch * TOKENS_PER_CARD
+                if i == 0:
+                    card_tokens = cards_in_first_batch * TOKENS_PER_CARD
+                context_i = working_context - card_tokens
+                start = i * context_i
+                starts.append(start)
+                end = (i + 1) * context_i
+                ends.append(end)
+                batch_content = encoding.decode(tokens_content[start:end])
+                #print("Batch content:", batch_content)
+                msg_chn = PromptFlow.load_from_file("json_flow")
+                msg_chn.add_interaction("user", ask_for_flashcards.format(sample_text=batch_content, 
+                                                                          num_cards=cards_in_first_batch if i == 0 else cards_per_batch))
+                msg_chn_batches.append(msg_chn.flow)
+                
+            # Create tasks for concurrent execution
+            tasks = [fetch_completion(messages, start, end) for messages, start, end in zip(msg_chn_batches, starts, ends)]
+            
+            # Run tasks concurrently and gather responses
+            flashcard_data = await asyncio.gather(*tasks)
+
+            return flashcard_data
+        
+        flashcard_data = asyncio.run(main())
+        print(f"Flashcard JSONs: {flashcard_data}")
+
+        create_flashcards(flashcard_data, topic_id)
+                
+        print(f"Asynchronous flashcards generated in {time.time() - st}s.")         
+        
+        return Response(status=204)
+
+    def process_file(self, file, file_cnt):
+        content = "START of Document " + str(file_cnt) + ": " + file.name + "\n"
+        if file.name.endswith('.txt'):
+            file_content = file.read().decode('utf-8')
+        elif file.name.endswith('.pdf'):
+            pdf = PdfReader(file)
+            file_content = "\n".join(page.extract_text() for page in pdf.pages)
+        elif file.name.endswith('.docx'):
+            doc = DocxDoc(BytesIO(file.read()))
+            file_content = "\n".join(para.text for para in doc.paragraphs)
+        content += file_content + "\n"
+        content += "END of Document " + str(file_cnt) + ": " + file.name + "\n"
+        return content
 
 
 class FlashcardListCreateAPIView(IsAuthenticatedUserView, generics.ListCreateAPIView):
@@ -295,13 +317,11 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         flashcards = Flashcard.objects.filter(topic=topic)
         flashcards_json = {i+1: f.to_json_card() for i, f in enumerate(flashcards)}
         
-        #calculate_score = lambda record: round(sum([int(i) for i in record]) / len(record) * 100, 2) if record else 0
-        #score_array = np.array([calculate_score(f.record) for f in flashcards])
         correct_array = np.array([f.rapid_correct for f in flashcards])
         print(f"Correct array: {correct_array} with length {len(correct_array)}" )
         attempts_array = np.array([f.rapid_attempts for f in flashcards])
         print("Attempts array:", attempts_array)
-        score_array = np.array([f.rapid_correct/f.rapid_attempts for f in flashcards])
+        score_array = np.array([f.rapid_correct/f.rapid_attempts if f.rapid_attempts != 0 else 1 for f in flashcards])
         print("Score array:", score_array)
         pctl = np.percentile(score_array, 25)
         print("Percentile:", pctl)
@@ -317,7 +337,6 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
         tokens_preamble = encoding.encode(''.join(msg['content'] for msg in msg_chn.flow))
         tokens_content = encoding.encode(combined_file)
-        working_context = GPT35_TURBO_CONTEXT - len(tokens_preamble)
         
         start_end_arr = [flashcards[int(i)].start_end for i in poor_flashcards_indices]
         print("Start end:", start_end_arr)
@@ -333,27 +352,48 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         total_cards = cards_in_first_location + (cards_per_location * (num_unique_locations - 1))
         if total_cards != NUM_CARDS_MORE:
             raise ValueError("Mismatch in the total number of flashcards calculated.")
+        
+        num_batches = len(set([f.start_end for f in flashcards]))
+        tokens_needed = num_unique_locations * (len(tokens_preamble) + len(tokens_content) / num_batches) + total_cards * TOKENS_PER_CARD
+        if not check_and_update_rate_limits(tokens_needed):
+            print("Rate limit exceeded")
+            return Response({"error": "Rate limit exceeded"}, status=429)
 
-        for i in range(num_unique_locations):
-            se = list(start_end_arr_set)[i].split('-')
-            print("Start end:", se)
-            start = int(se[0])
-            end = int(se[1])
-            print("Start:", start)
-            print("End:", end)
-            batch_content = encoding.decode(tokens_content[start:end])
-            #print("Batch content:", batch_content)
-            focus_cards = {j+1: flashcards[int(k)].to_json_card() for j, k in enumerate(poor_flashcards_indices) if flashcards[int(k)].start_end == start_end_arr_set[i]}
-            print("Focus cards:", focus_cards)
-            msg_chn = PromptFlow.load_from_file("json_flow")
-            msg_chn.add_interaction("user", ask_for_more.format(num_cards= cards_in_first_location if i == 0 else cards_per_location, 
-                                                            focus_cards=focus_cards,
-                                                            card_format=json_card_format, 
-                                                            card_axioms=card_axioms,
-                                                            text=batch_content))
-            #print("Message flow:", msg_chn.flow)
-            generate_flashcards(msg_chn.flow, topic_id, start, end)
+        client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
+        async def fetch_more_completion(messages, start, end):
+            response = await client.chat.completions.create(
+                model="gpt-3.5-turbo-0125",
+                response_format={"type": "json_object"},
+                messages=messages,
+            )
+            return (parse_json_string(response.choices[0].message.content), start, end)
+
+        async def main_more():
+            msg_chn_batches, starts, ends = [], [], []
+            for i in range(num_unique_locations):
+                se = list(start_end_arr_set)[i].split('-')
+                start = int(se[0])
+                end = int(se[1])
+                batch_content = encoding.decode(tokens_content[start:end])
+                focus_cards = {j+1: flashcards[int(k)].to_json_card() for j, k in enumerate(poor_flashcards_indices) if flashcards[int(k)].start_end == start_end_arr_set[i]}
+                msg_chn = PromptFlow.load_from_file("json_flow")
+                msg_chn.add_interaction("user", ask_for_more.format(num_cards= cards_in_first_location if i == 0 else cards_per_location, 
+                                                                focus_cards=focus_cards,
+                                                                card_format=json_card_format, 
+                                                                card_axioms=card_axioms,
+                                                                text=batch_content))
+                msg_chn_batches.append(msg_chn.flow)
+                starts.append(start)
+                ends.append(end)
             
+            tasks = [fetch_more_completion(messages, start, end) for messages, start, end in zip(msg_chn_batches, starts, ends)]
+            flashcard_data = await asyncio.gather(*tasks)
+
+            return flashcard_data
+        
+        flashcard_data = asyncio.run(main_more())
+        print(f"Flashcard JSONs: {flashcard_data}")
+        create_flashcards(flashcard_data, topic_id)            
         flashcards = Flashcard.objects.filter(topic_id=topic_id)
         serializer = FlashcardSerializer(flashcards, many=True)
 

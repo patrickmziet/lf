@@ -10,6 +10,7 @@ import { useDeleteTopic } from '../hooks/useDeleteTopic';
 export const UploadPage: React.FC = () => {
     const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state
+    const [uploadError, setUploadError] = useState<string | null>(null); // Add this line
     const { getAccessTokenSilently } = useAuth0();
     const { topicId } = useParams<{ topicId: string }>();
     const navigate = useNavigate();
@@ -44,11 +45,16 @@ export const UploadPage: React.FC = () => {
         const accessToken = await getAccessTokenSilently();
 
         try {
-            await uploadDocuments(accessToken, topicId, selectedFiles);
+            const response = await uploadDocuments(accessToken, topicId, selectedFiles);
+            if (response.error) {
+                throw new Error(response.error.message)
+            }
             navigate(`/learn/${topicId}`);
         } catch (error) {
-            console.error("Error uploading documents:", error);
-            alert("An error occurred during the upload. Please try again.");
+            const err = error as Error
+            //console.error("Error uploading documents:", err);
+            setUploadError(err.message)
+            alert(err.message);
         } finally {
             setIsLoading(false);
         }
@@ -98,9 +104,20 @@ export const UploadPage: React.FC = () => {
                                 isLoading ? (
                                     <ColorRingSpinner />
                                 ) : (
-                                    <button className="upload-button" type="submit">
-                                        Upload {selectedFiles.length} file{selectedFiles.length > 1 ? "s" : ""}
-                                    </button>
+                                    <>
+                                        {uploadError ? (
+                                            <>
+                                                <p>{uploadError}</p>
+                                                <button className="upload-button" onClick={handleUpload}>
+                                                    Retry Upload
+                                                </button>
+                                            </>
+                                        ) : (
+                                            <button className="upload-button" type="submit">
+                                                Upload {selectedFiles.length} file{selectedFiles.length > 1 ? "s" : ""}
+                                            </button>
+                                        )}
+                                    </>
                                 )
                             )}
                         </div>
