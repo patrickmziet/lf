@@ -2,7 +2,7 @@ import time
 import json
 from django.core.cache import cache
 
-HEADROOM_PROP = 0.05  # Leave some headroom to avoid hitting rate limits
+HEADROOM_PROP = 0.75  # Leave some headroom to avoid hitting rate limits
 GPT35_TURBO_TPM = int(160000 * HEADROOM_PROP)  # Tokens per minute
 GPT35_TURBO_RPM = int(5000 * HEADROOM_PROP)  # Requests per minute
 PAGE_TO_CARDS = {
