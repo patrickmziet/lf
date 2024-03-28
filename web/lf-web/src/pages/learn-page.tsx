@@ -164,10 +164,14 @@ export const LearnPage: React.FC = () => {
     // Create more flashcards
     const handleCreateMoreCards = async () => {
         if (!topicId) return;
+        const rapidAttemptedCards = flashcards.filter(card => card.rapid_attempts > 0);
+        if (rapidAttemptedCards.length < 5) {
+            alert("You must study at least 5 cards in rapid mode before more cards can be created.");
+            return;
+        }
         const accessToken = await getAccessTokenSilently();
         setIsLoading(true);
         try {
-            //const { data } = await createMoreFlashCards(accessToken, topicId, flashcards);
             const response = await createMoreFlashCards(accessToken, topicId, flashcards);
             if (response.error) {
                 throw new Error(response.error.message);
@@ -181,8 +185,8 @@ export const LearnPage: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
-
     };
+
     return (
         <PageLayout>
             <div className="content-layout">
