@@ -321,7 +321,7 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         print(f"Correct array: {correct_array} with length {len(correct_array)}" )
         attempts_array = np.array([f.rapid_attempts for f in flashcards])
         print("Attempts array:", attempts_array)
-        score_array = np.array([f.rapid_correct/f.rapid_attempts for f in flashcards])
+        score_array = np.array([f.rapid_correct/f.rapid_attempts if f.rapid_attempts != 0 else 1 for f in flashcards])
         print("Score array:", score_array)
         pctl = np.percentile(score_array, 25)
         print("Percentile:", pctl)
