@@ -167,13 +167,17 @@ export const LearnPage: React.FC = () => {
         const accessToken = await getAccessTokenSilently();
         setIsLoading(true);
         try {
-            const { data } = await createMoreFlashCards(accessToken, topicId, flashcards);
-            if (data && Array.isArray(data)) {
-                setFlashcards(data);
+            //const { data } = await createMoreFlashCards(accessToken, topicId, flashcards);
+            const response = await createMoreFlashCards(accessToken, topicId, flashcards);
+            if (response.error) {
+                throw new Error(response.error.message);
+            }
+            if (response.data && Array.isArray(response.data)) {
+                setFlashcards(response.data);
             }
         } catch (error) {
-            console.error("Error creating more flashcards:", error);
-            alert("An error occurred during the creation. Please try again.");
+            const err = error as Error;
+            alert(err.message);
         } finally {
             setIsLoading(false);
         }

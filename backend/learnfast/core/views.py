@@ -317,8 +317,6 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         flashcards = Flashcard.objects.filter(topic=topic)
         flashcards_json = {i+1: f.to_json_card() for i, f in enumerate(flashcards)}
         
-        #calculate_score = lambda record: round(sum([int(i) for i in record]) / len(record) * 100, 2) if record else 0
-        #score_array = np.array([calculate_score(f.record) for f in flashcards])
         correct_array = np.array([f.rapid_correct for f in flashcards])
         print(f"Correct array: {correct_array} with length {len(correct_array)}" )
         attempts_array = np.array([f.rapid_attempts for f in flashcards])
@@ -339,7 +337,6 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         encoding = tiktoken.encoding_for_model("gpt-3.5-turbo")
         tokens_preamble = encoding.encode(''.join(msg['content'] for msg in msg_chn.flow))
         tokens_content = encoding.encode(combined_file)
-        working_context = GPT35_TURBO_CONTEXT - len(tokens_preamble)
         
         start_end_arr = [flashcards[int(i)].start_end for i in poor_flashcards_indices]
         print("Start end:", start_end_arr)
@@ -356,6 +353,12 @@ class FlashcardMoreAPIView(IsAuthenticatedUserView):
         if total_cards != NUM_CARDS_MORE:
             raise ValueError("Mismatch in the total number of flashcards calculated.")
         
+        num_batches = len(set([f.start_end for f in flashcards]))
+        tokens_needed = num_unique_locations * (len(tokens_preamble) + len(tokens_content) / num_batches) + total_cards * TOKENS_PER_CARD
+        if not check_and_update_rate_limits(tokens_needed):
+            print("Rate limit exceeded")
+            return Response({"error": "Rate limit exceeded"}, status=429)
+
         client = AsyncOpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
         async def fetch_more_completion(messages, start, end):
             response = await client.chat.completions.create(
