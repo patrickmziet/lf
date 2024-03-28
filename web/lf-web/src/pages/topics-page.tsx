@@ -25,7 +25,9 @@ export const TopicsPage: React.FC = () => {
             const { data } = await getUserTopics(token);
 
             if (isMounted && data && Array.isArray(data)) {
-                setTopics(data);
+                const sortedTopics = data.sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+                console.log("Sorted topics", sortedTopics);
+                setTopics(sortedTopics);
             }
         };
 

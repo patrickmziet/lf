@@ -79,11 +79,43 @@ export const getTopic = async (accessToken: string, topicId: string): Promise<Ap
 
   const { data, error } = (await callExternalApi({ config })) as ApiResponse<Topic>;
 
+/*   // Update last_viewed field
+    const updateConfig: AxiosRequestConfig = {
+        url: `${apiServerUrl}/api/topics/update/${topicId}/`,
+        method: "PATCH",
+        headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    };
+
+  await callExternalApi({ config: updateConfig });
+ */
   return {
     data,
     error,
   };
 }
+
+
+// Function to update the last viewed field for a topic
+export const updateLastViewed = async (accessToken: string, topicId: string): Promise<ApiResponse<any>> => {
+    const config: AxiosRequestConfig = {
+        url: `${apiServerUrl}/api/topics/update/${topicId}/`,
+        method: "PATCH",
+        headers: {
+            "content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+        },
+    };
+
+    const { data, error } = (await callExternalApi({ config })) as ApiResponse<any>;
+
+    return {
+        data,
+        error,
+    };
+};
 
 
 // Function to get topics for the authenticated user

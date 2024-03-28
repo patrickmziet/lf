@@ -6,6 +6,7 @@ from rest_framework.views import APIView, exception_handler
 from rest_framework.parsers import MultiPartParser
 from django.contrib.auth import get_user_model
 from django.core.files.base import ContentFile, File
+from django.utils import timezone
 # File processing imports
 from PyPDF2 import PdfReader
 from docx import Document as DocxDoc
@@ -132,6 +133,19 @@ class TopicRetrieveAPIView(IsAuthenticatedUserView, generics.RetrieveAPIView):
 
     def get_queryset(self):
         return self.queryset.filter(user=self.get_user())
+
+
+class TopicUpdateAPIView(IsAuthenticatedUserView, generics.UpdateAPIView):
+    queryset = Topic.objects.all()
+    serializer_class = TopicSerializer
+
+    def get_queryset(self):
+        return self.queryset.filter(user=self.get_user())
+
+    def patch(self, request, *args, **kwargs):
+        topic = self.get_object()
+        topic.save() # This updates the updated_at field
+        return Response(TopicSerializer(topic).data)
 
 
 class DocumentUploadView(IsAuthenticatedUserView, APIView):

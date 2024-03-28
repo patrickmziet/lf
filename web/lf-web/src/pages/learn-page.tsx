@@ -6,7 +6,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { jsPDF } from "jspdf";
 import { GoTriangleRight, GoTriangleDown } from "react-icons/go";
 import { getTopicDocuments } from "../services/document.service";
-import { getTopicFlashCards, getTopic, createMoreFlashCards } from "../services/message.service";
+import { getTopicFlashCards, getTopic, createMoreFlashCards, updateLastViewed } from "../services/message.service";
 import { PageLayout } from "../components/page-layout";
 import { ColorRingSpinner } from '../components/ColorRingSpinner';
 import { Document } from "../models/document";
@@ -43,6 +43,20 @@ export const LearnPage: React.FC = () => {
             fetchTopic();
         }
     }, [topicId, state]);
+
+
+    useEffect(() => {
+        const updateTopicLastViewed = async () => {
+            console.log('Entered updateTopicLastViewed');
+            if (!topicId) return;
+            const accessToken = await getAccessTokenSilently();
+            const response = await updateLastViewed(accessToken, topicId);
+            console.log('updateLastViewed response:', response); // Debug: print response
+        };
+
+        updateTopicLastViewed();
+    }, []); // Empty dependency array
+
 
     useEffect(() => {
         const fetchDocuments = async () => {
