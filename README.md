@@ -14,31 +14,9 @@ Repository for the Viva app (from [Viva voce](https://en.wikipedia.org/wiki/Viva
 
 Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/blob/main/designs/user_experience.excalidraw).
 
-## Ideas
-- Use a LLM to filter data
-- Key point from Sutskever and Huang interview: "The most important difference between chatGPT and GPT-4 is that the base on top of which GPT-4 is built predicts the next word with greater accuracy."
-- Download Anki card databases for training data.
-- Measures of success: Optimize for bits (information) exchanged and retained per second.
 
 
-### Marketing strategy
-- Get fitness influencers like bodybuilders and College athletes (Swimmers, Soccer players, Tennis, American football, etc) to promote the app. The idea being that they represent your ideal customer, someone who is trying to balance lots of training and school work and they want to get their school work done ASAP. More importantly the perception of your brand will benefit, people who have less time to study are not viewed as lesser when they are athletes. Although they never should be viewed as such.
-- Look on YT and TikTok for "Day in the life of a {D1 athlete, Oxford Rower, Harvard, etc}" videos. Perhaps lean towards people who are studying Humanities type work first.
-- Try to catch up-and-coming influencers. If you can see that someone is talented/good and underfollowed then use them.
-- One way to lure up-and-comers could be to offer them a gift subscription to video editing tools which help them produce their videos.
-- [Pika for generating adverts](https://x.com/pika_labs?s=20)
-- [Anduril Comms strategy](https://twitter.com/piratewires/status/1750622782403301831?s=51)
-- [ASML marketing video](https://twitter.com/dylan522p/status/1752446312438505808?s=51)
-- [Lulu Cheng Meservey PR strategy "Go Direct" Comms Strategy](https://x.com/lulumeservey/status/1770111243174527264?s=20) and her company [Rostra](https://www.rostra.co/) and Lulu Garry Tan [interview](https://youtu.be/Z1vqzWfC_sA?si=1M45WUnHyubWTbtR)
-- [Bryne Hobart on Duolingo](https://www.thediff.co/archive/the-duolingo-disaster-that-wasnt/?ref=the-diff-newsletter). Look at their marketing strategy.
 
-### Strategy
-- How to prevent OpenAI from sweeping you: Manage and save the state of your learning for your subject is an important feature. Very difficult for them to have that in “general intelligence”. 
-
-### On company culture:
-- [Elad Gil: On resetting focus and setting aside politics](https://x.com/eladgil/status/1752709288018194692?s=20) 
-- [Brian Armstrong: Coinbase is a mission focused company](https://www.coinbase.com/en-gb/blog/coinbase-is-a-mission-focused-company)
-- [Tobi Lutke: We are not a family](https://www.businessinsider.com/shopify-ceo-email-to-managers-we-are-not-a-family-2021-5?r=US&IR=T)
 
 ## Resources
 ### Code, papers and technical notes
@@ -171,14 +149,6 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [Groq chips for inference](https://wow.groq.com/why-groq/)
 
 
-### Legal
-- [Set up a business UK.gov website](https://www.gov.uk/set-up-business)
-- Look at other legal disclaimers..
-- [ONCE software license](https://x.com/dhh/status/1748445489648050505?s=20)
-- On the Apple HEY calendar AppStore debacle [here](https://world.hey.com/dhh/apple-approves-the-hey-calendar-c76ebd9c) and [here](https://twitter.com/dhh/status/1744745276932604413?s=20)
-- [How Lisa Wehden got her O1 visa](https://x.com/lisawehden/status/1757825759648059433?s=20)
-
-
 ### AI Economics and Doom
 - [Michael Nielson Notes on Existential Risk from Artificial Superintelligence](https://michaelnotebook.com/xrisk/index.html)
 - [The AI Ate My Homework, and My Schoolwork Too by Tyler Cowen](https://www.bloomberg.com/opinion/articles/2023-09-18/how-ai-will-change-homework-and-classroom-instruction?utm_medium=email&utm_source=newsletter&utm_term=230918&utm_campaign=author_19834842)
@@ -210,25 +180,12 @@ Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/
 - [The spiritual case for banning tik tok](https://unherd.com/newsroom/the-spiritual-case-for-banning-tiktok/)
 
 
-
-
-
 ### Spaced repetition systems
 - [Michael Nielson Augmenting Long-term Memory](http://augmentingcognition.com/ltm.html)
 - [Michael Nielson Using spaced repetition systems to see through a piece of mathematics](https://cognitivemedium.com/srs-mathematics)
 - [Gwern Spaced Repetition for Efficient Learning](https://gwern.net/spaced-repetition)
 - [Andy Matuschak's list of unusual spaced memory repetition systems](https://x.com/andy_matuschak/status/1278498290296745984?s=20)
 
-### General pieces and random stuff
-- [Age of Average (Good words about branding and style)](https://www.alexmurrell.co.uk/articles/the-age-of-average)
-- [Malleable software by Geoff Litt](https://www.geoffreylitt.com/2023/03/25/llm-end-user-programming.html)
-- [Deepmind jobs](https://twitter.com/egrefen/status/1701592528435511715?s=20)
-- [London AI offices](https://x.com/ankesh_anand/status/1695927383386095972?s=20)
-- [WTF happened in 1971?](https://wtfhappenedin1971.com/)
-- [Britain Is Much Worse Off Than It Understands](https://foreignpolicy.com/2023/02/03/britain-worse-off-1970s/)
-- [How to Start a Hard Tech Start Up by Sam Altman](https://www.youtube.com/watch?v=RHSb4G18gFY)
-- [In Conversation with Tyler Cowen and Fraser Nelson about England](https://www.youtube.com/watch?v=0jhhsgoEDAE)
-- [Sigil Wen: I JUST got my O-1 Visa and moved to the US!](https://x.com/0xSigil/status/1745815757651591204?s=20)
 
 ### Spaced repetition memory systems
 #### [Using Artificial Intelligence to Augment Human Intelligence](https://distill.pub/2017/aia/)
