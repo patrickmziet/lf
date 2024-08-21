@@ -1,10 +1,12 @@
 # LearnFast (lf)
+
+This is a web app which uses a Django backend and React frontend that allows users to upload documents and be turned into flashcards which can be studied using [spaced repetition memory systems](https://en.wikipedia.org/wiki/Spaced_repetition). 
+
 ## Table of contents
 1. [General product comments](##general-product-comments)
 2. [Description](##description)
-3. [Ideas](##ideas)
-4. [Resources](##resources): [Code, papers and technical notes](###code,papers-and-technical-notes), [AI Economics and Doom](###ai-economics-and-doom), [General pieces and random stuff](###general-pieces-and-random-stuff) and [Spaced repetition memory systems](###spaced-repetition-memory-systems)
-6. [Thoughts](##thoughts): [Human vs Machine](###human-vs-machine), [Marketing strategy](###marketing-strategy)
+3. [Resources](##resources): [Code, papers and technical notes](###code,papers-and-technical-notes), [AI Economics and Doom](###ai-economics-and-doom), [General pieces and random stuff](###general-pieces-and-random-stuff) and [Spaced repetition memory systems](###spaced-repetition-memory-systems)
+
 ## General product comments
 - **Mission**: Maximises the users ability to operate without a machine.
 - Possible reason why other education platforms are not successful is that humans are lazy and learning things (languages, online coding courses) in a self-directed way and through self-motivation is *so rare*. So instead you must focus on the product being for students who are already working towards tests and exams that are imposed on them by the usual educational culture. Exams at schools and unis for example. Or professional exams like CFA. The latter example is technically self-directed, however I think it's different because so many people do it and so "doing a CFA" is more comparable to "going to uni" than "taking Spanish lessons".  
@@ -13,10 +15,6 @@
 Repository for the Viva app (from [Viva voce](https://en.wikipedia.org/wiki/Viva_voce)). The broad idea is that a user should be able to log in and learn anything by a combination of conversation, debate and spaced-memory repetition. 
 
 Here is the [Excal sketch file of the app](https://github.com/patrickmziet/viva/blob/main/designs/user_experience.excalidraw).
-
-
-
-
 
 ## Resources
 ### Code, papers and technical notes
